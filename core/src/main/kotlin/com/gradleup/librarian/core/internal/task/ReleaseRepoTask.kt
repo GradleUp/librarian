@@ -27,8 +27,6 @@ abstract class ReleaseRepoTask: DefaultTask() {
   @TaskAction
   fun taskAction() {
     runBlocking {
-      logger.log(LogLevel.LIFECYCLE, "Closing repository $repoId")
-
       val nexusStagingClient = nexusStagingClient(host.get(), username.get(), password.get())
       nexusStagingClient.closeRepositories(listOf(repoId.get()))
       withTimeout(30.minutes) {
