@@ -64,7 +64,7 @@ fun Project.librarianRoot() {
     isTag() -> {
       publishIfNeeded.dependsOn(releaseRepoTask)
     }
-    pushedRef() == "ref/heads/${properties.gitSnapshots()}" -> {
+    pushedRef() == "refs/heads/${properties.gitSnapshots()}" -> {
       publishIfNeeded.dependsOn(releaseRepoTask)
     }
   }
