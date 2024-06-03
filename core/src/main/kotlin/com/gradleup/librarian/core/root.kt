@@ -2,7 +2,6 @@ package com.gradleup.librarian.core
 
 import com.gradleup.librarian.core.internal.configurationLibrarianRepositoryId
 import com.gradleup.librarian.core.internal.dependsOn
-import com.gradleup.librarian.core.internal.findGradleProperty
 import com.gradleup.librarian.core.internal.isTag
 import com.gradleup.librarian.core.internal.pushedRef
 import com.gradleup.librarian.core.internal.registerCreateRepoIdTask
@@ -10,45 +9,29 @@ import com.gradleup.librarian.core.internal.registerReleaseTask
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.UnknownTaskException
+import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
 
-
-class Root(
-    val publishing: Publishing,
-    val snapshotsBranch: String,
-) {
-  class Builder internal constructor(internal val project: Project) {
-    var snapshotsBranch: String = "main"
-    var publishingBuilder: Publishing.Builder = Publishing.Builder(project)
-
-    fun publishing(initializer: Publishing.Builder.() -> Unit) {
-      publishingBuilder.initializer()
-    }
-
-    fun fromGradlePropertiesAndEnvironmentVariables() {
-      project.findGradleProperty("librarian.snapshotsBranch")?.let {
-        snapshotsBranch = it
-      }
-      publishing { fromGradlePropertiesAndEnvironmentVariables() }
-    }
-
-    fun build(): Root {
-      return Root(
-          publishing = publishingBuilder.build(),
-          snapshotsBranch = snapshotsBranch
-      )
-    }
-  }
-}
-
-fun Project.librarianRoot(block: Root.Builder.() -> Unit = { fromGradlePropertiesAndEnvironmentVariables() }) {
-  val root = Root.Builder(this).apply(block).build()
-
+fun Project.librarianRoot() {
   configureBcv()
 
-  val sonatype = root.publishing.sonatype
-  val pomMetadata = root.publishing.pomMetadata
+  val properties = project.rootProperties()
+  val pomMetadata = PomMetadata(properties.kdocArtifactId(), properties)
+  val sonatype = Sonatype(project, properties)
+  val signing = Signing(project, properties)
+
+  val kdocWithoutOlder = configureDokkatooAggregate(
+      currentVersion = pomMetadata.version,
+      olderVersions = properties.olderVersions()
+  )
+  configurePublishingInternal {
+    publications.create("kdoc", MavenPublication::class.java) {
+      it.artifact(kdocWithoutOlder)
+    }
+  }
+  configurePom(pomMetadata)
+
   val createRepoTask = registerCreateRepoIdTask(sonatype, pomMetadata.groupId, pomMetadata.version)
 
   val configuration = configurations.create(configurationLibrarianRepositoryId) {
@@ -57,39 +40,49 @@ fun Project.librarianRoot(block: Root.Builder.() -> Unit = { fromGradlePropertie
   }
   artifacts.add(configuration.name, createRepoTask)
 
+  configureRepositoriesRoot(sonatype, createRepoTask)
+  configureSigning(signing)
+
   val releaseRepoTask = registerReleaseTask(
       sonatype = sonatype,
       repoId = createRepoTask.map { it.output.get().asFile.readText() },
   )
 
-  val ciTaskProvider = tasks.register("ci")
+  val publishToStaging = tasks.register("librarianPublishToStaging")
+  val publishToSnapshots = tasks.register("librarianPublishToSnapshots")
+  val publishIfNeeded = tasks.register("librarianPublishIfNeeded")
 
   allprojects { otherProject ->
     otherProject.afterEvaluate {
-      it.configureSubproject(ciTaskProvider, createRepoTask, releaseRepoTask, root.snapshotsBranch)
+      it.configureSubproject(publishToStaging, publishToSnapshots, createRepoTask)
+    }
+  }
+
+  releaseRepoTask.dependsOn(publishToStaging)
+
+  when {
+    isTag() -> {
+      publishIfNeeded.dependsOn(releaseRepoTask)
+    }
+    pushedRef() == "ref/heads/${properties.gitSnapshots()}" -> {
+      publishIfNeeded.dependsOn(releaseRepoTask)
     }
   }
 }
 
 private fun <T1: Task, T2: Task> Project.configureSubproject(
-    ciTaskProvider: TaskProvider<Task>,
-    createRepoTaskProvider: TaskProvider<T1>,
-    releaseRepoTaskProvider: TaskProvider<T2>,
-    snapshotsBranch: String
+    publishToStaging: TaskProvider<Task>,
+    publishToSnapshots: TaskProvider<T1>,
+    createRepoTaskProvider: TaskProvider<T2>,
 ) {
   tasks.all {
     when {
-      //name == "build" -> ciTaskProvider.dependsOn(it)
       it.name.endsWith("ToSonatypeStagingRepository") -> {
         it.dependsOn(createRepoTaskProvider)
-        if (isTag()) {
-          ciTaskProvider.dependsOn(it)
-        }
+        publishToStaging.dependsOn(it)
       }
-      it.name == "publishAllPublicationsToSonatypeSnapshotsRepository" -> {
-        if (pushedRef() == "ref/heads/${snapshotsBranch}") {
-          ciTaskProvider.dependsOn(it)
-        }
+      it.name.endsWith("ToSonatypeSnapshotsRepository") -> {
+        publishToSnapshots.dependsOn(it)
       }
     }
   }

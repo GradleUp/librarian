@@ -34,28 +34,27 @@ fun Project.configureAndroidCompatibility(
 fun Project.configureKotlinCompatibility(
     version: String
 ) {
-    if (hasKotlin) {
-        val kotlinVersion = KotlinVersion.fromVersion(version.substringBeforeLast("."))
-        kotlinExtension.forEachCompilerOptions {
-            apiVersion.set(kotlinVersion)
-            languageVersion.set(kotlinVersion)
-        }
-
-        kotlinExtension.coreLibrariesVersion = version
+    val kotlin = kotlinExtensionOrNull
+    if (kotlin == null) {
+        return
     }
+    val kotlinVersion = KotlinVersion.fromVersion(version.substringBeforeLast("."))
+    kotlin.forEachCompilerOptions {
+        apiVersion.set(kotlinVersion)
+        languageVersion.set(kotlinVersion)
+    }
+
+    kotlin.coreLibrariesVersion = version
 }
 
 internal fun Project.configureJavaCompatibilityInternal(javaVersion: JavaVersion) {
     tasks.withType(JavaCompile::class.java) {
         it.options.release.set(javaVersion.majorVersion.toInt())
     }
-
     if (hasAndroid) {
         androidJavaVersion(javaVersion)
     }
-    if (hasKotlin) {
-        configureKotlinJvmTarget(javaVersion)
-    }
+    configureKotlinJvmTarget(javaVersion)
 }
 
 

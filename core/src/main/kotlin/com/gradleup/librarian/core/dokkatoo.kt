@@ -9,37 +9,9 @@ import org.gradle.api.Project
 import org.gradle.api.UnknownTaskException
 import org.gradle.api.attributes.Usage
 import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.TaskProvider
+import org.gradle.jvm.tasks.Jar
 import java.io.File
-
-class LibraryModuleKdoc(
-    val aggregator: String,
-    val html: KdocHtml?,
-) {
-  class Builder internal constructor(internal val project: Project) {
-    var aggregator: String? = null
-    var htmlBuilder: KdocHtml.Builder? = null
-
-    fun html(initialize: KdocHtml.Builder.() -> Unit) {
-      if (htmlBuilder == null) {
-        htmlBuilder = KdocHtml.Builder(project)
-      }
-      htmlBuilder?.initialize()
-    }
-
-    fun fromGradleProperties() {
-      aggregator = project.findGradleProperty("librarian.kdoc.aggregator")
-      html { fromGradleProperties() }
-    }
-
-    fun build(): LibraryModuleKdoc {
-      return LibraryModuleKdoc(
-          aggregator ?: error("Librarian: 'aggregator' is required."),
-          htmlBuilder?.build()
-      )
-    }
-  }
-}
-
 
 class KdocAggregate(
     val currentVersion: String,
@@ -58,8 +30,8 @@ class KdocAggregate(
             it.isNotEmpty()
           }
           .map {
-        Coordinates(it)
-      }
+            Coordinates(it)
+          }
     }
 
     fun build(): KdocAggregate {
@@ -70,33 +42,6 @@ class KdocAggregate(
     }
   }
 }
-
-class KdocHtml(
-    val customStyleSheets: List<File>,
-    val customAssets: List<File>,
-) {
-  class Builder internal constructor(internal val project: Project) {
-    var customStyleSheets: List<File>? = null
-    var customAssets: List<File>? = null
-
-    fun fromGradleProperties() {
-      customStyleSheets = project.findGradleProperty("librarian.kdoc.html.customStyleSheets")?.split(",").orEmpty().map {
-        project.rootProject.file(it)
-      }
-      customAssets = project.findGradleProperty("librarian.kdoc.html.customAssets")?.split(",").orEmpty().map {
-        project.rootProject.file(it)
-      }
-    }
-
-    fun build(): KdocHtml {
-      return KdocHtml(
-          customStyleSheets.orEmpty(),
-          customAssets.orEmpty()
-      )
-    }
-  }
-}
-
 
 internal fun Project.configureDokkatooHtml(block: DokkaHtmlPluginParameters.() -> Unit = {}) {
   plugins.apply("dev.adamko.dokkatoo-html")
@@ -138,30 +83,27 @@ fun Coordinates(coordinates: String): Coordinates {
   }
 }
 
-fun Project.configureDokkatooModule(libraryModuleKdoc: LibraryModuleKdoc) {
+internal fun <T> Project.configureDokkatooInternal(block: DokkatooExtension.() -> T): T {
   plugins.apply("dev.adamko.dokkatoo-html")
+  return block(extensions.getByType(DokkatooExtension::class.java))
+}
 
-  configureDokkatooHtml {
-    libraryModuleKdoc.html?.customStyleSheets?.let {
-      customStyleSheets.from(it)
-    }
-    libraryModuleKdoc.html?.customAssets?.let {
-      customAssets.from(it)
-    }
+fun Project.configureDokkatoo() = configureDokkatooInternal {
+  tasks.withType(DokkatooGenerateTask::class.java).configureEach {
+    it.workerIsolation.set(ClassLoaderIsolation())
   }
-  // TODO project isolation
-  val kdocProject = project(":${libraryModuleKdoc.aggregator}")
 
-  kdocProject.configurations.all {
+  // TODO project isolation
+  rootProject.configurations.all {
     if (it.name == "dokkatoo") {
-      it.dependencies.add(kdocProject.dependencies.project(mapOf("path" to ":${this@configureDokkatooModule.path}")))
+      it.dependencies.add(rootProject.dependencies.project(mapOf("path" to ":${this@configureDokkatoo.path}")))
     }
   }
 }
 
-fun Project.configureDokkatooAggregate(currentVersion: String, olderVersions: List<Coordinates>) {
-  plugins.apply("dev.adamko.dokkatoo-html")
-  extensions.getByType(DokkatooExtension::class.java).apply {
+fun Project.configureDokkatooAggregate(currentVersion: String, olderVersions: List<Coordinates>): TaskProvider<Jar> {
+  return configureDokkatooInternal {
+    plugins.apply("dev.adamko.dokkatoo-html")
     dependencies.add(
         "dokkatooPluginHtml",
         versions.jetbrainsDokka.map { dokkaVersion ->
@@ -185,13 +127,13 @@ fun Project.configureDokkatooAggregate(currentVersion: String, olderVersions: Li
         it.dependencies.add(project.dependencies.create("$version:javadoc"))
       }
 
-      tasks.register("extractKdocVersion_$versionString", Copy::class.java) {
+      tasks.register("librarianExtractKdocVersion_$versionString", Copy::class.java) {
         it.from(configuration.elements.map { it.map { zipTree(it) } })
         it.into(layout.buildDirectory.dir("kdoc-versions/${version.version}"))
       }
     }
 
-    val downloadKDocVersions = tasks.register("downloadKDocVersions") {
+    val downloadKDocVersions = tasks.register("librarianDownloadKDocVersions") {
       it.dependsOn(kdocVersionTasks)
       it.outputs.dir(layout.buildDirectory.dir("kdoc-versions/"))
       it.doLast {
@@ -223,7 +165,8 @@ fun Project.configureDokkatooAggregate(currentVersion: String, olderVersions: Li
   }
 }
 
-internal val kdocWithoutOlder = "kdocWithoutOlder"
+
+private val kdocWithoutOlder = "kdocWithoutOlder"
 
 internal fun Project.containsTask(name: String): Boolean {
   return try {

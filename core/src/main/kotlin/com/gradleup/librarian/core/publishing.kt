@@ -1,10 +1,9 @@
 package com.gradleup.librarian.core
 
-import com.gradleup.librarian.core.internal.createAndroidPublication
 import com.gradleup.librarian.core.internal.configurationLibrarianRepositoryId
-import com.gradleup.librarian.core.internal.findEnvironmentVariable
-import com.gradleup.librarian.core.internal.findGradleProperty
-import com.gradleup.librarian.core.internal.hasKotlin
+import com.gradleup.librarian.core.internal.createAndroidPublication
+import com.gradleup.librarian.core.internal.hasAndroid
+import com.gradleup.librarian.core.internal.task.CreateRepoTask
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.UnknownTaskException
@@ -16,73 +15,12 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
+import java.util.Properties
 
-/**
- * Applies the `maven-publish` plugin and executes [block].
- */
-fun Project.configurePublishing(block: PublishingExtension.() -> Unit) {
+
+internal fun Project.configurePublishingInternal(block: PublishingExtension.() -> Unit) {
   plugins.apply("maven-publish")
   block(extensions.getByType(PublishingExtension::class.java))
-}
-
-class Publishing(
-    val createMissingPublications: Boolean,
-    val publishPlatformArtifactsInRootModule: Boolean,
-    val pomMetadata: PomMetadata,
-    val sonatype: Sonatype,
-    val signing: Signing,
-) {
-
-  class Builder internal constructor(internal val project: Project) {
-    var pomMetadataBuilder: PomMetadata.Builder? = null
-    var sonatypeBuilder: Sonatype.Builder = Sonatype.Builder(project)
-    var signingBuilder: Signing.Builder = Signing.Builder(project)
-    var createMissingPublications = true
-    var publishPlatformArtifactsInRootModule = true
-
-    fun pom(initialize: PomMetadata.Builder.() -> Unit) {
-      if (pomMetadataBuilder == null) {
-        pomMetadataBuilder = PomMetadata.Builder(project)
-      }
-      pomMetadataBuilder?.initialize()
-    }
-
-    fun sonatype(initialize: Sonatype.Builder.() -> Unit) {
-      sonatypeBuilder.initialize()
-    }
-
-    fun signing(initialize: Signing.Builder.() -> Unit) {
-      signingBuilder.initialize()
-    }
-
-    fun fromGradlePropertiesAndEnvironmentVariables() {
-      pom { fromGradleProperties() }
-
-      sonatype { fromGradlePropertiesAndEnvironmentVariables() }
-
-      if (project.findGradleProperty("librarian.publishing.signing")?.toBooleanStrictOrNull() != false) {
-        signing { fromEnvironmentVariables() }
-      }
-
-       project.findGradleProperty("librarian.publishing.publishPlatformArtifactsInRootModule")?.toBooleanStrict()?.let {
-         publishPlatformArtifactsInRootModule = it
-       }
-
-      project.findGradleProperty("librarian.publishing.createMissingPublications")?.toBooleanStrict()?.let {
-        createMissingPublications = it
-      }
-    }
-
-    fun build(): Publishing {
-      return Publishing(
-          pomMetadata = pomMetadataBuilder?.build() ?: error("Librarian: 'pom' is required."),
-          sonatype = sonatypeBuilder.build(),
-          signing = signingBuilder.build(),
-          createMissingPublications = createMissingPublications,
-          publishPlatformArtifactsInRootModule = publishPlatformArtifactsInRootModule,
-      )
-    }
-  }
 }
 
 enum class SonatypeHost {
@@ -94,37 +32,24 @@ class Sonatype(
     val username: String?,
     val password: String?,
     val host: SonatypeHost,
-    val stagingProfile: String?,
-) {
-  class Builder internal constructor(internal val project: Project) {
-    var username: String? = null
-    var password: String? = null
-    var host: SonatypeHost? = null
-    /**
-     * The staging profile if you have several. If null, uses the single staging profile associated with the account.
-     *
-     * Get your staging profiles at https://s01.oss.sonatype.org/#stagingRepositories
-     */
-    var stagingProfile: String? = null
+)
 
-    fun fromGradlePropertiesAndEnvironmentVariables() {
-      host = project.findGradleProperty("librarian.sonatype.host")?.let { SonatypeHost.valueOf(it) }
-      username = project.findEnvironmentVariable("LIBRARIAN_SONATYPE_USERNAME")
-      password = project.findEnvironmentVariable("LIBRARIAN_SONATYPE_PASSWORD")
-      stagingProfile = project.findEnvironmentVariable("LIBRARIAN_SONATYPE_STAGING_PROFILE")
-    }
-
-    fun build(): Sonatype {
-      return Sonatype(
-          username = username,
-          password = password,
-          host = host ?: error("Librarian: 'host' is required."),
-          stagingProfile = stagingProfile,
-      )
-    }
-  }
+fun PomMetadata(artifactId: String, properties: Properties): PomMetadata {
+  return PomMetadata(
+          groupId = properties.getRequiredProperty("pom.groupId"),
+          artifactId = artifactId,
+          version = properties.getRequiredProperty("pom.version"),
+          description = properties.getRequiredProperty("pom.description"),
+          vcsUrl = properties.getRequiredProperty("pom.vcsUrl"),
+          developer = properties.getRequiredProperty("pom.developer"),
+          licenseUrl = properties.getRequiredProperty("pom.licenseUrl"),
+          license = properties.getRequiredProperty("pom.license"),
+  )
 }
 
+internal fun Properties.getRequiredProperty(name: String): String {
+  return getProperty(name) ?: error("Librarian: '$name' is required.")
+}
 /**
  * User metadata for .pom or .module metadata associated with the repository.
  * This metadata is the same in all modules
@@ -138,63 +63,25 @@ class PomMetadata(
     val developer: String,
     val license: String,
     val licenseUrl: String,
-) {
-  class Builder internal constructor(internal val project: Project) {
-    var groupId: String? = null
-    var artifactId: String? = null
-    var version: String? = null
-    var description: String? = null
-    var vcsUrl: String? = null
-    var developer: String? = null
-    var license: String? = null
-    var licenseUrl: String? = null
-
-    fun fromGradleProperties() {
-      groupId = project.findGradleProperty("librarian.pom.groupId")
-      artifactId = project.name
-      version = project.findGradleProperty("librarian.pom.version")
-      description = project.findGradleProperty("librarian.pom.description")
-      vcsUrl = project.findGradleProperty("librarian.pom.vcsUrl")
-      developer = project.findGradleProperty("librarian.pom.developer")
-      license = project.findGradleProperty("librarian.pom.license")
-      licenseUrl = project.findGradleProperty("librarian.pom.licenseUrl")
-    }
-
-    fun build(): PomMetadata {
-      return PomMetadata(
-          groupId = groupId ?: error("Librarian: 'groupId' is required."),
-          artifactId = artifactId ?: error("Librarian: 'artifactId' is required."),
-          version = version ?: error("Librarian: 'version' is required."),
-          description = description ?: error("Librarian: 'description' is required."),
-          vcsUrl = vcsUrl ?: error("Librarian: 'vcsUrl' is required."),
-          developer = developer ?: error("Librarian: 'developer' is required."),
-          license = license ?: error("Librarian: 'license' is required."),
-          licenseUrl = licenseUrl ?: error("Librarian: 'licenseUrl' is required."),
-      )
-    }
-  }
-}
+)
 
 fun Project.configurePublishing(
-    publishing: Publishing
+    createMissingPublications: Boolean,
+    publishPlatformArtifactsInRootModule: Boolean,
+    pomMetadata: PomMetadata,
+    sonatype: Sonatype,
+    signing: Signing,
 ) {
-  if (publishing.createMissingPublications) {
-    createMissingPublications(publishing.pomMetadata.vcsUrl)
+  if (createMissingPublications) {
+    createMissingPublications(pomMetadata.vcsUrl)
   }
-  configurePom(publishing.pomMetadata)
-  if (publishing.publishPlatformArtifactsInRootModule) {
-    if (hasKotlin) {
-      publishPlatformArtifactsInRootModule()
-    }
+  configurePom(pomMetadata)
+  if (publishPlatformArtifactsInRootModule) {
+    publishPlatformArtifactsInRootModule()
   }
-  publishing.sonatype.let {
-    configureRepositories(it)
-  }
-  publishing.signing.let {
-    configureSigning(it)
-  }
+  configureRepositories(sonatype)
+  configureSigning(signing)
 }
-
 
 private fun Project.emptyJavadoc(repositoryUrl: String?): TaskProvider<Jar> {
   return tasks.register("librarianEmptyJavadoc", org.gradle.jvm.tasks.Jar::class.java) {
@@ -237,7 +124,7 @@ private fun Project.javaSources(): TaskProvider<Jar> {
  */
 fun Project.createMissingPublications(
     docUrl: String? = null,
-) = configurePublishing {
+) = configurePublishingInternal {
   val emptyJavadoc = emptyJavadoc(docUrl)
 
   when {
@@ -270,7 +157,7 @@ fun Project.createMissingPublications(
       }
     }
 
-    extensions.findByName("android") != null -> {
+    hasAndroid -> {
       createAndroidPublication("release")
 
       publications.withType(MavenPublication::class.java) {
@@ -286,21 +173,13 @@ fun Project.createMissingPublications(
         it.artifact(javaSources())
       }
     }
-
-    tasks.providerByName(kdocWithoutOlder) != null -> {
-      val kdocWithoutOlder = tasks.providerByName(kdocWithoutOlder)
-
-      publications.create("default", MavenPublication::class.java) {
-        it.artifact(kdocWithoutOlder)
-      }
-    }
   }
 }
 
 /**
  * Configures the sonatype repositories
  */
-fun Project.configureRepositories(sonatype: Sonatype) = configurePublishing {
+fun Project.configureRepositories(sonatype: Sonatype) = configurePublishingInternal {
   val configuration = configurations.detachedConfiguration(
       dependencies.project(
           mapOf(
@@ -319,6 +198,15 @@ fun Project.configureRepositories(sonatype: Sonatype) = configurePublishing {
   }
 }
 
+fun Project.configureRepositoriesRoot(sonatype: Sonatype, createRepoTask: TaskProvider<CreateRepoTask>) = configurePublishingInternal {
+  repositories {
+    it.mavenSonatypeSnapshot(sonatype)
+    it.mavenSonatypeStaging(sonatype = sonatype, createRepoTask.map {
+      val repoId = it.output.asFile.get().readText()
+      "${sonatype.host.toBaseUrl()}/service/local/staging/deployByRepositoryId/$repoId/"
+    })
+  }
+}
 /**
  * Configures pom
  *
@@ -326,7 +214,7 @@ fun Project.configureRepositories(sonatype: Sonatype) = configurePublishing {
  */
 fun Project.configurePom(
     pomMetadata: PomMetadata,
-) = configurePublishing {
+) = configurePublishingInternal {
   afterEvaluate {
     publications.configureEach {
       (it as MavenPublication)
@@ -367,7 +255,6 @@ fun Project.configurePom(
     }
   }
 }
-
 
 internal fun SonatypeHost.toBaseUrl(): String {
   return when (this) {

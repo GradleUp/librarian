@@ -1,6 +1,5 @@
 package com.gradleup.librarian.core
 
-import com.gradleup.librarian.core.internal.findEnvironmentVariable
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
@@ -10,7 +9,7 @@ import org.gradle.plugins.signing.SigningExtension
 fun Project.configureSigning(signing: Signing) {
   val publishing = extensions.findByName("publishing") as PublishingExtension?
   require(publishing != null) {
-    "Librarian: You need to configure publishing before configure signing"
+    "Librarian: You need to configure publishing before configuring signing"
   }
   configureSigning(publishing, signing)
 }
@@ -56,29 +55,4 @@ internal fun Project.configureSigning(publishing: PublishingExtension, signing: 
 class Signing(
     val privateKey: String?,
     val privateKeyPassword: String?,
-) {
-  class Builder internal constructor(internal val project: Project) {
-    /**
-     * The armoured private key that starts with -----BEGIN PGP PRIVATE KEY BLOCK-----
-     * Get it with gpg --armour --export-secret-keys KEY_ID
-     */
-    var privateKey: String? = null
-
-    /**
-     * The password for [privateKey]
-     */
-    var privateKeyPassword: String? = null
-
-    fun fromEnvironmentVariables() {
-      privateKey = project.findEnvironmentVariable("LIBRARIAN_SIGNING_PRIVATE_KEY")
-      privateKeyPassword = project.findEnvironmentVariable("LIBRARIAN_SIGNING_PRIVATE_KEY_PASSWORD")
-    }
-
-    fun build(): Signing {
-      return Signing(
-          privateKey = privateKey,
-          privateKeyPassword = privateKeyPassword
-      )
-    }
-  }
-}
+)

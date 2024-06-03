@@ -11,7 +11,11 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 internal fun Project.configureKotlinJvmTarget(javaVersion: JavaVersion) {
-    kotlinExtension.forEachCompilerOptions {
+    val kotlin = kotlinExtensionOrNull
+    if (kotlin == null) {
+        return
+    }
+    kotlin.forEachCompilerOptions {
         when (this) {
             is KotlinJvmCompilerOptions -> {
                 val version = javaVersion.toInt()

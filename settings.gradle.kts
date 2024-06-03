@@ -7,5 +7,4 @@ pluginManagement {
   }
 }
 
-//includeBuild("build-logic")
 include(":core")

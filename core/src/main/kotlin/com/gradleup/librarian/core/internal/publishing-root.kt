@@ -1,6 +1,5 @@
 package com.gradleup.librarian.core.internal
 
-import com.gradleup.librarian.core.Publishing
 import com.gradleup.librarian.core.Sonatype
 import com.gradleup.librarian.core.SonatypeHost
 import com.gradleup.librarian.core.internal.task.CreateRepoTask
@@ -27,9 +26,6 @@ internal fun Project.registerCreateRepoIdTask(
     it.groupId.set(group)
     it.username.set(sonatype.username)
     it.password.set(sonatype.password)
-    if (sonatype.stagingProfile != null) {
-      it.stagingProfile.set(sonatype.stagingProfile)
-    }
   }
 }
 

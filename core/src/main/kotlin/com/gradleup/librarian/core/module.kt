@@ -1,78 +1,113 @@
 package com.gradleup.librarian.core
 
-import com.gradleup.librarian.core.internal.findGradleProperty
+import com.gradleup.librarian.core.internal.findEnvironmentVariable
 import org.gradle.api.Project
+import java.util.Properties
 
-class LibraryModule(
-    val javaCompatibility: Int?,
-    val kotlinCompatibility: String?,
-    val libraryModuleKdoc: LibraryModuleKdoc?,
-    val publishing: Publishing?,
-    val sympathyForMrMaven: Boolean
-) {
-  class Builder internal constructor(internal val project: Project) {
-    var javaCompatibility: Int? = null
-    var kotlinCompatibility: String? = null
-    var libraryModuleKdocBuilder: LibraryModuleKdoc.Builder? = null
-    var publishingBuilder: Publishing.Builder? = null
-    var sympathyForMrMaven: Boolean = true
+internal fun Properties.javaCompatibility(): Int? {
+  return getProperty("java.compatibility")?.toInt()
+}
 
-    fun kdoc(initialize: LibraryModuleKdoc.Builder.() -> Unit) {
-      if (libraryModuleKdocBuilder == null) {
-        libraryModuleKdocBuilder = LibraryModuleKdoc.Builder(project)
+internal fun Properties.kotlinCompatibility(): String? {
+  return getProperty("kotlin.compatibility")
+}
+
+internal fun Properties.versionPackageName(): String? {
+  return getProperty("version.packageName")
+}
+
+internal fun Properties.gitSnapshots(): String {
+  return getProperty("git.snapshots") ?: "main"
+}
+
+internal fun Properties.kdocArtifactId(): String {
+  return getProperty("kdoc.artifactId") ?: "kdoc"
+}
+
+internal fun Properties.olderVersions(): List<Coordinates> {
+  return getProperty("kdoc.olderVersions")?.split(",")
+  .orEmpty()
+      .filter {
+        it.isNotEmpty()
       }
-      libraryModuleKdocBuilder?.initialize()
-    }
-
-    fun publishing(initialize: Publishing.Builder.() -> Unit) {
-      if (publishingBuilder == null) {
-        publishingBuilder = Publishing.Builder(project)
+      .map {
+        Coordinates(it)
       }
-      publishingBuilder?.initialize()
-    }
+}
 
-    fun fromGradlePropertiesAndEnvironmentVariables() {
-      javaCompatibility = project.findGradleProperty("librarian.javaCompatibility")?.toInt()
-      kotlinCompatibility = project.findGradleProperty("librarian.kotlinCompatibility")
-      sympathyForMrMaven = project.findGradleProperty("librarian.sympathyForMrMaven")?.toBooleanStrict() != false
+fun Project.configureMavenFriendlyDependencies() {
+  pluginManager.apply("com.gradleup.maven-sympathy")
+}
 
-      if (project.findGradleProperty("librarian.kdoc")?.toBooleanStrictOrNull() != false) {
-        kdoc { fromGradleProperties() }
-      }
 
-      if (project.findGradleProperty("librarian.publishing")?.toBooleanStrictOrNull() != false) {
-        publishing { fromGradlePropertiesAndEnvironmentVariables() }
-      }
-    }
+internal fun Project.rootProperties(): Properties {
+  val propertiesFile = rootProject.file("librarian.properties")
+  check(propertiesFile.exists()) {
+    "No librarian.properties file found at ${propertiesFile.absolutePath}"
+  }
 
-    fun build(): LibraryModule {
-      return LibraryModule(
-          javaCompatibility = javaCompatibility,
-          kotlinCompatibility = kotlinCompatibility,
-          libraryModuleKdoc = libraryModuleKdocBuilder?.build(),
-          publishing = publishingBuilder?.build(),
-          sympathyForMrMaven = sympathyForMrMaven
-      )
+  return Properties().apply {
+    propertiesFile.inputStream().use {
+      load(it)
     }
   }
 }
 
-fun Project.librarianModule(block: (LibraryModule.Builder.() -> Unit) = { fromGradlePropertiesAndEnvironmentVariables() }) {
-  val libraryModule = LibraryModule.Builder(this).apply(block).build()
+internal fun Project.moduleProperties(): Properties {
+  val propertiesFile = file("librarian.properties")
+  if(!propertiesFile.exists()) {
+    return Properties()
+  }
 
-  libraryModule.javaCompatibility?.let {
+  return Properties().apply {
+    propertiesFile.inputStream().use {
+      load(it)
+    }
+  }
+}
+
+fun Project.librarianModule() {
+  val properties = rootProperties()
+
+  properties.javaCompatibility()?.let {
     configureJavaCompatibility(it)
   }
-  libraryModule.kotlinCompatibility?.let {
+
+  properties.kotlinCompatibility()?.let {
     configureKotlinCompatibility(it)
   }
-  libraryModule.libraryModuleKdoc?.let {
-    configureDokkatooModule(it)
+
+  properties.versionPackageName()?.let {
+    configureGeneratedVersion(it)
   }
 
-  if (libraryModule.sympathyForMrMaven) {
-    pluginManager.apply("com.gradleup.maven-sympathy")
-  }
+  configureDokkatoo()
 
-  libraryModule.publishing?.let(::configurePublishing)
+  configurePublishing(
+      createMissingPublications = true,
+      publishPlatformArtifactsInRootModule = true,
+      pomMetadata = PomMetadata(project.name, properties),
+      sonatype = Sonatype(project, properties),
+      signing = Signing(project, properties)
+  )
 }
+
+internal fun Sonatype(project: Project, properties: Properties): Sonatype {
+  val usernameVariable = properties.getProperty("sonatype.username.environmentVariable") ?: "LIBRARIAN_SONATYPE_USERNAME"
+  val passwordVariable = properties.getProperty("sonatype.password.environmentVariable") ?: "LIBRARIAN_SONATYPE_PASSWORD"
+  return Sonatype(
+      username = project.findEnvironmentVariable(usernameVariable),
+      password = project.findEnvironmentVariable(passwordVariable),
+      host = SonatypeHost.valueOf(properties.getRequiredProperty("sonatype.host"))
+  )
+}
+
+internal fun Signing(project: Project, properties: Properties): Signing {
+  val usernameVariable = properties.getProperty("signing.privateKey.environmentVariable") ?: "LIBRARIAN_SIGNING_PRIVATE_KEY"
+  val passwordVariable = properties.getProperty("signing.privateKeyPassword.environmentVariable") ?: "LIBRARIAN_SIGNING_PRIVATE_KEY_PASSWORD"
+  return Signing(
+      privateKey = project.findEnvironmentVariable(usernameVariable),
+      privateKeyPassword = project.findEnvironmentVariable(passwordVariable)
+  )
+}
+
