@@ -36,7 +36,7 @@ abstract class ReleaseRepoTask: DefaultTask() {
           logger.log(LogLevel.INFO, ".")
         }
       }
-      //nexusStagingClient.releaseRepositories(listOf(repoId.get()), true)
+      nexusStagingClient.releaseRepositories(listOf(repoId.get()), true)
     }
   }
 }
