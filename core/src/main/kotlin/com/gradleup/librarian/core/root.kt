@@ -75,7 +75,7 @@ private fun <T1: Task, T2: Task> Project.configureSubproject(
     publishToSnapshots: TaskProvider<T1>,
     createRepoTaskProvider: TaskProvider<T2>,
 ) {
-  tasks.all {
+  tasks.configureEach {
     when {
       it.name.endsWith("ToSonatypeStagingRepository") -> {
         it.dependsOn(createRepoTaskProvider)
