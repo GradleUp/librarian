@@ -36,7 +36,7 @@ internal fun Project.configureSigning(publishing: PublishingExtension, signing: 
 
   // https://github.com/gradle/gradle/issues/26132
   afterEvaluate {
-    tasks.all {
+    tasks.configureEach {
       if (it.name.startsWith("compileTestKotlin")) {
         val target = it.name.substring("compileTestKotlin".length)
         val sign = try {
