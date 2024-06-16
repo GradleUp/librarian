@@ -1,7 +1,7 @@
 package com.gradleup.librarian.core.internal.task
 
 import com.gradleup.librarian.core.SonatypeHost
-import com.gradleup.librarian.core.internal.nexusStagingClient
+import com.gradleup.librarian.core.nexusStagingClient
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.gradle.api.DefaultTask

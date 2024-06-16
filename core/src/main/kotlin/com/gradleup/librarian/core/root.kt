@@ -1,17 +1,9 @@
 package com.gradleup.librarian.core
 
-import com.gradleup.librarian.core.internal.configurationLibrarianRepositoryId
-import com.gradleup.librarian.core.internal.dependsOn
 import com.gradleup.librarian.core.internal.isTag
 import com.gradleup.librarian.core.internal.pushedRef
-import com.gradleup.librarian.core.internal.registerCreateRepoIdTask
-import com.gradleup.librarian.core.internal.registerReleaseTask
 import org.gradle.api.Project
-import org.gradle.api.Task
-import org.gradle.api.UnknownTaskException
 import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.tasks.TaskContainer
-import org.gradle.api.tasks.TaskProvider
 
 fun Project.librarianRoot() {
   configureBcv()
@@ -34,7 +26,7 @@ fun Project.librarianRoot() {
 
   val createRepoTask = registerCreateRepoIdTask(sonatype, pomMetadata.groupId, pomMetadata.version)
 
-  val configuration = configurations.create(configurationLibrarianRepositoryId) {
+  val configuration = configurations.create(CONFIGURATION_REPO_ID) {
     it.isCanBeConsumed = true
     it.isVisible = false
   }
@@ -49,13 +41,30 @@ fun Project.librarianRoot() {
   )
 
   val publishToStaging = tasks.register("librarianPublishToStaging")
-  val publishToSnapshots = tasks.register("librarianPublishToSnapshots")
+  val publishToSnapshots = tasks.register("librarianPublishToSnapshots") {
+    it.doLast {
+      it.inputs.files.forEach {
+        println("${it.name}: ${it.readText()}")
+      }
+    }
+  }
   val publishIfNeeded = tasks.register("librarianPublishIfNeeded")
 
-  allprojects { otherProject ->
-    otherProject.afterEvaluate {
-      it.configureSubproject(publishToStaging, publishToSnapshots, createRepoTask)
-    }
+
+  val releaseConfiguration = configurations.detachedConfiguration()
+  val snapshotConfiguration = configurations.detachedConfiguration()
+
+  subprojects {
+    releaseConfiguration.dependencies.add(dependencies.project(it.path, CONFIGURATION_RELEASE_DATE))
+    snapshotConfiguration.dependencies.add(dependencies.project(it.path, CONFIGURATION_SNAPSHOT_DATE))
+  }
+
+  publishToStaging.configure {
+    it.inputs.files(releaseConfiguration.incoming.artifactView { it.lenient(true) }.files)
+  }
+  publishToSnapshots.configure {
+    it.inputs.files(snapshotConfiguration)
+    //it.inputs.files(snapshotConfiguration.incoming.artifactView { it.lenient(true) }.files)
   }
 
   releaseRepoTask.dependsOn(publishToStaging)
@@ -67,31 +76,5 @@ fun Project.librarianRoot() {
     pushedRef() == "refs/heads/${properties.gitSnapshots()}" -> {
       publishIfNeeded.dependsOn(releaseRepoTask)
     }
-  }
-}
-
-private fun <T1: Task, T2: Task> Project.configureSubproject(
-    publishToStaging: TaskProvider<Task>,
-    publishToSnapshots: TaskProvider<T1>,
-    createRepoTaskProvider: TaskProvider<T2>,
-) {
-  tasks.configureEach {
-    when {
-      it.name.endsWith("ToSonatypeStagingRepository") -> {
-        it.dependsOn(createRepoTaskProvider)
-        publishToStaging.dependsOn(it)
-      }
-      it.name.endsWith("ToSonatypeSnapshotsRepository") -> {
-        publishToSnapshots.dependsOn(it)
-      }
-    }
-  }
-}
-
-fun TaskContainer.namedOrNull(name: String): TaskProvider<Task>? {
-  return try {
-    named(name)
-  } catch (e: UnknownTaskException) {
-    null
   }
 }
