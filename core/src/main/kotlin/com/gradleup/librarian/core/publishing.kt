@@ -114,8 +114,12 @@ fun Project.configurePublishing(
     }
   }
 
-  val releaseConfiguration = configurations.create(CONFIGURATION_RELEASE_DATE)
-  val snapshotConfiguration = configurations.create(CONFIGURATION_SNAPSHOT_DATE)
+  val releaseConfiguration = configurations.create(CONFIGURATION_RELEASE_DATE) {
+    it.isVisible = false
+  }
+  val snapshotConfiguration = configurations.create(CONFIGURATION_SNAPSHOT_DATE) {
+    it.isVisible = false
+  }
 
   tasks.named("publishAllPublicationsToSonatypeStagingRepository").apply {
     configure { task ->
