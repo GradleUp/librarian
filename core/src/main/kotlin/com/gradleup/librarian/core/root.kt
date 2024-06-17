@@ -42,14 +42,9 @@ fun Project.librarianRoot() {
 
   val publishToStaging = tasks.register("librarianPublishToStaging")
   val publishToSnapshots = tasks.register("librarianPublishToSnapshots") {
-    it.doLast {
-      it.inputs.files.forEach {
-        println("${it.name}: ${it.readText()}")
-      }
-    }
+    it.enabled = pomMetadata.version.endsWith("-SNAPSHOT")
   }
   val publishIfNeeded = tasks.register("librarianPublishIfNeeded")
-
 
   val releaseConfiguration = configurations.detachedConfiguration()
   val snapshotConfiguration = configurations.detachedConfiguration()
@@ -63,8 +58,7 @@ fun Project.librarianRoot() {
     it.inputs.files(releaseConfiguration.incoming.artifactView { it.lenient(true) }.files)
   }
   publishToSnapshots.configure {
-    it.inputs.files(snapshotConfiguration)
-    //it.inputs.files(snapshotConfiguration.incoming.artifactView { it.lenient(true) }.files)
+    it.inputs.files(snapshotConfiguration.incoming.artifactView { it.lenient(true) }.files)
   }
 
   releaseRepoTask.dependsOn(publishToStaging)
