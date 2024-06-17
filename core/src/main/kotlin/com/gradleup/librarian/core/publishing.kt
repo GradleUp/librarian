@@ -103,10 +103,14 @@ fun Project.configurePublishing(
   }
 
   tasks.configureEach {
-    if (it is AbstractPublishToMaven && it.name.endsWith("SonatypeStagingRepository")) {
-      // We need that to avoid error like this:
-      // Querying the mapped value of provider(java.util.Set) before task ':librarianCreateStagingRepo' has completed is not supported
-      it.inputs.files(repoIdConfiguration)
+    if (it is AbstractPublishToMaven) {
+      if (it.name.endsWith("SonatypeStagingRepository")) {
+        // We need that to avoid error like this:
+        // Querying the mapped value of provider(java.util.Set) before task ':librarianCreateStagingRepo' has completed is not supported
+        it.inputs.files(repoIdConfiguration)
+      } else if (it.name.endsWith("SonatypeSnapshotsRepository")) {
+        it.enabled = pomMetadata.version.endsWith("-SNAPSHOT")
+      }
     }
   }
 
