@@ -258,11 +258,15 @@ fun Project.configurePom(
       (it as MavenPublication)
       it.groupId = pomMetadata.groupId
       it.artifactId = if (plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
+        // Multiplatform -> Keep artifactId untouched
         when {
           it.artifactId == project.name -> project.name
           it.artifactId.startsWith("${project.name}-") -> it.artifactId.replace(Regex("^${project.name}"), pomMetadata.artifactId)
           else -> error("Cannot set artifactId for '${it.artifactId}'")
         }
+      } else if (it.artifactId.endsWith("gradle.plugin")) {
+        // Gradle plugin marker -> Keep artifactId untouched
+        it.artifactId
       } else {
         pomMetadata.artifactId
       }
