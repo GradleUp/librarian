@@ -67,18 +67,21 @@ internal fun Project.moduleProperties(): Properties {
 }
 
 fun Project.librarianModule() {
-  val properties = rootProperties()
+  val rootProperties = rootProperties()
+  val moduleProperties = moduleProperties()
 
-  properties.javaCompatibility()?.let {
+  rootProperties.javaCompatibility()?.let {
     configureJavaCompatibility(it)
   }
 
-  properties.kotlinCompatibility()?.let {
+  rootProperties.kotlinCompatibility()?.let {
     configureKotlinCompatibility(it)
   }
 
-  properties.versionPackageName()?.let {
-    configureGeneratedVersion(it)
+  val pomMetadata = PomMetadata(project.name, rootProperties)
+
+  moduleProperties.versionPackageName()?.let {
+    configureGeneratedVersion(it, pomMetadata.version)
   }
 
   configureDokkatoo()
@@ -86,15 +89,16 @@ fun Project.librarianModule() {
   configurePublishing(
       createMissingPublications = true,
       publishPlatformArtifactsInRootModule = true,
-      pomMetadata = PomMetadata(project.name, properties),
-      sonatype = Sonatype(project, properties),
-      signing = Signing(project, properties)
+      pomMetadata = pomMetadata,
+      sonatype = Sonatype(project, rootProperties),
+      signing = Signing(project, rootProperties)
   )
 }
 
 internal fun Sonatype(project: Project, properties: Properties): Sonatype {
   val usernameVariable = properties.getProperty("sonatype.username.environmentVariable") ?: "LIBRARIAN_SONATYPE_USERNAME"
   val passwordVariable = properties.getProperty("sonatype.password.environmentVariable") ?: "LIBRARIAN_SONATYPE_PASSWORD"
+
   return Sonatype(
       username = project.findEnvironmentVariable(usernameVariable),
       password = project.findEnvironmentVariable(passwordVariable),
