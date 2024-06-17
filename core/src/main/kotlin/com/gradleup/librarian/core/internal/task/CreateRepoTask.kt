@@ -29,6 +29,14 @@ abstract class CreateRepoTask: DefaultTask() {
   @get:OutputFile
   abstract val output: RegularFileProperty
 
+  init {
+    /**
+     * We always want to create a fresh repo
+     */
+    outputs.upToDateWhen {
+      false
+    }
+  }
   @TaskAction
   fun taskAction() {
     val repoId = runBlocking {
