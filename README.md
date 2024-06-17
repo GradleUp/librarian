@@ -18,7 +18,7 @@ Add `librarian` to your Gradle buildscript classpath:
 
 ```kotlin
 plugins {
-  
+  id("com.gradleup.librarian").version("0.0.2")
 }
 ```
 
