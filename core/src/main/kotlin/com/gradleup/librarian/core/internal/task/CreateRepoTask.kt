@@ -7,14 +7,17 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
 abstract class CreateRepoTask: DefaultTask() {
   @get:Input
+  @get:Optional
   abstract val username: Property<String>
 
   @get:Input
+  @get:Optional
   abstract val password: Property<String>
 
   @get:Input
@@ -39,6 +42,12 @@ abstract class CreateRepoTask: DefaultTask() {
   }
   @TaskAction
   fun taskAction() {
+    if (!username.isPresent) {
+      error("No sonatype username found, double check your LIBRARIAN_SONATYPE_USERNAME environment variable")
+    }
+    if (!password.isPresent) {
+      error("No sonatype password found, double check your LIBRARIAN_SONATYPE_PASSWORD environment variable")
+    }
     val repoId = runBlocking {
       val nexusStagingClient = nexusStagingClient(sonatypeHost.get(), username.get(), password.get())
       val candidates = nexusStagingClient.getProfiles()
@@ -47,7 +56,7 @@ abstract class CreateRepoTask: DefaultTask() {
         candidates.size > 1 -> {
           val found = candidates.singleOrNull { groupId.get().startsWith(it.name) }
           if (found == null) {
-            error("Cannot choose between staging profiles: ${candidates.map { "${it.name}(${it.id}" }.joinToString(", ")}")
+            error("Cannot choose between staging profiles: ${candidates.map { "${it.name}(${it.id})" }.joinToString(", ")}")
           }
           found.id
         }
