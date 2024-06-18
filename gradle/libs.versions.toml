@@ -1,0 +1,12 @@
+[libraries]
+coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
+vespene = "net.mbonnin.vespene:vespene-lib:0.5"
+maven-sympathy = "com.gradleup.maven-sympathy:maven-sympathy:0.0.2"
+dokkatoo = "dev.adamko.dokkatoo:dokkatoo-plugin:2.3.1"
+bcv = "org.jetbrains.kotlinx:binary-compatibility-validator:0.15.0-Beta.2"
+
+gradle-api = "dev.gradleplugins:gradle-api:8.0"
+agp = "com.android.tools.build:gradle:8.2.0"
+kgp = "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
+clikt = "com.github.ajalt.clikt:clikt:3.5.0"
+

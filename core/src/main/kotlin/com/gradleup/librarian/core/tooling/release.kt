@@ -14,6 +14,10 @@ internal fun checkCwd() {
 fun commitRelease(versionToRelease: String) {
   checkCwd()
 
+  check(versionToRelease.isValidVersion()) {
+    "Version must start with 'major.minor.patch' (found '$versionToRelease')"
+  }
+
   check(getCurrentVersion().endsWith("-SNAPSHOT")) {
     "Version '${getCurrentVersion()} is not a -SNAPSHOT, check your working directory"
   }

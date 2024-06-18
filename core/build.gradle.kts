@@ -1,4 +1,5 @@
 import com.gradleup.librarian.core.librarianModule
+import org.gradle.api.internal.artifacts.dependencies.DefaultFileCollectionDependency
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -8,17 +9,21 @@ plugins {
 librarianModule()
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-    implementation("net.mbonnin.vespene:vespene-lib:0.5")
-    implementation("com.gradleup.maven-sympathy:maven-sympathy:0.0.2")
-    api("dev.adamko.dokkatoo:dokkatoo-plugin:2.3.1")
-    api("org.jetbrains.kotlinx:binary-compatibility-validator:0.15.0-Beta.2")
+    implementation(libs.coroutines)
+    implementation(libs.vespene)
+    implementation(libs.maven.sympathy)
+    api(libs.dokkatoo)
+    api(libs.bcv)
 
-    compileOnly("dev.gradleplugins:gradle-api:8.0")
-    compileOnly("com.android.tools.build:gradle:8.2.0")
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
+    compileOnly(libs.gradle.api)
+    compileOnly(libs.agp)
+    compileOnly(libs.kgp)
 
     testImplementation(kotlin("test"))
+}
+
+configurations.getByName("api").dependencies.removeIf {
+    it is DefaultFileCollectionDependency
 }
 
 gradlePlugin {

@@ -7,4 +7,4 @@ pluginManagement {
   }
 }
 
-include(":core")
+include(":core", ":cli")
