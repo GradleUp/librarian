@@ -19,7 +19,7 @@ fun processChangelog(versionToRelease: String){
   checkCwd()
 
   val file = File(changelogMd)
-  require(!file.exists()) {
+  require(file.exists()) {
     "No $changelogMd file present."
   }
 
