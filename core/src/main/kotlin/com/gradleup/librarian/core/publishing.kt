@@ -371,7 +371,7 @@ internal fun nexusStagingClient(host: SonatypeHost, username: String, password: 
   )
 }
 
-internal fun Project.registerReleaseTask(
+internal fun Project.registerReleaseRepositoryTask(
     sonatype: Sonatype,
     repoId: Provider<String>,
 ): TaskProvider<out Task> {

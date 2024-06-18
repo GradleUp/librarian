@@ -1,7 +1,6 @@
 package com.gradleup.librarian.core
 
-import com.gradleup.librarian.core.internal.isTag
-import com.gradleup.librarian.core.internal.pushedRef
+import com.gradleup.librarian.core.internal.registerCreateGitHubReleaseTask
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
 
@@ -35,16 +34,18 @@ fun Project.librarianRoot() {
   configureRepositoriesRoot(sonatype, createRepoTask)
   configureSigning(signing)
 
-  val releaseRepoTask = registerReleaseTask(
+  val releaseRepoTask = registerReleaseRepositoryTask(
       sonatype = sonatype,
       repoId = createRepoTask.map { it.output.get().asFile.readText() },
   )
+  registerCreateGitHubReleaseTask {
+    it.dependsOn(releaseRepoTask)
+  }
 
   val publishToStaging = tasks.register("librarianPublishToStaging")
   val publishToSnapshots = tasks.register("librarianPublishToSnapshots") {
     it.enabled = pomMetadata.version.endsWith("-SNAPSHOT")
   }
-  val publishIfNeeded = tasks.register("librarianPublishIfNeeded")
 
   val releaseConfiguration = configurations.detachedConfiguration()
   val snapshotConfiguration = configurations.detachedConfiguration()
@@ -62,13 +63,4 @@ fun Project.librarianRoot() {
   }
 
   releaseRepoTask.dependsOn(publishToStaging)
-
-  when {
-    isTag() -> {
-      publishIfNeeded.dependsOn(releaseRepoTask)
-    }
-    pushedRef() == "refs/heads/${properties.gitSnapshots()}" -> {
-      publishIfNeeded.dependsOn(releaseRepoTask)
-    }
-  }
 }

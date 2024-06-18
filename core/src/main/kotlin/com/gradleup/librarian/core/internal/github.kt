@@ -1,5 +1,9 @@
 package com.gradleup.librarian.core.internal
 
+import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.tasks.Exec
+
 
 internal fun isTag(): Boolean {
   val ref = System.getenv("GITHUB_REF")
@@ -20,4 +24,23 @@ internal fun pushedRef(): String? {
   }
 
   return ref
+}
+
+fun Project.registerCreateGitHubReleaseTask(block: (Task) ->Unit) {
+  tasks.register("librarianCreateGitHubRelease", Exec::class.java) {
+    it.commandLine("gh", "release", "create", getTagName(), "--verify-tag", "--notes-from-tag")
+    block(it)
+  }
+}
+
+fun getTagName(): String {
+  val ref = System.getenv("GITHUB_REF")
+  require (ref != null) {
+    "Cannot find GITHUB_REF envitonment variable, are you running from GitHub actions?"
+  }
+  require(ref.startsWith("refs/tags/")) {
+    "Not on a tag? (GITHUB_REF='$ref')"
+  }
+
+  return ref.substring("refs/tags/".length)
 }
