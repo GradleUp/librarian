@@ -1,6 +1,5 @@
 package com.gradleup.librarian.core
 
-import com.gradleup.librarian.core.internal.registerCreateGitHubReleaseTask
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
 
@@ -38,9 +37,6 @@ fun Project.librarianRoot() {
       sonatype = sonatype,
       repoId = createRepoTask.map { it.output.get().asFile.readText() },
   )
-  registerCreateGitHubReleaseTask {
-    it.dependsOn(releaseRepoTask)
-  }
 
   val publishToStaging = tasks.register("librarianPublishToStaging")
   val publishToSnapshots = tasks.register("librarianPublishToSnapshots") {
