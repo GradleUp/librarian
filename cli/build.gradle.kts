@@ -22,6 +22,7 @@ val startScriptTaskProvider =
   }
 
 distributions.named("main").configure {
+  distributionBaseName = "librarian"
   contents {
     from(configurations["runtimeClasspath"]) {
       into("lib")

@@ -383,7 +383,6 @@ internal fun Project.registerReleaseRepositoryTask(
   }
 }
 
-
 fun <T : Task> TaskProvider<T>.dependsOn(other: Any) {
   configure {
     it.dependsOn(other)
