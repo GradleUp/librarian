@@ -3,6 +3,13 @@ pluginManagement {
     it.apply {
       mavenCentral()
       google()
+
+      exclusiveContent {
+        forRepository { maven("https://jitpack.io") }
+        filter {
+          includeGroup("com.github.kotlin-inquirer")
+        }
+      }
     }
   }
 }

@@ -1,0 +1,11 @@
+<component name="ProjectCodeStyleConfiguration">
+  <code_scheme name="Project" version="173">
+    <option name="OTHER_INDENT_OPTIONS">
+      <value>
+        <option name="INDENT_SIZE" value="__INDENT__" />
+        <option name="TAB_SIZE" value="__INDENT__" />
+      </value>
+    </option>
+    <option name="RIGHT_MARGIN" value="140" />
+  </code_scheme>
+</component>

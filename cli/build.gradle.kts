@@ -1,6 +1,7 @@
 import com.gradleup.librarian.core.librarianModule
 
 plugins {
+  id("java")
   id("org.jetbrains.kotlin.jvm")
   id("distribution")
 }
@@ -10,6 +11,10 @@ librarianModule()
 dependencies {
   implementation(project(":core"))
   implementation(libs.clikt)
+  implementation(libs.inquirer)
+  implementation(libs.jsonpath)
+  implementation(libs.okhttp)
+  implementation(libs.serialization.json)
   testImplementation(kotlin("test"))
 }
 
