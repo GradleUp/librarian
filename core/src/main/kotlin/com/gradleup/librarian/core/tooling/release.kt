@@ -30,7 +30,7 @@ fun commitRelease(versionToRelease: String) {
     "You must be on the main branch or a release branch to make a release"
   }
 
-  processChangelog(versionToRelease)
+  val markdown = processChangelog(versionToRelease)
 
   // 'De-snapshot' the version, open a PR, and merge it
   val releaseBranchName = "prepare-release-$versionToRelease"
@@ -44,12 +44,11 @@ fun commitRelease(versionToRelease: String) {
   mergeAndWait(releaseBranchName)
   println("Release PR merged.")
 
-  val changelog = extractChangelog(versionToRelease)
   // Tag the release, and push the tag
   runCommand("git", "checkout", startBranch)
   runCommand("git", "pull", "origin", startBranch)
   val tagName = "v$versionToRelease"
-  runCommand("git", "tag", tagName, "-m", changelog)
+  runCommand("git", "tag", tagName, "-m", markdown)
 
   runCommand("git", "push", "origin", tagName)
   println("Tag pushed.")

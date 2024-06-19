@@ -13,9 +13,9 @@ internal val nextVersion = "Next version (unreleased)"
  * - add the date
  * - add a new 'Next version (unreleased)'
  *
- * @return the version
+ * @return the changelog for the version to release
  */
-fun processChangelog(versionToRelease: String){
+fun processChangelog(versionToRelease: String): String {
   checkCwd()
 
   val file = File(changelogMd)
@@ -23,70 +23,28 @@ fun processChangelog(versionToRelease: String){
     "No $changelogMd file present."
   }
 
-  val processedChangelog = file.useLines {
+  val changelog = file.useLines {
     processChangelog(it, versionToRelease)
   }
 
-  file.writeText(processedChangelog)
-}
+  file.writeText(changelog.processedChangelog)
 
-fun extractChangelog(version: String): String {
-  checkCwd()
-
-  val file = File(changelogMd)
-  require(file.exists()) {
-    "No $changelogMd file present."
-  }
-
-  return file.useLines {
-    extractChangelog(it, version)
-  }
-}
-
-/**
- * return the markdown for version 'version'
- */
-internal fun extractChangelog(lines: Sequence<String>, version: String): String {
-  val markdown = StringBuilder()
-  var state: ParsingState = ParsingState.INTRO
-  lines.forEach { line ->
-    when (state) {
-      ParsingState.INTRO -> {
-        if (line.startsWith("# ")) {
-          val regex = Regex("# Version ([^ ]*) *")
-          val matchResult = regex.matchEntire(line)
-          if (matchResult == null) {
-            // ignore unknown H1 sections
-            return@forEach
-          }
-          if (matchResult.groupValues.get(1) == version) {
-            state = ParsingState.CONTENT
-          }
-        }
-      }
-
-      ParsingState.CONTENT -> {
-        markdown.appendLine(line)
-        if (line.startsWith("# Version")) {
-          return markdown.toString()
-        }
-      }
-    }
-  }
-
-  require (state != ParsingState.INTRO) {
-    "Version '$version' not found"
-  }
-  return markdown.toString()
+  return changelog.versionToReleaseChangelog
 }
 
 private enum class ParsingState {
   INTRO,
+  ENTRY,
   CONTENT,
 }
 
-internal fun processChangelog(lines: Sequence<String>, versionToRelease: String): String {
+internal class Changelog(
+    val versionToReleaseChangelog: String,
+    val processedChangelog: String,
+)
+internal fun processChangelog(lines: Sequence<String>, versionToRelease: String): Changelog {
   val processedChangelog = StringBuilder()
+  val nextVersionMarkdown = StringBuilder()
 
   var state: ParsingState = ParsingState.INTRO
 
@@ -106,9 +64,17 @@ internal fun processChangelog(lines: Sequence<String>, versionToRelease: String)
             processedChangelog.appendLine("# Version $versionToRelease")
             processedChangelog.appendLine("_${currentDate()}_")
 
-            state = ParsingState.CONTENT
+            state = ParsingState.ENTRY
           } else {
             processedChangelog.appendLine(line)
+          }
+        }
+        ParsingState.ENTRY -> {
+          processedChangelog.appendLine(line)
+          if (line.startsWith("# ")) {
+            state = ParsingState.CONTENT
+          } else {
+            nextVersionMarkdown.appendLine(line)
           }
         }
 
@@ -123,7 +89,10 @@ internal fun processChangelog(lines: Sequence<String>, versionToRelease: String)
     error("$changelogMd must contain the next unreleased version:\n'# Version ${'$'}version (unreleased)'")
   }
 
-  return processedChangelog.toString()
+  return Changelog(
+      versionToReleaseChangelog = nextVersionMarkdown.toString(),
+      processedChangelog = processedChangelog.toString()
+  )
 }
 
 private fun currentDate(): String {

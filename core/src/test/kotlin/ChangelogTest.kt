@@ -1,5 +1,4 @@
 import com.gradleup.librarian.core.tooling.changelogMd
-import com.gradleup.librarian.core.tooling.extractChangelog
 import com.gradleup.librarian.core.tooling.nextVersion
 import com.gradleup.librarian.core.tooling.processChangelog
 import kotlin.test.Test
@@ -38,8 +37,15 @@ class ChangelogTest {
 
       Initial release
       
-      """.trimIndent(), it.replaceDate()
+      """.trimIndent(), it.processedChangelog.replaceDate()
       )
+
+      assertEquals("""
+      
+      Bugfix
+      
+      
+      """.trimIndent(), it.versionToReleaseChangelog)
     }
   }
 
@@ -56,30 +62,6 @@ class ChangelogTest {
     }
 
     assertTrue(result.exceptionOrNull()?.message?.contains("The first H1 heading of $changelogMd must be '# $nextVersion'") == true)
-  }
-
-  @Test
-  fun extract() {
-    extractChangelog("""
-      Changelog
-      
-      # Version 0.0.2
-      
-      Bugfixes
-      
-      # Version 0.0.1
-      
-      Initial release
-    """.trimIndent().lineSequence(), "0.0.1"
-    ).let {
-      assertEquals("""
-        
-        Initial release
-        
-      """.trimIndent(),
-          it
-      )
-    }
   }
 }
 
