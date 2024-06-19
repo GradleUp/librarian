@@ -1,0 +1,11 @@
+name: 'Tag version'
+description: 'Sets the version to "versionToRelease", creates a tag and bump to the next patch SNAPSHOT'
+inputs:
+  versionToRelease:
+    description: 'The version to release'
+    required: true
+
+runs:
+  using: 'node20'
+  main: 'index.js'
+
