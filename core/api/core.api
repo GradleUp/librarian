@@ -1,0 +1,172 @@
+public final class com/gradleup/librarian/core/BcvKt {
+	public static final fun configureBcv (Lorg/gradle/api/Project;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun configureBcv$default (Lorg/gradle/api/Project;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public final class com/gradleup/librarian/core/CompatibilityKt {
+	public static final fun configureAndroidCompatibility (Lorg/gradle/api/Project;III)V
+	public static final fun configureJavaCompatibility (Lorg/gradle/api/Project;I)V
+	public static final fun configureJavaCompatibility (Lorg/gradle/api/Project;Lorg/gradle/api/JavaVersion;)V
+	public static final fun configureKotlinCompatibility (Lorg/gradle/api/Project;Ljava/lang/String;)V
+}
+
+public final class com/gradleup/librarian/core/Compatibility_kotlinKt {
+	public static final fun forEachCompilerOptions (Lorg/jetbrains/kotlin/gradle/dsl/KotlinProjectExtension;Lkotlin/jvm/functions/Function2;)V
+}
+
+public final class com/gradleup/librarian/core/Coordinates {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getArtifactId ()Ljava/lang/String;
+	public final fun getGroupId ()Ljava/lang/String;
+	public final fun getVersion ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/core/DokkatooKt {
+	public static final fun Coordinates (Ljava/lang/String;)Lcom/gradleup/librarian/core/Coordinates;
+	public static final fun configureDokkatoo (Lorg/gradle/api/Project;)V
+	public static final fun configureDokkatooAggregate (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/util/List;)Lorg/gradle/api/tasks/TaskProvider;
+}
+
+public abstract class com/gradleup/librarian/core/GeneratePluginVersion : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getVersion ()Lorg/gradle/api/provider/Property;
+	public final fun taskAction ()V
+}
+
+public final class com/gradleup/librarian/core/GeneratedVersionKt {
+	public static final fun configureGeneratedVersion (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public final class com/gradleup/librarian/core/KdocAggregate {
+	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public final fun getCurrentVersion ()Ljava/lang/String;
+	public final fun getOlderVersions ()Ljava/util/List;
+}
+
+public final class com/gradleup/librarian/core/KdocAggregate$Builder {
+	public final fun build ()Lcom/gradleup/librarian/core/KdocAggregate;
+	public final fun fromGradleProperties ()V
+	public final fun getCurrentVersion ()Ljava/lang/String;
+	public final fun getOlderVersions ()Ljava/util/List;
+	public final fun setCurrentVersion (Ljava/lang/String;)V
+	public final fun setOlderVersions (Ljava/util/List;)V
+}
+
+public final class com/gradleup/librarian/core/LibrarianPlugin : org/gradle/api/Plugin {
+	public fun <init> ()V
+	public synthetic fun apply (Ljava/lang/Object;)V
+	public fun apply (Lorg/gradle/api/Project;)V
+}
+
+public final class com/gradleup/librarian/core/MavenKt {
+	public static final fun publishPlatformArtifactsInRootModule (Lorg/gradle/api/Project;)V
+}
+
+public final class com/gradleup/librarian/core/ModuleKt {
+	public static final fun configureMavenFriendlyDependencies (Lorg/gradle/api/Project;)V
+	public static final fun librarianModule (Lorg/gradle/api/Project;)V
+}
+
+public final class com/gradleup/librarian/core/PomMetadata {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getArtifactId ()Ljava/lang/String;
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getDeveloper ()Ljava/lang/String;
+	public final fun getGroupId ()Ljava/lang/String;
+	public final fun getLicense ()Ljava/lang/String;
+	public final fun getLicenseUrl ()Ljava/lang/String;
+	public final fun getVcsUrl ()Ljava/lang/String;
+	public final fun getVersion ()Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/core/Project_kotlinKt {
+	public static final fun forEachKotlinCompilerOptions (Lorg/gradle/api/Project;Lkotlin/jvm/functions/Function2;)V
+	public static final fun getKotlinExtension (Lorg/gradle/api/Project;)Lorg/jetbrains/kotlin/gradle/dsl/KotlinProjectExtension;
+}
+
+public final class com/gradleup/librarian/core/PublishingKt {
+	public static final fun PomMetadata (Ljava/lang/String;Ljava/util/Properties;)Lcom/gradleup/librarian/core/PomMetadata;
+	public static final fun configurePom (Lorg/gradle/api/Project;Lcom/gradleup/librarian/core/PomMetadata;)V
+	public static final fun configurePublishing (Lorg/gradle/api/Project;ZZLcom/gradleup/librarian/core/PomMetadata;Lcom/gradleup/librarian/core/Sonatype;Lcom/gradleup/librarian/core/Signing;)V
+	public static final fun configureRepositoriesRoot (Lorg/gradle/api/Project;Lcom/gradleup/librarian/core/Sonatype;Lorg/gradle/api/tasks/TaskProvider;)V
+	public static final fun createMissingPublications (Lorg/gradle/api/Project;Ljava/lang/String;)V
+	public static synthetic fun createMissingPublications$default (Lorg/gradle/api/Project;Ljava/lang/String;ILjava/lang/Object;)V
+	public static final fun dependsOn (Lorg/gradle/api/tasks/TaskProvider;Ljava/lang/Object;)V
+}
+
+public final class com/gradleup/librarian/core/RootKt {
+	public static final fun librarianRoot (Lorg/gradle/api/Project;)V
+}
+
+public final class com/gradleup/librarian/core/Signing {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getPrivateKey ()Ljava/lang/String;
+	public final fun getPrivateKeyPassword ()Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/core/SigningKt {
+	public static final fun configureSigning (Lorg/gradle/api/Project;Lcom/gradleup/librarian/core/Signing;)V
+}
+
+public final class com/gradleup/librarian/core/Sonatype {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/SonatypeHost;)V
+	public final fun getHost ()Lcom/gradleup/librarian/core/SonatypeHost;
+	public final fun getPassword ()Ljava/lang/String;
+	public final fun getUsername ()Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/core/SonatypeHost : java/lang/Enum {
+	public static final field Default Lcom/gradleup/librarian/core/SonatypeHost;
+	public static final field S01 Lcom/gradleup/librarian/core/SonatypeHost;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/gradleup/librarian/core/SonatypeHost;
+	public static fun values ()[Lcom/gradleup/librarian/core/SonatypeHost;
+}
+
+public final class com/gradleup/librarian/core/internal/Project_androidKt {
+	public static final fun getAndroidExtension (Lorg/gradle/api/Project;)Lcom/android/build/api/dsl/CommonExtension;
+	public static final fun getAndroidExtensionOrNull (Lorg/gradle/api/Project;)Lcom/android/build/api/dsl/CommonExtension;
+}
+
+public final class com/gradleup/librarian/core/internal/Publishing_androidKt {
+	public static final fun createAndroidPublication (Lorg/gradle/api/Project;Ljava/lang/String;)V
+}
+
+public abstract class com/gradleup/librarian/core/internal/task/CreateRepoTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public abstract fun getGroupId ()Lorg/gradle/api/provider/Property;
+	public abstract fun getOutput ()Lorg/gradle/api/file/RegularFileProperty;
+	public abstract fun getPassword ()Lorg/gradle/api/provider/Property;
+	public abstract fun getRepoDescription ()Lorg/gradle/api/provider/Property;
+	public abstract fun getSonatypeHost ()Lorg/gradle/api/provider/Property;
+	public abstract fun getUsername ()Lorg/gradle/api/provider/Property;
+	public final fun taskAction ()V
+}
+
+public abstract class com/gradleup/librarian/core/internal/task/ReleaseRepoTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public abstract fun getHost ()Lorg/gradle/api/provider/Property;
+	public abstract fun getPassword ()Lorg/gradle/api/provider/Property;
+	public abstract fun getRepoId ()Lorg/gradle/api/provider/Property;
+	public abstract fun getUsername ()Lorg/gradle/api/provider/Property;
+	public final fun taskAction ()V
+}
+
+public final class com/gradleup/librarian/core/tooling/ChangelogKt {
+	public static final fun extractChangelog (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun processChangelog (Ljava/lang/String;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/ReleaseKt {
+	public static final fun commitRelease (Ljava/lang/String;)V
+	public static final fun getCurrentVersion ()Ljava/lang/String;
+	public static final fun mergeAndWait (Ljava/lang/String;)V
+	public static final fun runCommand ([Ljava/lang/String;)Ljava/lang/String;
+	public static final fun runCommandVoid ([Ljava/lang/String;)V
+	public static final fun setCurrentVersion (Ljava/lang/String;)V
+	public static final fun setVersionInDocs (Ljava/lang/String;)V
+}
+
