@@ -35,7 +35,7 @@ fun commitRelease(versionToRelease: String) {
   }
 
   // 'De-snapshot' the version, open a PR, and merge it
-  val releaseBranchName = "release-$versionToRelease"
+  val releaseBranchName = "$versionToRelease-release"
   runCommand("git", "checkout", "-b", releaseBranchName)
   setCurrentVersion(versionToRelease)
   setVersionInDocs(versionToRelease)
@@ -57,7 +57,7 @@ fun commitRelease(versionToRelease: String) {
   println("Tag pushed.")
 
   // Bump the version to the next snapshot
-  val bumpVersionBranchName = "release-$versionToRelease-bump-snapshot"
+  val bumpVersionBranchName = "$versionToRelease-bump-snapshot"
   runCommand("git", "checkout", "-b", bumpVersionBranchName)
 
   val nextSnapshot = getNextSnapshot(versionToRelease)
