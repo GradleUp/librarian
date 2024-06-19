@@ -1,4 +1,4 @@
-name: 'Tag version'
+name: 'Prepare release'
 description: 'Sets the version to "versionToRelease", creates a tag and bump to the next patch SNAPSHOT'
 inputs:
   versionToRelease:

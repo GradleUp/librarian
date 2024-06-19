@@ -24,7 +24,7 @@ const exec = (cmd, args=[]) => new Promise((resolve, reject) => {
 });
 
 const main = async () => {
-    await exec('kotlin', [path.join(__dirname, './tag-version.main.kts')]);
+    await exec('kotlin', [path.join(__dirname, './prepare-release.main.kts')]);
 };
 
 main().catch(err => {
