@@ -41,7 +41,7 @@ fun commitRelease(versionToRelease: String) {
   runCommand("git", "push", "origin", releaseBranchName)
   runCommand("gh", "pr", "create", "--base", startBranch, "--fill")
 
-  mergeAndWait(releaseBranchName)
+  runCommandVoid(releaseBranchName)
   println("Release PR merged.")
 
   val changelog = extractChangelog(versionToRelease)
@@ -74,6 +74,15 @@ fun commitRelease(versionToRelease: String) {
   println("Everything is done.")
 }
 
+fun runCommandVoid(vararg args: String) {
+  val ret = ProcessBuilder(*args)
+      .inheritIO()
+      .start()
+      .waitFor()
+  check(ret == 0) {
+    "Ouille $ret"
+  }
+}
 fun runCommand(vararg args: String): String {
   val builder = ProcessBuilder(*args)
       .redirectError(ProcessBuilder.Redirect.INHERIT)
