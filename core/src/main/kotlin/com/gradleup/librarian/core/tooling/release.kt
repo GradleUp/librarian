@@ -10,7 +10,7 @@ internal fun checkCwd() {
   }
 }
 
-fun commitRelease(versionToRelease: String) {
+fun prepareRelease(versionToRelease: String) {
   checkCwd()
 
   check(versionToRelease.isValidVersion()) {

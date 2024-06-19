@@ -64,11 +64,13 @@ class InitCommand : CliktCommand() {
     copyResource("gitignore", ".gitignore")
     copyResource("CHANGELOG.md")
 
-    File(".idea/codeStyles").let {
-      it.mkdirs()
-      copyResource("codeStyleConfig.xml", it.resolve("codeStyleConfig.xml").path)
-      it.resolve("Project.xml").writeText(resourceText("Project.xml").replace("__INDENT__", indentSize))
-    }
+    copyResource("codeStyles/codeStyleConfig.xml", ".idea/codeStyles/codeStyleConfig.xml")
+    copyResource("codeStyles/Project.xml", ".idea/codeStyles/Project.xml")
+
+    copyResource("actions/check-pull-request.yaml", ".github/workflows/check-pull-request.yaml")
+    copyResource("actions/prepare-release.yaml", ".github/workflows/prepare-release.yaml")
+    copyResource("actions/publish-release.yaml", ".github/workflows/publish-release.yaml")
+    copyResource("actions/publish-snapshot.yaml", ".github/workflows/publish-snapshot.yaml")
 
     File("gradle").mkdirs()
     File("gradle/gradle-wrapper.properties").writeText("""

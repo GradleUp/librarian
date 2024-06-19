@@ -5,7 +5,7 @@ import com.github.ajalt.clikt.core.subcommands
 
 class MainCommand: CliktCommand() {
   init {
-    subcommands(ReleaseCommand(), InitCommand())
+    subcommands(PrepareReleaseCommand(), InitCommand(), ReleaseCommand())
   }
   override fun run() {
 
