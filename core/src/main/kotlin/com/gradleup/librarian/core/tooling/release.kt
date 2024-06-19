@@ -33,7 +33,7 @@ fun commitRelease(versionToRelease: String) {
   processChangelog(versionToRelease)
 
   // 'De-snapshot' the version, open a PR, and merge it
-  val releaseBranchName = "$versionToRelease-release"
+  val releaseBranchName = "prepare-release-$versionToRelease"
   runCommand("git", "checkout", "-b", releaseBranchName)
   setCurrentVersion(versionToRelease)
   setVersionInDocs(versionToRelease)
@@ -55,7 +55,7 @@ fun commitRelease(versionToRelease: String) {
   println("Tag pushed.")
 
   // Bump the version to the next snapshot
-  val bumpVersionBranchName = "$versionToRelease-bump-snapshot"
+  val bumpVersionBranchName = "bump-snapshot-$versionToRelease"
   runCommand("git", "checkout", "-b", bumpVersionBranchName)
 
   val nextSnapshot = getNextSnapshot(versionToRelease)
@@ -74,6 +74,15 @@ fun commitRelease(versionToRelease: String) {
   println("Everything is done.")
 }
 
+fun runCommandVoid(vararg args: String) {
+  val ret = ProcessBuilder(*args)
+      .inheritIO()
+      .start()
+      .waitFor()
+  check(ret == 0) {
+    "Ouille $ret"
+  }
+}
 fun runCommand(vararg args: String): String {
   val builder = ProcessBuilder(*args)
       .redirectError(ProcessBuilder.Redirect.INHERIT)
@@ -134,7 +143,7 @@ fun setVersionInDocs(version: String) {
 }
 
 fun mergeAndWait(branchName: String) {
-  runCommand("gh", "pr", "merge", branchName, "--squash", "--auto", "--delete-branch")
+  runCommandVoid("gh", "pr", "merge", branchName, "--squash", "--auto", "--delete-branch")
   println("Waiting for the PR to be merged...")
   while (true) {
     val state = runCommand("gh", "pr", "view", branchName, "--json", "state", "--jq", ".state")
