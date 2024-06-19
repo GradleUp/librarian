@@ -1,7 +1,6 @@
 package com.gradleup.librarian.core.tooling
 
 import java.io.File
-import kotlin.system.exitProcess
 
 internal fun checkCwd() {
   File(".git").apply {
@@ -22,17 +21,16 @@ fun commitRelease(versionToRelease: String) {
     "Version '${getCurrentVersion()} is not a -SNAPSHOT, check your working directory"
   }
 
-  if (runCommand("git", "status", "--porcelain").isNotEmpty()) {
-    println("Your git repo is not clean. Make sure to stash or commit your changes before making a release")
-    exitProcess(1)
+  check (runCommand("git", "status", "--porcelain").isEmpty()) {
+    "Your git repo is not clean. Make sure to stash or commit your changes before making a release"
   }
-
-  processChangelog(versionToRelease)
 
   val startBranch = runCommand("git", "symbolic-ref", "--short", "HEAD")
   check(startBranch == "main" || startBranch.startsWith("release-")) {
     "You must be on the main branch or a release branch to make a release"
   }
+
+  processChangelog(versionToRelease)
 
   // 'De-snapshot' the version, open a PR, and merge it
   val releaseBranchName = "$versionToRelease-release"
