@@ -1,0 +1,15 @@
+public final class com/gradleup/librarian/cli/MainCommand : com/github/ajalt/clikt/core/CliktCommand {
+	public fun <init> ()V
+	public fun run ()V
+}
+
+public final class com/gradleup/librarian/cli/MainKt {
+	public static final fun main ([Ljava/lang/String;)V
+}
+
+public final class com/gradleup/librarian/cli/ReleaseCommand : com/github/ajalt/clikt/core/CliktCommand {
+	public fun <init> ()V
+	public final fun getVersion ()Ljava/lang/String;
+	public fun run ()V
+}
+
