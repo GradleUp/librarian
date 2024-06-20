@@ -59,8 +59,6 @@ internal fun processChangelog(lines: Sequence<String>, versionToRelease: String)
 
             processedChangelog.appendLine("# $nextVersion")
             processedChangelog.appendLine()
-            processedChangelog.appendLine("PUT_CHANGELOG_HERE")
-            processedChangelog.appendLine()
             processedChangelog.appendLine("# Version $versionToRelease")
             processedChangelog.appendLine("_${currentDate()}_")
 

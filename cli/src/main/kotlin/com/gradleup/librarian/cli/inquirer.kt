@@ -60,7 +60,7 @@ class MultilineSecretComponent(private val message: String) : Component<String> 
         if (consecutiveNewLines == 3) {
           interacting = false
         } else {
-          //value = value.orEmpty() + "\n"
+          value = value.orEmpty() + "\n"
         }
       }
       is KeyPressBackspace -> {
