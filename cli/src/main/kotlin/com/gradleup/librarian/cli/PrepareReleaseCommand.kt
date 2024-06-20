@@ -6,7 +6,7 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.gradleup.librarian.core.tooling.prepareRelease
 
-class PrepareReleaseCommand: CliktCommand(hidden = true) {
+internal class PrepareReleaseCommand: CliktCommand(hidden = true) {
   val versionToRelease by option().required().help("The version to release")
 
   override fun run() {

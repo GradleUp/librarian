@@ -3,7 +3,6 @@ package com.gradleup.librarian.core
 import com.gradleup.librarian.core.internal.createAndroidPublication
 import com.gradleup.librarian.core.internal.hasAndroid
 import com.gradleup.librarian.core.internal.task.CreateRepoTask
-import com.gradleup.librarian.core.internal.task.ReleaseRepoTask
 import net.mbonnin.vespene.lib.NexusStagingClient
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -369,18 +368,6 @@ internal fun nexusStagingClient(host: SonatypeHost, username: String, password: 
       username = username,
       password = password
   )
-}
-
-internal fun Project.registerReleaseRepositoryTask(
-    sonatype: Sonatype,
-    repoId: Provider<String>,
-): TaskProvider<out Task> {
-  return tasks.register("librarianReleaseStagingRepo", ReleaseRepoTask::class.java) {
-    it.host.set(sonatype.host)
-    it.username.set(sonatype.username)
-    it.password.set(sonatype.password)
-    it.repoId.set(repoId)
-  }
 }
 
 fun <T : Task> TaskProvider<T>.dependsOn(other: Any) {

@@ -1,14 +1,10 @@
 package com.gradleup.librarian.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.parameters.options.help
-import com.github.ajalt.clikt.parameters.options.option
-import com.github.ajalt.clikt.parameters.options.required
+import com.github.ajalt.clikt.parameters.arguments.argument
 
-class ReleaseCommand: CliktCommand(){
-  val versionToRelease by option()
-      .required()
-      .help("The version to release")
+internal class ReleaseCommand: CliktCommand(){
+  private val versionToRelease by argument()
 
   override fun run() {
     val args = arrayOf("gh", "workflow", "run", "prepare-release.yaml", "-f", "versionToRelease=$versionToRelease")

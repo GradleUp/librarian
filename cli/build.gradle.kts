@@ -13,6 +13,7 @@ dependencies {
   implementation(libs.clikt)
   implementation(libs.inquirer)
   implementation(libs.jsonpath)
+  implementation(libs.jansi)
   implementation(libs.okhttp)
   implementation(libs.serialization.json)
   testImplementation(kotlin("test"))

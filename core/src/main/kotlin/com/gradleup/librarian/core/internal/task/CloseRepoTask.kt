@@ -3,12 +3,15 @@ package com.gradleup.librarian.core.internal.task
 import com.gradleup.librarian.core.SonatypeHost
 import com.gradleup.librarian.core.nexusStagingClient
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.gradle.api.DefaultTask
+import org.gradle.api.logging.LogLevel
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
+import kotlin.time.Duration.Companion.minutes
 
-abstract class ReleaseRepoTask: DefaultTask() {
+abstract class CloseRepoTask: DefaultTask() {
   @get:Input
   abstract val username: Property<String>
 
@@ -25,7 +28,12 @@ abstract class ReleaseRepoTask: DefaultTask() {
   fun taskAction() {
     runBlocking {
       val nexusStagingClient = nexusStagingClient(host.get(), username.get(), password.get())
-      nexusStagingClient.releaseRepositories(listOf(repoId.get()), true)
+      nexusStagingClient.closeRepositories(listOf(repoId.get()))
+      withTimeout(30.minutes) {
+        nexusStagingClient.waitForClose(repoId.get(), 1000) {
+          logger.log(LogLevel.INFO, ".")
+        }
+      }
     }
   }
 }

@@ -74,7 +74,7 @@ fun prepareRelease(versionToRelease: String) {
   println("Everything is done.")
 }
 
-fun runCommand(vararg args: String): String {
+internal fun runCommand(vararg args: String): String {
   val builder = ProcessBuilder(*args)
       .redirectError(ProcessBuilder.Redirect.INHERIT)
 
@@ -90,7 +90,7 @@ fun runCommand(vararg args: String): String {
   return output.trim()
 }
 
-fun setCurrentVersion(version: String) {
+internal fun setCurrentVersion(version: String) {
   val file = File("librarian.properties")
   val newContent = file.readLines().map {
     it.replace(Regex("pom.version=.*"), "pom.version=$version")
@@ -98,7 +98,7 @@ fun setCurrentVersion(version: String) {
   file.writeText(newContent)
 }
 
-fun getCurrentVersion(): String {
+internal fun getCurrentVersion(): String {
   val file = File("librarian.properties")
   require(file.exists()) {
     "Cannot find file ${file.absolutePath}"
@@ -121,7 +121,7 @@ fun getCurrentVersion(): String {
   return "$version-SNAPSHOT"
 }
 
-fun setVersionInDocs(version: String) {
+internal fun setVersionInDocs(version: String) {
   val file = File("Writerside/v.list")
   if (!file.exists()) {
     return
@@ -134,7 +134,7 @@ fun setVersionInDocs(version: String) {
   })
 }
 
-fun mergeAndWait(branchName: String) {
+internal fun mergeAndWait(branchName: String) {
   runCommand("gh", "pr", "merge", branchName, "--squash", "--auto", "--delete-branch")
   println("Waiting for the PR to be merged...")
   while (true) {

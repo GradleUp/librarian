@@ -1,5 +1,6 @@
 package com.gradleup.librarian.core
 
+import com.gradleup.librarian.core.internal.task.ReleaseRepoTask
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
 
@@ -33,11 +34,6 @@ fun Project.librarianRoot() {
   configureRepositoriesRoot(sonatype, createRepoTask)
   configureSigning(signing)
 
-  val releaseRepoTask = registerReleaseRepositoryTask(
-      sonatype = sonatype,
-      repoId = createRepoTask.map { it.output.get().asFile.readText() },
-  )
-
   val publishToStaging = tasks.register("librarianPublishToStaging")
   val publishToSnapshots = tasks.register("librarianPublishToSnapshots") {
     it.enabled = pomMetadata.version.endsWith("-SNAPSHOT")
@@ -58,5 +54,20 @@ fun Project.librarianRoot() {
     it.inputs.files(snapshotConfiguration.incoming.artifactView { it.lenient(true) }.files)
   }
 
-  releaseRepoTask.dependsOn(publishToStaging)
+  val repoId = createRepoTask.map { it.output.get().asFile.readText() }
+  val closeRepoTask = tasks.register("librarianCloseStagingRepo", ReleaseRepoTask::class.java) {
+    it.host.set(sonatype.host)
+    it.username.set(sonatype.username)
+    it.password.set(sonatype.password)
+    it.repoId.set(repoId)
+    it.dependsOn(publishToStaging)
+  }
+
+  tasks.register("librarianReleaseStagingRepo", ReleaseRepoTask::class.java) {
+    it.host.set(sonatype.host)
+    it.username.set(sonatype.username)
+    it.password.set(sonatype.password)
+    it.repoId.set(repoId)
+    it.dependsOn(closeRepoTask)
+  }
 }

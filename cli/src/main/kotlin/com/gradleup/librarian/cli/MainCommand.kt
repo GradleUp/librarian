@@ -3,9 +3,9 @@ package com.gradleup.librarian.cli
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
 
-class MainCommand: CliktCommand() {
+internal class MainCommand: CliktCommand() {
   init {
-    subcommands(PrepareReleaseCommand(), InitCommand(), ReleaseCommand())
+    subcommands(PrepareReleaseCommand(), CreateCommand(), ReleaseCommand(), SetupGithubCommand())
   }
   override fun run() {
 
