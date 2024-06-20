@@ -15,4 +15,20 @@ fun getOptionalInput(name: String): String? {
   }
 }
 
+runCommand("git", "config", "user.name", "librarian[bot]")
+runCommand("git", "config", "user.email", "librarian[bot]@users.noreply.github.com")
+
 commitRelease(getInput("versionToRelease"))
+
+private fun runCommand(vararg args: String) {
+  ProcessBuilder()
+      .inheritIO()
+      .command(*args)
+      .start()
+      .waitFor()
+      .let {
+        check(it == 0) {
+          "Cannot execute '${args.joinToString(" ")}': $it"
+        }
+      }
+}
