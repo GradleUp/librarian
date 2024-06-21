@@ -11,6 +11,8 @@ import org.gradle.api.tasks.TaskAction
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import java.io.File
 
+internal const val LIBRARIAN_GENERATE_VERSION = "librarianGenerateVersion"
+
 fun Project.configureGeneratedVersion(packageName: String, pomVersion: String) {
   val kotlin = kotlinExtensionOrNull
   if (kotlin == null) {
@@ -18,7 +20,7 @@ fun Project.configureGeneratedVersion(packageName: String, pomVersion: String) {
     return
   }
 
-  val pluginVersionTaskProvider = tasks.register("librarianGenerateVersion", GeneratePluginVersion::class.java) {
+  val pluginVersionTaskProvider = tasks.register(LIBRARIAN_GENERATE_VERSION, GeneratePluginVersion::class.java) {
     it.outputDir.set(project.layout.buildDirectory.dir("task/librarianGenerateVersion"))
     it.version.set(pomVersion)
     it.packageName.set(packageName)
