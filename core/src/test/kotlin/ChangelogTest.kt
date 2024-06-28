@@ -26,8 +26,6 @@ class ChangelogTest {
       
       # Next version (unreleased)
 
-      PUT_CHANGELOG_HERE
-
       # Version 0.0.2
       _date_
 

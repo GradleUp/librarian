@@ -135,6 +135,15 @@ public final class com/gradleup/librarian/core/internal/Publishing_androidKt {
 	public static final fun createAndroidPublication (Lorg/gradle/api/Project;Ljava/lang/String;)V
 }
 
+public abstract class com/gradleup/librarian/core/internal/task/CloseRepoTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public abstract fun getHost ()Lorg/gradle/api/provider/Property;
+	public abstract fun getPassword ()Lorg/gradle/api/provider/Property;
+	public abstract fun getRepoId ()Lorg/gradle/api/provider/Property;
+	public abstract fun getUsername ()Lorg/gradle/api/provider/Property;
+	public final fun taskAction ()V
+}
+
 public abstract class com/gradleup/librarian/core/internal/task/CreateRepoTask : org/gradle/api/DefaultTask {
 	public fun <init> ()V
 	public abstract fun getGroupId ()Lorg/gradle/api/provider/Property;
@@ -156,17 +165,10 @@ public abstract class com/gradleup/librarian/core/internal/task/ReleaseRepoTask 
 }
 
 public final class com/gradleup/librarian/core/tooling/ChangelogKt {
-	public static final fun extractChangelog (Ljava/lang/String;)Ljava/lang/String;
-	public static final fun processChangelog (Ljava/lang/String;)V
+	public static final fun processChangelog (Ljava/lang/String;)Ljava/lang/String;
 }
 
-public final class com/gradleup/librarian/core/tooling/ReleaseKt {
-	public static final fun commitRelease (Ljava/lang/String;)V
-	public static final fun getCurrentVersion ()Ljava/lang/String;
-	public static final fun mergeAndWait (Ljava/lang/String;)V
-	public static final fun runCommand ([Ljava/lang/String;)Ljava/lang/String;
-	public static final fun runCommandVoid ([Ljava/lang/String;)V
-	public static final fun setCurrentVersion (Ljava/lang/String;)V
-	public static final fun setVersionInDocs (Ljava/lang/String;)V
+public final class com/gradleup/librarian/core/tooling/Prepare_releaseKt {
+	public static final fun prepareRelease (Ljava/lang/String;)V
 }
 

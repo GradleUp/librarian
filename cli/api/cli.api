@@ -1,15 +1,21 @@
-public final class com/gradleup/librarian/cli/MainCommand : com/github/ajalt/clikt/core/CliktCommand {
-	public fun <init> ()V
-	public fun run ()V
-}
-
 public final class com/gradleup/librarian/cli/MainKt {
 	public static final fun main ([Ljava/lang/String;)V
 }
 
-public final class com/gradleup/librarian/cli/ReleaseCommand : com/github/ajalt/clikt/core/CliktCommand {
-	public fun <init> ()V
-	public final fun getVersion ()Ljava/lang/String;
-	public fun run ()V
+public final class com/gradleup/librarian/cli/MultilineSecretComponent : com/github/kinquirer/core/Component {
+	public fun <init> (Ljava/lang/String;)V
+	public fun isInteracting ()Z
+	public fun onEvent (Lcom/github/kinquirer/core/KInquirerEvent;)V
+	public fun render ()Ljava/lang/String;
+	public synthetic fun value ()Ljava/lang/Object;
+	public fun value ()Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/cli/SupportedLicenses : java/lang/Enum {
+	public static final field MIT Lcom/gradleup/librarian/cli/SupportedLicenses;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getFullName ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/gradleup/librarian/cli/SupportedLicenses;
+	public static fun values ()[Lcom/gradleup/librarian/cli/SupportedLicenses;
 }
 
