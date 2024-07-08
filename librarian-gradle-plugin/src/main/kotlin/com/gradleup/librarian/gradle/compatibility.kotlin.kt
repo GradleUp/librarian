@@ -15,12 +15,12 @@ internal fun Project.configureKotlinJvmTarget(javaVersion: JavaVersion) {
     if (kotlin == null) {
         return
     }
-    kotlin.forEachCompilerOptions {
+    kotlin.forEachCompilerOptions { platformType ->
         when (this) {
             is KotlinJvmCompilerOptions -> {
                 val version = javaVersion.toInt()
 
-                if (it != KotlinPlatformType.androidJvm) {
+                if (platformType != KotlinPlatformType.androidJvm) {
                     // See https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:build-system/gradle-core/src/main/java/com/android/build/gradle/tasks/JavaCompileUtils.kt;l=410?q=Using%20%27--release%27%20option%20for%20JavaCompile%20is%20not%20supported%20because%20it%20prevents%20the%20Android%20Gradle%20plugin
                     freeCompilerArgs.add("-Xjdk-release=${version}")
                 }

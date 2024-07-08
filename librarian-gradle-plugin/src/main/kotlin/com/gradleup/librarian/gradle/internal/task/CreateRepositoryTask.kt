@@ -1,6 +1,6 @@
 package com.gradleup.librarian.gradle.internal.task
 
-import com.gradleup.librarian.gradle.SonatypeHost
+import com.gradleup.librarian.gradle.SonatypeBackend
 import com.gradleup.librarian.gradle.nexusStagingClient
 import kotlinx.coroutines.runBlocking
 import org.gradle.api.DefaultTask
@@ -11,7 +11,7 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
-abstract class CreateRepoTask: DefaultTask() {
+abstract class CreateRepositoryTask: DefaultTask() {
   @get:Input
   @get:Optional
   abstract val username: Property<String>
@@ -21,7 +21,10 @@ abstract class CreateRepoTask: DefaultTask() {
   abstract val password: Property<String>
 
   @get:Input
-  abstract val sonatypeHost: Property<SonatypeHost>
+  abstract val baseUrl: Property<String>
+
+  @get:Input
+  abstract val version: Property<String>
 
   @get:Input
   abstract val groupId: Property<String>
@@ -48,8 +51,13 @@ abstract class CreateRepoTask: DefaultTask() {
     if (!password.isPresent) {
       error("No sonatype password found, double check your LIBRARIAN_SONATYPE_PASSWORD environment variable")
     }
+
+    check(version.get().endsWith("-SNAPSHOT").not()) {
+      "Cannot deploy a SNAPSHOT version ('${version.get()}') to the central portal)."
+    }
+
     val repoId = runBlocking {
-      val nexusStagingClient = nexusStagingClient(sonatypeHost.get(), username.get(), password.get())
+      val nexusStagingClient = nexusStagingClient(baseUrl.get(), username.get(), password.get())
       val candidates = nexusStagingClient.getProfiles()
       val profileId = when {
         candidates.isEmpty() -> error("No staging profile found")

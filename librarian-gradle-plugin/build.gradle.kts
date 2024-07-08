@@ -12,6 +12,7 @@ dependencies {
     implementation(libs.coroutines)
     implementation(libs.vespene)
     implementation(libs.maven.sympathy)
+    implementation(libs.okhttp)
     api(libs.dokkatoo)
     api(libs.bcv)
 
@@ -20,6 +21,8 @@ dependencies {
     compileOnly(libs.kgp)
 
     testImplementation(kotlin("test"))
+    testImplementation(gradleTestKit())
+    testImplementation(libs.mockwebserver)
 }
 
 configurations.getByName("api").dependencies.removeIf {

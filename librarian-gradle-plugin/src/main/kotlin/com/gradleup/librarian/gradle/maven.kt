@@ -18,7 +18,11 @@ fun Project.publishPlatformArtifactsInRootModule() = afterEvaluate {
   }
   val platformPublication = extensions.getByType(PublishingExtension::class.java)
       .publications
-      .getByName("jvm") as MavenPublication
+      .findByName("jvm") as MavenPublication?
+
+    if (platformPublication == null) {
+        return@afterEvaluate
+    }
 
   lateinit var platformXml: XmlProvider
   platformPublication.pom?.withXml { platformXml = it }

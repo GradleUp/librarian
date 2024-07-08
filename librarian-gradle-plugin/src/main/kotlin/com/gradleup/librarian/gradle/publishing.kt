@@ -2,42 +2,41 @@ package com.gradleup.librarian.gradle
 
 import com.gradleup.librarian.gradle.internal.createAndroidPublication
 import com.gradleup.librarian.gradle.internal.hasAndroid
-import com.gradleup.librarian.gradle.internal.task.CreateRepoTask
 import net.mbonnin.vespene.lib.NexusStagingClient
 import org.gradle.api.Project
-import org.gradle.api.Task
-import org.gradle.api.UnknownTaskException
 import org.gradle.api.artifacts.dsl.DependencyHandler
-import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.plugins.JavaPluginExtension
-import org.gradle.api.provider.Provider
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
-import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
-import java.util.Date
 import java.util.Properties
 
-internal const val CONFIGURATION_REPO_ID = "librarianRepoId"
-internal const val CONFIGURATION_RELEASE_DATE = "librarianReleaseDate"
-internal const val CONFIGURATION_SNAPSHOT_DATE = "librarianSnapshotDate"
+internal const val librarianPublication = "librarianPublication"
 
 internal fun Project.configurePublishingInternal(block: PublishingExtension.() -> Unit) {
   plugins.apply("maven-publish")
   block(extensions.getByType(PublishingExtension::class.java))
 }
 
-enum class SonatypeHost {
+enum class SonatypeBackend {
   Default,
   S01,
+  Portal
+}
+
+enum class SonatypeRelease {
+  Automatic,
+  Manual
 }
 
 class Sonatype(
     val username: String?,
     val password: String?,
-    val host: SonatypeHost,
+    val backend: SonatypeBackend,
+    val release: SonatypeRelease,
+    val baseUrl: String?
 )
 
 fun PomMetadata(artifactId: String, properties: Properties): PomMetadata {
@@ -75,7 +74,6 @@ fun Project.configurePublishing(
     createMissingPublications: Boolean,
     publishPlatformArtifactsInRootModule: Boolean,
     pomMetadata: PomMetadata,
-    sonatype: Sonatype,
     signing: Signing,
 ) {
   if (createMissingPublications) {
@@ -87,59 +85,32 @@ fun Project.configurePublishing(
   }
   configureSigning(signing)
 
-  val repoIdConfiguration = configurations.detachedConfiguration(
-      dependencies.project(rootProject.path, CONFIGURATION_REPO_ID)
-  )
-
+  val librarianRepository = layout.buildDirectory.dir("librarian/repo").get()
   extensions.getByType(PublishingExtension::class.java).apply {
     repositories {
-      it.mavenSonatypeSnapshot(sonatype)
-      it.mavenSonatypeStaging(sonatype = sonatype, repoIdConfiguration.elements.map {
-        val repoId = it.single().asFile.readText()
-        "${sonatype.host.toBaseUrl()}/service/local/staging/deployByRepositoryId/$repoId/"
-      })
-    }
-  }
-
-  tasks.configureEach {
-    if (it is AbstractPublishToMaven) {
-      if (it.name.endsWith("SonatypeStagingRepository")) {
-        // We need that to avoid error like this:
-        // Querying the mapped value of provider(java.util.Set) before task ':librarianCreateStagingRepo' has completed is not supported
-        it.inputs.files(repoIdConfiguration)
-      } else if (it.name.endsWith("SonatypeSnapshotsRepository")) {
-        it.enabled = pomMetadata.version.endsWith("-SNAPSHOT")
+      it.maven {
+        it.name = "librarian"
+        it.setUrl(uri(librarianRepository.asFile.path))
       }
     }
   }
 
-  val releaseConfiguration = configurations.create(CONFIGURATION_RELEASE_DATE) {
-    it.isVisible = false
-  }
-  val snapshotConfiguration = configurations.create(CONFIGURATION_SNAPSHOT_DATE) {
+  val librarianPublication = configurations.create(librarianPublication) {
     it.isVisible = false
   }
 
-  tasks.named("publishAllPublicationsToSonatypeStagingRepository").apply {
-    configure { task ->
-      task.outputs.file(layout.buildDirectory.file("${task.name}Date.txt"))
-      task.doLast {
-        it.outputs.files.singleFile.writeText("${it.name}: ${Date()}")
-      }
-    }
-    artifacts {
-      it.add(releaseConfiguration.name, this)
+  val librarianCleanup = tasks.register("librarianCleanup") {
+    it.doLast {
+      librarianRepository.asFile.deleteRecursively()
     }
   }
-  tasks.named("publishAllPublicationsToSonatypeSnapshotsRepository").apply {
-    configure { task ->
-      task.outputs.file(layout.buildDirectory.file("${task.name}Date.txt"))
-      task.doLast {
-        it.outputs.files.singleFile.writeText("${it.name}: ${Date()}")
-      }
-    }
-    artifacts {
-      it.add(snapshotConfiguration.name, this)
+  tasks.withType(AbstractPublishToMaven::class.java).configureEach {
+    it.dependsOn(librarianCleanup)
+  }
+
+  artifacts {
+    it.add(librarianPublication.name, librarianRepository) {
+      it.builtBy("publishAllPublicationsToLibrarianRepository")
     }
   }
 }
@@ -237,15 +208,6 @@ fun Project.createMissingPublications(
   }
 }
 
-fun Project.configureRepositoriesRoot(sonatype: Sonatype, createRepoTask: TaskProvider<CreateRepoTask>) = configurePublishingInternal {
-  repositories {
-    it.mavenSonatypeSnapshot(sonatype)
-    it.mavenSonatypeStaging(sonatype = sonatype, createRepoTask.map {
-      val repoId = it.output.asFile.get().readText()
-      "${sonatype.host.toBaseUrl()}/service/local/staging/deployByRepositoryId/$repoId/"
-    })
-  }
-}
 /**
  * Configures pom
  *
@@ -305,73 +267,23 @@ fun Project.configurePom(
   }
 }
 
-internal fun SonatypeHost.toBaseUrl(): String {
+internal fun SonatypeBackend.toBaseUrl(): String {
   return when (this) {
-    SonatypeHost.S01 -> "https://s01.oss.sonatype.org"
-    SonatypeHost.Default -> "https://oss.sonatype.org"
+    SonatypeBackend.S01 -> "https://s01.oss.sonatype.org"
+    SonatypeBackend.Default -> "https://oss.sonatype.org"
+    SonatypeBackend.Portal -> TODO()
   }
 }
 
-private fun RepositoryHandler.mavenSonatypeSnapshot(
-    sonatype: Sonatype,
-) = maven {
-  it.name = "SonatypeSnapshots"
-  it.setUrl("${sonatype.host.toBaseUrl()}/content/repositories/snapshots/")
-  it.credentials {
-    it.username = sonatype.username
-    it.password = sonatype.password
-  }
-}
-
-internal fun RepositoryHandler.mavenSonatypeStaging(
-    sonatype: Sonatype,
-    url: Provider<String>,
-) = maven {
-  it.name = "SonatypeStaging"
-  it.setUrl(url)
-  it.credentials {
-    it.username = sonatype.username
-    it.password = sonatype.password
-  }
-}
-
-internal fun TaskContainer.providerByName(name: String): TaskProvider<Task>? {
-  return try {
-    this.named(name)
-  } catch (e: UnknownTaskException) {
-    null
-  }
-}
 
 internal fun DependencyHandler.project(path: String, configuration: String) = project(
     mapOf("path" to path, "configuration" to configuration)
 )
 
-internal fun Project.registerCreateRepoIdTask(
-    sonatype: Sonatype,
-    group: String,
-    version: String,
-): TaskProvider<CreateRepoTask> {
-  return rootProject.tasks.register("librarianCreateStagingRepo", CreateRepoTask::class.java) {
-    it.output.set(rootProject.layout.buildDirectory.file("librarianRepoId"))
-    it.repoDescription.set("$group:${project.name}:$version")
-    it.sonatypeHost.set(sonatype.host)
-    it.groupId.set(group)
-    it.username.set(sonatype.username)
-    it.password.set(sonatype.password)
-  }
-}
-
-internal fun nexusStagingClient(host: SonatypeHost, username: String, password: String): NexusStagingClient {
+internal fun nexusStagingClient(host: String, username: String, password: String): NexusStagingClient {
   return NexusStagingClient(
-      baseUrl = "${host.toBaseUrl()}/service/local/",
+      baseUrl = "${host}/service/local/",
       username = username,
       password = password
   )
-}
-
-fun <T : Task> TaskProvider<T>.dependsOn(other: Any) {
-  configure {
-    it.dependsOn(other)
-  }
 }

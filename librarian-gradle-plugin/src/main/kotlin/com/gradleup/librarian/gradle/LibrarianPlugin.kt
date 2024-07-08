@@ -8,5 +8,6 @@ import org.gradle.api.Project
  */
 class LibrarianPlugin: Plugin<Project> {
     override fun apply(target: Project) {
+        target.extensions.create("librarian", LibrarianExtension::class.java, target)
     }
 }
