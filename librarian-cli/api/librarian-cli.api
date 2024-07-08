@@ -1,3 +1,7 @@
+public final class com/gradleup/librarian/cli/JsonKt {
+	public static final fun toJsonElement (Ljava/lang/String;)Lkotlinx/serialization/json/JsonElement;
+}
+
 public final class com/gradleup/librarian/cli/MainKt {
 	public static final fun main ([Ljava/lang/String;)V
 }
@@ -9,13 +13,5 @@ public final class com/gradleup/librarian/cli/MultilineSecretComponent : com/git
 	public fun render ()Ljava/lang/String;
 	public synthetic fun value ()Ljava/lang/Object;
 	public fun value ()Ljava/lang/String;
-}
-
-public final class com/gradleup/librarian/cli/SupportedLicenses : java/lang/Enum {
-	public static final field MIT Lcom/gradleup/librarian/cli/SupportedLicenses;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public final fun getFullName ()Ljava/lang/String;
-	public static fun valueOf (Ljava/lang/String;)Lcom/gradleup/librarian/cli/SupportedLicenses;
-	public static fun values ()[Lcom/gradleup/librarian/cli/SupportedLicenses;
 }
 
