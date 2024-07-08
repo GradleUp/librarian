@@ -14,4 +14,4 @@ pluginManagement {
   }
 }
 
-include(":core", ":cli")
+include(":librarian-gradle-plugin", ":librarian-cli", ":librarian-core")

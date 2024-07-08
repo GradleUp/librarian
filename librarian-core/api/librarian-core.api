@@ -1,0 +1,8 @@
+public final class com/gradleup/librarian/core/tooling/ChangelogKt {
+	public static final fun processChangelog (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/core/tooling/Prepare_releaseKt {
+	public static final fun prepareRelease (Ljava/lang/String;)V
+}
+

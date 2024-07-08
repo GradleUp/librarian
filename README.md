@@ -51,7 +51,7 @@ librarian.kdoc.olderVersions=
 librarian.version.packageName=com.apollographql.mockserver
 
 # publishing
-librarian.sonatype.host=S01
+librarian.sonatype.backend=S01
 librarian.pom.groupId=com.apollographql.mockserver
 librarian.pom.version=0.0.1
 librarian.pom.description=Apollo Mockserver
