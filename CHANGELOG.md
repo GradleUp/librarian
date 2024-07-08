@@ -1,6 +1,7 @@
 # Next version (unreleased)
 
-PUT_CHANGELOG_HERE
+* Add Central Portal publishing
+* Configuration Cache support
 
 # Version 0.0.3
 _2024-06-19_
