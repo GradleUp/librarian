@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="doc"
+                 name="Apollo Adapters"
+                 start-page="welcome.md">
+
+    <toc-element topic="welcome.md"/>
+    <toc-element toc-title="GitHub" href="https://github.com/{{repositoryOwner}}/{{repositoryName}}"/>
+    <toc-element toc-title="Kdoc" href="https://{{repositoryOwner}}.github.io/{{repositoryName}}/kdoc"/>
+</instance-profile>

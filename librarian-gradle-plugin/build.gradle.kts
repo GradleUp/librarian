@@ -14,6 +14,7 @@ dependencies {
     implementation(libs.maven.sympathy)
     implementation(libs.okhttp)
     api(libs.dokkatoo)
+    implementation(project(":librarian-core"))
     api(libs.bcv)
 
     compileOnly(libs.gradle.api)

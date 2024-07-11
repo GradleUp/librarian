@@ -1,5 +1,7 @@
 package com.gradleup.librarian.gradle
 
+import com.gradleup.librarian.core.tooling.init.SonatypeBackend
+import com.gradleup.librarian.core.tooling.init.SonatypeRelease
 import com.gradleup.librarian.gradle.internal.createAndroidPublication
 import com.gradleup.librarian.gradle.internal.hasAndroid
 import net.mbonnin.vespene.lib.NexusStagingClient
@@ -20,16 +22,6 @@ internal fun Project.configurePublishingInternal(block: PublishingExtension.() -
   block(extensions.getByType(PublishingExtension::class.java))
 }
 
-enum class SonatypeBackend {
-  Default,
-  S01,
-  Portal
-}
-
-enum class SonatypeRelease {
-  Automatic,
-  Manual
-}
 
 class Sonatype(
     val username: String?,

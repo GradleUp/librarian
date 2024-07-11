@@ -1,5 +1,7 @@
 package com.gradleup.librarian.gradle
 
+import com.gradleup.librarian.core.tooling.init.SonatypeBackend
+import com.gradleup.librarian.core.tooling.init.SonatypeRelease
 import com.gradleup.librarian.gradle.internal.task.*
 import com.gradleup.librarian.gradle.internal.task.snapshotsUrl
 import com.gradleup.librarian.gradle.internal.task.stagingRepositoryUrl

@@ -1,5 +1,7 @@
 package com.gradleup.librarian.gradle
 
+import com.gradleup.librarian.core.tooling.init.SonatypeBackend
+import com.gradleup.librarian.core.tooling.init.SonatypeRelease
 import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
 import org.gradle.api.Project
 import java.util.Properties
@@ -14,10 +16,6 @@ internal fun Properties.kotlinCompatibility(): String? {
 
 internal fun Properties.versionPackageName(): String? {
   return getProperty("version.packageName")
-}
-
-internal fun Properties.gitSnapshots(): String {
-  return getProperty("git.snapshots") ?: "main"
 }
 
 internal fun Properties.kdocArtifactId(): String {

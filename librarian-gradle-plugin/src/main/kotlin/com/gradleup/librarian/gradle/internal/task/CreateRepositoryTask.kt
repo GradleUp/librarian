@@ -1,6 +1,5 @@
 package com.gradleup.librarian.gradle.internal.task
 
-import com.gradleup.librarian.gradle.SonatypeBackend
 import com.gradleup.librarian.gradle.nexusStagingClient
 import kotlinx.coroutines.runBlocking
 import org.gradle.api.DefaultTask

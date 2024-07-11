@@ -8,6 +8,10 @@ librarianModule()
 
 dependencies {
     implementation(libs.coroutines)
+    implementation(libs.jsonpath)
+    implementation(libs.jsonpathkt)
+    implementation(libs.okhttp)
+    implementation(libs.serialization.json)
 
     testImplementation(kotlin("test"))
 }

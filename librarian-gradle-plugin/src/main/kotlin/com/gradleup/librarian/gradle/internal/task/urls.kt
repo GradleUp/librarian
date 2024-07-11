@@ -1,6 +1,6 @@
 package com.gradleup.librarian.gradle.internal.task
 
-import com.gradleup.librarian.gradle.SonatypeBackend
+import com.gradleup.librarian.core.tooling.init.SonatypeBackend
 import com.gradleup.librarian.gradle.toBaseUrl
 
 internal fun stagingRepositoryUrl(sonatypeBackend: SonatypeBackend, baseUrl: String?, repoId: String): String {
