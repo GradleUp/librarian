@@ -5,7 +5,6 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        ../scripts/install.sh
+        ${{ github.action_path }}/../scripts/install.sh
         echo "$HOME/.librarian/bin" >> $GITHUB_PATH
-        librarian --version
       shell: bash
