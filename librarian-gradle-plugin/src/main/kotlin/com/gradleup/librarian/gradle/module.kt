@@ -6,15 +6,15 @@ import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
 import org.gradle.api.Project
 import java.util.Properties
 
-internal fun Properties.javaCompatibility(): Int? {
+fun Properties.javaCompatibility(): Int? {
   return getProperty("java.compatibility")?.toInt()
 }
 
-internal fun Properties.kotlinCompatibility(): String? {
+fun Properties.kotlinCompatibility(): String? {
   return getProperty("kotlin.compatibility")
 }
 
-internal fun Properties.versionPackageName(): String? {
+fun Properties.versionPackageName(): String? {
   return getProperty("version.packageName")
 }
 
