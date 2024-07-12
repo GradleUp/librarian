@@ -82,6 +82,20 @@ class GH(private val path: Path) {
     )
   }
 
+  fun addTeam(team: String, permission: String) {
+    val repository = repository()
+    // Succeeds even if the team is already there
+    path.runCommand(
+      "gh",
+      "api",
+      "--method", "PUT",
+      "-H", "Accept: application/vnd.github+json",
+      "-H", "X-GitHub-Api-Version: 2022-11-28",
+      "/orgs/${repository.owner}/teams/$team/repos/${repository.owner}/${repository.name}",
+      "-f", "permission=$permission"
+    )
+  }
+
   fun createBranch(branch: String) {
     val repository = repository()
     var result = path.runCommandAndCaptureStdout(
