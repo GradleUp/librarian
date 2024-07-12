@@ -9,6 +9,7 @@ import kotlin.io.path.createParentDirectories
 
 fun Path.initWriterside(repository: GitHubRepository) {
   val variables = mapOf(
+      "projectTitle" to repository.name,
       "repositoryName" to repository.name,
       "repositoryOwner" to repository.owner,
   )

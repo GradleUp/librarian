@@ -3,7 +3,7 @@
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
 <instance-profile id="doc"
-                 name="Apollo Adapters"
+                 name="{{projectTitle}}"
                  start-page="welcome.md">
 
     <toc-element topic="welcome.md"/>
