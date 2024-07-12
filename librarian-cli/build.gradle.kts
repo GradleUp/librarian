@@ -9,7 +9,6 @@ plugins {
 librarianModule()
 
 dependencies {
-  implementation(project(":librarian-gradle-plugin"))
   implementation(project(":librarian-core"))
   implementation(libs.clikt)
   implementation(libs.inquirer)
