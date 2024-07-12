@@ -24,7 +24,13 @@ download_binary_and_run_installer() {
     need_cmd rmdir
     need_cmd unzip
 
-    DOWNLOAD_VERSION=$PACKAGE_VERSION
+    if [ -z ${VERSION} ]; then
+        # VERSION is either not set or empty
+        DOWNLOAD_VERSION=$PACKAGE_VERSION
+    else
+        # VERSION set and not empty
+        DOWNLOAD_VERSION=$VERSION
+    fi
 
     local _tardir="librarian-$DOWNLOAD_VERSION"
     local _url="$BINARY_DOWNLOAD_PREFIX/v$DOWNLOAD_VERSION/${_tardir}.zip"

@@ -1,10 +1,11 @@
 name: 'Setup Librarian'
 description: 'Installs "librarian" in PATH'
-inputs:
-  version:
-    description: 'The version to install'
 
 runs:
-  using: 'node20'
-  main: 'index.js'
-
+  using: 'composite'
+  steps:
+    - run: |
+        ../scripts/install.sh
+        echo "$HOME/.librarian/bin" >> $GITHUB_PATH
+        librarian --version
+      shell: bash
