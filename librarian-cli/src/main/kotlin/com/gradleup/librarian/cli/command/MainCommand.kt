@@ -17,7 +17,7 @@ internal class MainCommand: CliktCommand(invokeWithoutSubcommand = true) {
   override fun run() {
     if (version) {
       println("librarian $VERSION")
-      exitProcess(1)
+      exitProcess(0)
     }
     val subcommand = currentContext.invokedSubcommand
     if (subcommand == null) {
