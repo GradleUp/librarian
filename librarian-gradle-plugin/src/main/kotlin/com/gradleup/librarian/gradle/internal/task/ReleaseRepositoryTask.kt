@@ -38,6 +38,8 @@ abstract class ReleaseRepositoryTask: DefaultTask() {
       }
       if (automatic.get()) {
         nexusStagingClient.releaseRepositories(listOf(repoId.get()), true)
+      } else {
+        logger.log(LogLevel.LIFECYCLE, "Artifacts uploaded, go to ${baseUrl.get()} to release them")
       }
     }
   }

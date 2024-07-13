@@ -15,6 +15,7 @@ import okio.use
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
+import org.gradle.api.logging.LogLevel
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
@@ -97,6 +98,9 @@ abstract class DeployToPortalTask : DefaultTask() {
             error("Cannot publish to maven central (status='${it.code}'): ${it.body?.string()}")
           }
         }
+    if (!automatic.get()) {
+      logger.log(LogLevel.LIFECYCLE, "Artifacts uploaded, go to ${baseUrl.get()} to release them")
+    }
   }
 }
 
