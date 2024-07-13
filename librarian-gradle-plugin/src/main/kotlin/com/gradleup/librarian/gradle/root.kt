@@ -56,7 +56,7 @@ fun Project.librarianRoot() {
   }
 
   val allFilesConfiguration = configurations.detachedConfiguration()
-  subprojects {
+  subprojects.forEach {
     allFilesConfiguration.dependencies.add(dependencies.project(it.path, librarianPublication))
   }
   val allFiles = allFilesConfiguration.incoming.artifactView { it.lenient(true) }.files
