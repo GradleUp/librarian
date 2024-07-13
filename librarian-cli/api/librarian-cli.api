@@ -1,7 +1,3 @@
-public final class com/gradleup/librarian/cli/JsonKt {
-	public static final fun toJsonElement (Ljava/lang/String;)Lkotlinx/serialization/json/JsonElement;
-}
-
 public final class com/gradleup/librarian/cli/MainKt {
 	public static final fun main ([Ljava/lang/String;)V
 }
@@ -13,5 +9,19 @@ public final class com/gradleup/librarian/cli/MultilineSecretComponent : com/git
 	public fun render ()Ljava/lang/String;
 	public synthetic fun value ()Ljava/lang/Object;
 	public fun value ()Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/cli/VersionKt {
+	public static final field VERSION Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/cli/command/init/GradleWrapperCommand : com/github/ajalt/clikt/core/CliktCommand {
+	public fun <init> ()V
+	public fun run ()V
+}
+
+public final class com/gradleup/librarian/cli/command/init/PublishingCommand : com/github/ajalt/clikt/core/CliktCommand {
+	public fun <init> ()V
+	public fun run ()V
 }
 

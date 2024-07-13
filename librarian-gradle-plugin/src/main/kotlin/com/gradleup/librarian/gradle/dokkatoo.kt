@@ -94,9 +94,11 @@ fun Project.configureDokkatoo() = configureDokkatooInternal {
   }
 
   // TODO project isolation
-  rootProject.configurations.all {
-    if (it.name == "dokkatoo") {
-      it.dependencies.add(rootProject.dependencies.project(mapOf("path" to ":${this@configureDokkatoo.path}")))
+  if (!skipProjectIsolationIncompatibleParts) {
+    rootProject.configurations.all {
+      if (it.name == "dokkatoo") {
+        it.dependencies.add(rootProject.dependencies.project(mapOf("path" to ":${this@configureDokkatoo.path}")))
+      }
     }
   }
 }

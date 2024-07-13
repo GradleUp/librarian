@@ -38,7 +38,7 @@ fun Project.configureMavenFriendlyDependencies() {
 }
 
 internal fun Project.rootProperties(): Properties {
-  val propertiesFile = rootProject.file("librarian.properties")
+  val propertiesFile = rootDir.resolve("librarian.properties")
   check(propertiesFile.exists()) {
     "No librarian.properties file found at ${propertiesFile.absolutePath}"
   }
@@ -63,7 +63,7 @@ internal fun Project.moduleProperties(): Properties {
   }
 }
 
-fun Project.librarianModule(publish: Boolean) {
+fun Project.librarianModule(publish: Boolean = true) {
   val rootProperties = rootProperties()
   val moduleProperties = moduleProperties()
 

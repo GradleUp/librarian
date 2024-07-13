@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
 
 class GradleTest {
   @Test
-  fun process() = runBlocking {
+  fun portalEndToEndTest() = runBlocking {
     val mockWebServer = MockServer()
     mockWebServer.enqueueString("ok")
 
@@ -53,7 +53,6 @@ class GradleTest {
             }
           }
         }
-
       }
     }
   }

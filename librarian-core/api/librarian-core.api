@@ -1,8 +1,145 @@
+public final class com/gradleup/librarian/core/VersionKt {
+	public static final field VERSION Ljava/lang/String;
+}
+
 public final class com/gradleup/librarian/core/tooling/ChangelogKt {
 	public static final fun processChangelog (Ljava/lang/String;)Ljava/lang/String;
 }
 
-public final class com/gradleup/librarian/core/tooling/Prepare_releaseKt {
-	public static final fun prepareRelease (Ljava/lang/String;)V
+public final class com/gradleup/librarian/core/tooling/GH {
+	public fun <init> (Ljava/nio/file/Path;)V
+	public final fun addTeam (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun addTopics (Ljava/util/List;)V
+	public final fun allowWorkflowWrite ()V
+	public final fun createBranch (Ljava/lang/String;)V
+	public final fun enablePages (Ljava/lang/String;)V
+	public final fun repository ()Lcom/gradleup/librarian/core/tooling/GitHubRepository;
+	public final fun repositoryOrNull ()Lcom/gradleup/librarian/core/tooling/GitHubRepository;
+	public final fun setDescription (Ljava/lang/String;)V
+	public final fun setSecret (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun setUrl (Ljava/lang/String;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/GHKt {
+	public static final fun GH (Ljava/nio/file/Path;)Lcom/gradleup/librarian/core/tooling/GH;
+	public static final fun getAvailableOrganizations ()Ljava/util/List;
+}
+
+public final class com/gradleup/librarian/core/tooling/GitHubRepository {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOwner ()Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/core/tooling/JsonKt {
+	public static final fun toJsonElement (Ljava/lang/String;)Lkotlinx/serialization/json/JsonElement;
+}
+
+public final class com/gradleup/librarian/core/tooling/ProcessKt {
+	public static final fun runCommand (Ljava/nio/file/Path;[Ljava/lang/String;)V
+	public static final fun runCommandAndCaptureStdout (Ljava/nio/file/Path;[Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/ProcessResult;
+}
+
+public final class com/gradleup/librarian/core/tooling/ProcessResult {
+	public fun <init> (Ljava/lang/String;ILjava/lang/String;)V
+	public final fun getCode ()I
+	public final fun getStdout ()Ljava/lang/String;
+	public final fun stdoutOrThrow ()Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/core/tooling/ResourceKt {
+	public static final fun makeExecutable (Ljava/nio/file/Path;)Ljava/nio/file/Path;
+	public static final fun readResource (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun substituteVariables (Ljava/lang/String;Ljava/util/Map;)Ljava/lang/String;
+	public static final fun substituteVariables (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+	public static final fun writeTo (Ljava/lang/String;Ljava/nio/file/Path;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/Tag_and_bumpKt {
+	public static final fun tagAndBump (Ljava/lang/String;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/init/ActionsKt {
+	public static final fun initActions (Ljava/nio/file/Path;Ljava/lang/String;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/init/ChangelogKt {
+	public static final fun initChangelog (Ljava/nio/file/Path;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/init/Code_styleKt {
+	public static final fun initCodeStyle (Ljava/nio/file/Path;Ljava/lang/String;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/init/GithubKt {
+	public static final fun initGitHub (Ljava/nio/file/Path;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/init/GitignoreKt {
+	public static final fun initGitIgnore (Ljava/nio/file/Path;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/init/Gradle_wrapperKt {
+	public static final fun initGradleWrapper (Ljava/nio/file/Path;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/init/LicenseKt {
+	public static final fun currentYear ()Ljava/lang/String;
+	public static final fun guessLicenseOrNull (Ljava/nio/file/Path;)Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;
+	public static final fun initLicense (Ljava/nio/file/Path;Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;Ljava/lang/String;Ljava/lang/String;)V
+	public static final fun toSupportedLicense (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;
+}
+
+public final class com/gradleup/librarian/core/tooling/init/MetadataKt {
+	public static final fun initMetadata (Ljava/nio/file/Path;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/init/ProjectKt {
+	public static final fun initProject (Ljava/nio/file/Path;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/GitHubRepository;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/init/PublishingKt {
+	public static final fun initPublishing (Ljava/nio/file/Path;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/GitHubRepository;Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/init/Secrets {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getSigningPrivateKey ()Ljava/lang/String;
+	public final fun getSigningPrivateKeyPassword ()Ljava/lang/String;
+	public final fun getSonatypePassword ()Ljava/lang/String;
+	public final fun getSonatypeUsername ()Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/core/tooling/init/SecretsKt {
+	public static final fun initSecrets (Ljava/nio/file/Path;Lcom/gradleup/librarian/core/tooling/init/Secrets;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/init/SonatypeBackend : java/lang/Enum {
+	public static final field Default Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
+	public static final field Portal Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
+	public static final field S01 Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
+	public static fun values ()[Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
+}
+
+public final class com/gradleup/librarian/core/tooling/init/SonatypeRelease : java/lang/Enum {
+	public static final field Automatic Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;
+	public static final field Manual Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;
+	public static fun values ()[Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;
+}
+
+public final class com/gradleup/librarian/core/tooling/init/SupportedLicense : java/lang/Enum {
+	public static final field MIT Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getFullName ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;
+	public static fun values ()[Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;
+}
+
+public final class com/gradleup/librarian/core/tooling/init/WritersideKt {
+	public static final fun initWriterside (Ljava/nio/file/Path;Lcom/gradleup/librarian/core/tooling/GitHubRepository;)V
 }
 

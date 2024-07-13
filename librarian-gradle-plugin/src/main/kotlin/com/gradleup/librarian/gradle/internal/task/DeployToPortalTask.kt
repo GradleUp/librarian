@@ -10,6 +10,7 @@ import okio.Buffer
 import okio.BufferedSink
 import okio.Timeout
 import okio.buffer
+import okio.sink
 import okio.use
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
@@ -19,6 +20,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
+import java.io.File
 import java.io.IOException
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -79,7 +81,7 @@ abstract class DeployToPortalTask : DefaultTask() {
 
     Request.Builder()
         .post(body)
-        .addHeader("Authorization", "UserToken $token")
+        .addHeader("Authorization", "Bearer $token")
         .url("${baseUrl.get()}/api/v1/publisher/upload?publishingType=$publicationType")
         .build()
         .let {
@@ -100,18 +102,24 @@ abstract class DeployToPortalTask : DefaultTask() {
 
 internal class MyBody(val files: FileCollection) : RequestBody() {
   override fun contentType(): MediaType {
-    return "application/zip".toMediaType()
+    return "application/octet-stream".toMediaType()
   }
 
   override fun writeTo(sink: BufferedSink) {
     val stream = ZipOutputStream(sink.outputStream())
     files.toInputFiles().forEach {
+      // Exclude maven-metadata files or the bundle is not recognized
+      // See https://slack-chats.kotlinlang.org/t/16407246/anyone-tried-the-https-central-sonatype-org-publish-publish-#c8738fe5-8051-4f64-809f-ca67a645216e
+      if (it.file.name.startsWith("maven-metadata")) {
+        return@forEach
+      }
       stream.putNextEntry(ZipEntry(it.path))
       it.file.inputStream().use {
         it.copyTo(stream)
       }
       stream.closeEntry()
     }
+    stream.finish()
     stream.flush()
     sink.flush()
   }

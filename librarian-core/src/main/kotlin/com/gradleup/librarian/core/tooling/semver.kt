@@ -46,15 +46,5 @@ internal fun getNextSnapshot(version: String): String {
  * Mostly used as a sanity check
  */
 internal fun String.isValidVersion(): Boolean {
-  val c = split(".")
-  if (c.size < 3) {
-    return false
-  }
-  for (i in 0.until(3)) {
-    if (c[i].toIntOrNull() == null) {
-      return false
-    }
-  }
-
-  return true
+  return Regex("[0-9]+\\.[0-9]+\\.[0-9]+.*").matches(this)
 }

@@ -7,9 +7,25 @@ import com.gradleup.librarian.gradle.internal.task.snapshotsUrl
 import com.gradleup.librarian.gradle.internal.task.stagingRepositoryUrl
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.TaskProvider
+
+internal val librarianCreateStagingRepo = "librarianCreateStagingRepo"
+internal val librarianUploadFilesToStaging = "librarianUploadFilesToStaging"
+internal val librarianReleaseRepository = "librarianReleaseRepository"
+
+internal val librarianUploadFilesToSnapshots = "librarianUploadFilesToSnapshots"
+
+internal val librarianDeployToPortal = "librarianDeployToPortal"
+
+internal val librarianPublishToMavenCentral = "librarianPublishToMavenCentral"
+internal val librarianPublishToSnapshots = "librarianPublishToSnapshots"
+
+internal val skipProjectIsolationIncompatibleParts = false
 
 fun Project.librarianRoot() {
-  configureBcv()
+  if (!skipProjectIsolationIncompatibleParts) {
+    configureBcv()
+  }
 
   val properties = project.rootProperties()
   val pomMetadata = PomMetadata(properties.kdocArtifactId(), properties)
@@ -29,7 +45,7 @@ fun Project.librarianRoot() {
   configureSigning(signing)
 
   val deploymentDescription = "${pomMetadata.groupId}:${project.name}:${pomMetadata.version}"
-  val createRepoTask = tasks.register("librarianCreateStagingRepo", CreateRepositoryTask::class.java) {
+  val createRepoTask = tasks.register(librarianCreateStagingRepo, CreateRepositoryTask::class.java) {
     it.output.set(layout.buildDirectory.file("librarian/repositoryId"))
     it.repoDescription.set(deploymentDescription)
     it.baseUrl.set(stagingBaseUrl(sonatype.backend, sonatype.baseUrl))
@@ -47,49 +63,57 @@ fun Project.librarianRoot() {
 
   val repoId = createRepoTask.map { it.output.get().asFile.readText() }
 
-  val uploadToStaging = tasks.register("librarianUploadFilesToStaging", UploadFilesTask::class.java) {
-    it.url.set(repoId.map { stagingRepositoryUrl(sonatype.backend, sonatype.baseUrl, it) })
-    it.username.set(sonatype.username)
-    it.password.set(sonatype.password)
-    it.files.from(allFiles)
-  }
+  val mavenCentralTaskProvider: TaskProvider<*>
+  val snapshotsTaskProvider: TaskProvider<*>?
 
-  tasks.register("librarianReleaseRepository", ReleaseRepositoryTask::class.java) {
-    it.baseUrl.set(stagingBaseUrl(sonatype.backend, sonatype.baseUrl))
-    it.username.set(sonatype.username)
-    it.password.set(sonatype.password)
-    it.repoId.set(repoId)
-    it.automatic.set(sonatype.release == SonatypeRelease.Automatic)
-    it.dependsOn(uploadToStaging)
-  }
+  if (sonatype.backend == SonatypeBackend.Portal) {
+    mavenCentralTaskProvider = tasks.register(librarianDeployToPortal, DeployToPortalTask::class.java) {
+      it.username.set(sonatype.username)
+      it.password.set(sonatype.password)
+      it.files.from(allFiles)
+      it.deploymentDescription.set(deploymentDescription)
+      it.automatic.set(SonatypeRelease.Automatic == sonatype.release)
+      it.version.set(pomMetadata.version)
+      it.baseUrl.set(deployBaseUrl(sonatype.baseUrl))
+    }
+    snapshotsTaskProvider = null
+  } else {
+    val uploadToStaging = tasks.register(librarianUploadFilesToStaging, UploadFilesTask::class.java) {
+      it.url.set(repoId.map { stagingRepositoryUrl(sonatype.backend, sonatype.baseUrl, it) })
+      it.username.set(sonatype.username)
+      it.password.set(sonatype.password)
+      it.files.from(allFiles)
+    }
 
-  val uploadToSnapshots = tasks.register("librarianUploadFilesToSnapshots", UploadFilesTask::class.java) {
-    it.url.set(snapshotsUrl(sonatype.backend, sonatype.baseUrl))
-    it.username.set(sonatype.username)
-    it.password.set(sonatype.password)
-    it.files.from(allFiles)
+    mavenCentralTaskProvider = tasks.register(librarianReleaseRepository, ReleaseRepositoryTask::class.java) {
+      it.baseUrl.set(stagingBaseUrl(sonatype.backend, sonatype.baseUrl))
+      it.username.set(sonatype.username)
+      it.password.set(sonatype.password)
+      it.repoId.set(repoId)
+      it.automatic.set(sonatype.release == SonatypeRelease.Automatic)
+      it.dependsOn(uploadToStaging)
+    }
 
-    it.enabled = pomMetadata.version.endsWith("-SNAPSHOT")
-  }
+    snapshotsTaskProvider = tasks.register(librarianUploadFilesToSnapshots, UploadFilesTask::class.java) {
+      it.url.set(snapshotsUrl(sonatype.backend, sonatype.baseUrl))
+      it.username.set(sonatype.username)
+      it.password.set(sonatype.password)
+      it.files.from(allFiles)
 
-  val deployToPortal = tasks.register("librarianDeployToPortal", DeployToPortalTask::class.java) {
-    it.username.set(sonatype.username)
-    it.password.set(sonatype.password)
-    it.files.from(allFiles)
-    it.deploymentDescription.set(deploymentDescription)
-    it.automatic.set(SonatypeRelease.Automatic == sonatype.release)
-    it.version.set(pomMetadata.version)
-    it.baseUrl.set(deployBaseUrl(sonatype.baseUrl))
-  }
-
-  tasks.register("librarianPublishToMavenCentral") {
-    if (sonatype.backend == SonatypeBackend.Portal) {
-      it.dependsOn("librarianDeployToPortal")
-    } else {
-      it.dependsOn("librarianReleaseRepository")
+      it.enabled = pomMetadata.version.endsWith("-SNAPSHOT")
     }
   }
-  tasks.register("librarianPublishToMavenSnapshots") {
-    it.dependsOn("librarianUploadFilesToSnapshots")
+
+  tasks.register(librarianPublishToMavenCentral) {
+    it.dependsOn(mavenCentralTaskProvider)
+  }
+  tasks.register(librarianPublishToSnapshots) {
+    if (snapshotsTaskProvider != null) {
+      it.dependsOn(snapshotsTaskProvider)
+    } else {
+      it.doLast {
+        error("The central portal doesn't support SNAPSHOTs")
+      }
+    }
   }
 }

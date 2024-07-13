@@ -59,12 +59,8 @@ public final class com/gradleup/librarian/gradle/KmpKt {
 	public static final fun allAppleTargets (Lorg/jetbrains/kotlin/gradle/dsl/KotlinMultiplatformExtension;)V
 }
 
-public abstract class com/gradleup/librarian/gradle/LibrarianExtension {
-	public fun <init> (Lorg/gradle/api/Project;)V
-	public final fun module ()V
-	public final fun module (Z)V
-	public static synthetic fun module$default (Lcom/gradleup/librarian/gradle/LibrarianExtension;ZILjava/lang/Object;)V
-	public final fun root ()V
+public final class com/gradleup/librarian/gradle/LibrarianKt {
+	public static final fun librarianProperties (Lorg/gradle/api/Project;)Ljava/util/Properties;
 }
 
 public final class com/gradleup/librarian/gradle/LibrarianPlugin : org/gradle/api/Plugin {
@@ -79,7 +75,11 @@ public final class com/gradleup/librarian/gradle/MavenKt {
 
 public final class com/gradleup/librarian/gradle/ModuleKt {
 	public static final fun configureMavenFriendlyDependencies (Lorg/gradle/api/Project;)V
+	public static final fun javaCompatibility (Ljava/util/Properties;)Ljava/lang/Integer;
+	public static final fun kotlinCompatibility (Ljava/util/Properties;)Ljava/lang/String;
 	public static final fun librarianModule (Lorg/gradle/api/Project;Z)V
+	public static synthetic fun librarianModule$default (Lorg/gradle/api/Project;ZILjava/lang/Object;)V
+	public static final fun versionPackageName (Ljava/util/Properties;)Ljava/lang/String;
 }
 
 public final class com/gradleup/librarian/gradle/PomMetadata {
@@ -122,29 +122,12 @@ public final class com/gradleup/librarian/gradle/SigningKt {
 }
 
 public final class com/gradleup/librarian/gradle/Sonatype {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/gradle/SonatypeBackend;Lcom/gradleup/librarian/gradle/SonatypeRelease;Ljava/lang/String;)V
-	public final fun getBackend ()Lcom/gradleup/librarian/gradle/SonatypeBackend;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;Ljava/lang/String;)V
+	public final fun getBackend ()Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
 	public final fun getBaseUrl ()Ljava/lang/String;
 	public final fun getPassword ()Ljava/lang/String;
-	public final fun getRelease ()Lcom/gradleup/librarian/gradle/SonatypeRelease;
+	public final fun getRelease ()Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;
 	public final fun getUsername ()Ljava/lang/String;
-}
-
-public final class com/gradleup/librarian/gradle/SonatypeBackend : java/lang/Enum {
-	public static final field Default Lcom/gradleup/librarian/gradle/SonatypeBackend;
-	public static final field Portal Lcom/gradleup/librarian/gradle/SonatypeBackend;
-	public static final field S01 Lcom/gradleup/librarian/gradle/SonatypeBackend;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/gradleup/librarian/gradle/SonatypeBackend;
-	public static fun values ()[Lcom/gradleup/librarian/gradle/SonatypeBackend;
-}
-
-public final class com/gradleup/librarian/gradle/SonatypeRelease : java/lang/Enum {
-	public static final field Automatic Lcom/gradleup/librarian/gradle/SonatypeRelease;
-	public static final field Manual Lcom/gradleup/librarian/gradle/SonatypeRelease;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/gradleup/librarian/gradle/SonatypeRelease;
-	public static fun values ()[Lcom/gradleup/librarian/gradle/SonatypeRelease;
 }
 
 public final class com/gradleup/librarian/gradle/internal/Project_androidKt {
