@@ -1,6 +1,6 @@
 [libraries]
 coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
-vespene = "net.mbonnin.vespene:vespene-lib:0.5"
+vespene = "net.mbonnin.vespene:vespene-lib:0.6.0"
 maven-sympathy = "com.gradleup.maven-sympathy:maven-sympathy:0.0.2"
 dokkatoo = "dev.adamko.dokkatoo:dokkatoo-plugin:2.3.1"
 bcv = "org.jetbrains.kotlinx:binary-compatibility-validator:0.15.0-Beta.2"
