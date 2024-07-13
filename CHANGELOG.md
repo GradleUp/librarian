@@ -1,5 +1,8 @@
 # Next version (unreleased)
 
+# Version 0.0.5
+_2024-07-13_
+
 * Add Central Portal publishing
 * Configuration Cache support
 
