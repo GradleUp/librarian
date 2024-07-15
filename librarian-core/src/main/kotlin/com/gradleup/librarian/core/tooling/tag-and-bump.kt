@@ -2,12 +2,6 @@ package com.gradleup.librarian.core.tooling
 
 import java.io.File
 
-fun tagAndBump(versionToRelease: String) {
-  return tagAndBump(versionToRelease) {
-    error("versionToRelease must not be null")
-  }
-}
-
 sealed interface Confirmation
 class UseDefaultVersion(
     val expectedVersion: String
@@ -23,35 +17,8 @@ class BumpMajor(
     val currentVersion: String
 ): Confirmation
 
-fun tagAndBump(versionToRelease: String?, confirm: (Confirmation) -> Unit) {
+fun tagAndBump(versionToRelease: String) {
   checkCwd()
-
-  var tagVersion = versionToRelease
-  val currentVersion = getCurrentVersion()
-  val currentVersionParsed = currentVersion.toVersionOrNull()
-  check(currentVersionParsed != null) {
-    "Cannot parse current version: '${currentVersion}'"
-  }
-  check(currentVersionParsed.isSnapshot) {
-    "Version '${currentVersion} is not a -SNAPSHOT, check your working directory"
-  }
-
-  val expectedVersion = currentVersion.removeSuffix("-SNAPSHOT")
-
-  if (tagVersion == null) {
-    confirm(UseDefaultVersion(expectedVersion))
-    tagVersion = expectedVersion
-  }
-
-  val tagVersionParsed = tagVersion.toVersionOrNull()
-  check(tagVersionParsed != null) {
-    "Version must start with 'major.minor.patch' (found '$tagVersion')"
-  }
-  if (tagVersionParsed < currentVersionParsed) {
-    confirm(DowngradeVersion(tagVersion, currentVersion))
-  } else if (tagVersionParsed.major > currentVersionParsed.major) {
-    confirm(BumpMajor(tagVersion, currentVersion))
-  }
 
   check(runCommand("git", "status", "--porcelain").isEmpty()) {
     "Your git repo is not clean. Make sure to stash or commit your changes before making a release"
@@ -62,14 +29,14 @@ fun tagAndBump(versionToRelease: String?, confirm: (Confirmation) -> Unit) {
     "You must be on the main branch or a release branch to make a release"
   }
 
-  val markdown = processChangelog(tagVersion)
+  val markdown = processChangelog(versionToRelease)
 
   // 'De-snapshot' the version, open a PR, and merge it
-  val releaseBranchName = "tag-$tagVersion"
+  val releaseBranchName = "tag-$versionToRelease"
   runCommand("git", "checkout", "-b", releaseBranchName)
-  setCurrentVersion(tagVersion)
-  setVersionInDocs(tagVersion)
-  runCommand("git", "commit", "-a", "-m", "release $tagVersion")
+  setCurrentVersion(versionToRelease)
+  setVersionInDocs(versionToRelease)
+  runCommand("git", "commit", "-a", "-m", "release $versionToRelease")
   runCommand("git", "push", "origin", releaseBranchName)
   runCommand("gh", "pr", "create", "--base", startBranch, "--fill")
 
@@ -79,17 +46,17 @@ fun tagAndBump(versionToRelease: String?, confirm: (Confirmation) -> Unit) {
   // Tag the release, and push the tag
   runCommand("git", "checkout", startBranch)
   runCommand("git", "pull", "origin", startBranch)
-  val tagName = "v$tagVersion"
+  val tagName = "v$versionToRelease"
   runCommand("git", "tag", tagName, "-m", markdown)
 
   runCommand("git", "push", "origin", tagName)
   println("Tag pushed.")
 
   // Bump the version to the next snapshot
-  val bumpVersionBranchName = "bump-$tagVersion"
+  val bumpVersionBranchName = "bump-$versionToRelease"
   runCommand("git", "checkout", "-b", bumpVersionBranchName)
 
-  val nextSnapshot = getNextSnapshot(tagVersion)
+  val nextSnapshot = getNextSnapshot(versionToRelease)
   setCurrentVersion(nextSnapshot)
   runCommand("git", "commit", "-a", "-m", "version is now $nextSnapshot")
   runCommand("git", "push", "origin", bumpVersionBranchName)
@@ -130,7 +97,7 @@ internal fun setCurrentVersion(version: String) {
   file.writeText(newContent)
 }
 
-internal fun getCurrentVersion(): String {
+fun getCurrentVersion(): String {
   val file = File("librarian.properties")
   require(file.exists()) {
     "Cannot find file ${file.absolutePath}"

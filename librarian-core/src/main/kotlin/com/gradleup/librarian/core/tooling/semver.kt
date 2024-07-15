@@ -42,12 +42,10 @@ internal fun getNextSnapshot(version: String): String {
   return getNextPatch(version) + "-SNAPSHOT"
 }
 
-internal class PreRelease(
+class PreRelease(
     val name: String,
     val version: Int,
-) {
-
-}
+)
 
 internal fun PreRelease?.compareTo(other: PreRelease?): Int {
   return if (this == null && other == null) {
@@ -67,7 +65,7 @@ internal fun PreRelease?.compareTo(other: PreRelease?): Int {
   }
 }
 
-internal class Version(
+class Version(
     val major: Int,
     val minor: Int,
     val patch: Int,
@@ -94,7 +92,7 @@ internal class Version(
   }
 }
 
-internal fun String.toVersionOrNull(): Version? {
+fun String.toVersionOrNull(): Version? {
   val regex1 = Regex("([0-9]+)\\.([0-9]+)\\.([0-9]+)(.*)")
 
   val result1 = regex1.matchEntire(this) ?: return null
@@ -114,7 +112,7 @@ internal fun String.toVersionOrNull(): Version? {
   if (snapshot) {
     rem = rem.removeSuffix("-SNAPSHOT")
   }
-  if (!rem.isEmpty()) {
+  if (rem.isNotEmpty()) {
     if (!rem.startsWith("-")) {
       return null
     }
