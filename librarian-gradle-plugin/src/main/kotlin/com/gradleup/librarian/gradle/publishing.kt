@@ -13,6 +13,7 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import java.util.Properties
 
 internal const val librarianPublication = "librarianPublication"
@@ -154,8 +155,9 @@ fun Project.createMissingPublications(
   when {
     project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform") -> {
       /**
-       * Kotlin MPP creates publications.
-       * It only misses the javadoc
+       * Kotlin MPP creates publications but doesn't add javadoc.
+       * Note: for Android, the caller needs to opt-in puoblication
+       * See https://kotlinlang.org/docs/multiplatform-publish-lib.html#publish-an-android-library
        */
       publications.withType(MavenPublication::class.java).configureEach {
         it.artifact(emptyJavadoc)

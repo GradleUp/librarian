@@ -3,14 +3,54 @@ package com.gradleup.librarian.core.tooling
 import java.io.File
 
 fun tagAndBump(versionToRelease: String) {
+  return tagAndBump(versionToRelease) {
+    error("versionToRelease must not be null")
+  }
+}
+
+sealed interface Confirmation
+class UseDefaultVersion(
+    val expectedVersion: String
+): Confirmation
+
+class DowngradeVersion(
+    val tagVersion: String,
+    val currentVersion: String
+): Confirmation
+
+class BumpMajor(
+    val tagVersion: String,
+    val currentVersion: String
+): Confirmation
+
+fun tagAndBump(versionToRelease: String?, confirm: (Confirmation) -> Unit) {
   checkCwd()
 
-  check(versionToRelease.isValidVersion()) {
-    "Version must start with 'major.minor.patch' (found '$versionToRelease')"
+  var tagVersion = versionToRelease
+  val currentVersion = getCurrentVersion()
+  val currentVersionParsed = currentVersion.toVersionOrNull()
+  check(currentVersionParsed != null) {
+    "Cannot parse current version: '${currentVersion}'"
+  }
+  check(currentVersionParsed.isSnapshot) {
+    "Version '${currentVersion} is not a -SNAPSHOT, check your working directory"
   }
 
-  check(getCurrentVersion().endsWith("-SNAPSHOT")) {
-    "Version '${getCurrentVersion()} is not a -SNAPSHOT, check your working directory"
+  val expectedVersion = currentVersion.removeSuffix("-SNAPSHOT")
+
+  if (tagVersion == null) {
+    confirm(UseDefaultVersion(expectedVersion))
+    tagVersion = expectedVersion
+  }
+
+  val tagVersionParsed = tagVersion.toVersionOrNull()
+  check(tagVersionParsed != null) {
+    "Version must start with 'major.minor.patch' (found '$tagVersion')"
+  }
+  if (tagVersionParsed < currentVersionParsed) {
+    confirm(DowngradeVersion(tagVersion, currentVersion))
+  } else if (tagVersionParsed.major > currentVersionParsed.major) {
+    confirm(BumpMajor(tagVersion, currentVersion))
   }
 
   check(runCommand("git", "status", "--porcelain").isEmpty()) {
@@ -22,14 +62,14 @@ fun tagAndBump(versionToRelease: String) {
     "You must be on the main branch or a release branch to make a release"
   }
 
-  val markdown = processChangelog(versionToRelease)
+  val markdown = processChangelog(tagVersion)
 
   // 'De-snapshot' the version, open a PR, and merge it
-  val releaseBranchName = "tag-$versionToRelease"
+  val releaseBranchName = "tag-$tagVersion"
   runCommand("git", "checkout", "-b", releaseBranchName)
-  setCurrentVersion(versionToRelease)
-  setVersionInDocs(versionToRelease)
-  runCommand("git", "commit", "-a", "-m", "release $versionToRelease")
+  setCurrentVersion(tagVersion)
+  setVersionInDocs(tagVersion)
+  runCommand("git", "commit", "-a", "-m", "release $tagVersion")
   runCommand("git", "push", "origin", releaseBranchName)
   runCommand("gh", "pr", "create", "--base", startBranch, "--fill")
 
@@ -39,17 +79,17 @@ fun tagAndBump(versionToRelease: String) {
   // Tag the release, and push the tag
   runCommand("git", "checkout", startBranch)
   runCommand("git", "pull", "origin", startBranch)
-  val tagName = "v$versionToRelease"
+  val tagName = "v$tagVersion"
   runCommand("git", "tag", tagName, "-m", markdown)
 
   runCommand("git", "push", "origin", tagName)
   println("Tag pushed.")
 
   // Bump the version to the next snapshot
-  val bumpVersionBranchName = "bump-$versionToRelease"
+  val bumpVersionBranchName = "bump-$tagVersion"
   runCommand("git", "checkout", "-b", bumpVersionBranchName)
 
-  val nextSnapshot = getNextSnapshot(versionToRelease)
+  val nextSnapshot = getNextSnapshot(tagVersion)
   setCurrentVersion(nextSnapshot)
   runCommand("git", "commit", "-a", "-m", "version is now $nextSnapshot")
   runCommand("git", "push", "origin", bumpVersionBranchName)
