@@ -2,22 +2,7 @@ package com.gradleup.librarian.core.tooling
 
 import java.io.File
 
-sealed interface Confirmation
-class UseDefaultVersion(
-    val expectedVersion: String
-): Confirmation
-
-class DowngradeVersion(
-    val tagVersion: String,
-    val currentVersion: String
-): Confirmation
-
-class BumpMajor(
-    val tagVersion: String,
-    val currentVersion: String
-): Confirmation
-
-fun tagAndBump(versionToRelease: String) {
+fun tagAndBump(versionToRelease: Version) {
   checkCwd()
 
   check(runCommand("git", "status", "--porcelain").isEmpty()) {
@@ -29,14 +14,15 @@ fun tagAndBump(versionToRelease: String) {
     "You must be on the main branch or a release branch to make a release"
   }
 
-  val markdown = processChangelog(versionToRelease)
+  val versionToReleaseString = versionToRelease.toString()
+  val markdown = processChangelog(versionToReleaseString)
 
   // 'De-snapshot' the version, open a PR, and merge it
-  val releaseBranchName = "tag-$versionToRelease"
+  val releaseBranchName = "tag-$versionToReleaseString"
   runCommand("git", "checkout", "-b", releaseBranchName)
-  setCurrentVersion(versionToRelease)
-  setVersionInDocs(versionToRelease)
-  runCommand("git", "commit", "-a", "-m", "release $versionToRelease")
+  setCurrentVersion(versionToReleaseString)
+  setVersionInDocs(versionToReleaseString)
+  runCommand("git", "commit", "-a", "-m", "release $versionToReleaseString")
   runCommand("git", "push", "origin", releaseBranchName)
   runCommand("gh", "pr", "create", "--base", startBranch, "--fill")
 
@@ -46,17 +32,17 @@ fun tagAndBump(versionToRelease: String) {
   // Tag the release, and push the tag
   runCommand("git", "checkout", startBranch)
   runCommand("git", "pull", "origin", startBranch)
-  val tagName = "v$versionToRelease"
+  val tagName = "v$versionToReleaseString"
   runCommand("git", "tag", tagName, "-m", markdown)
 
   runCommand("git", "push", "origin", tagName)
   println("Tag pushed.")
 
   // Bump the version to the next snapshot
-  val bumpVersionBranchName = "bump-$versionToRelease"
+  val bumpVersionBranchName = "bump-$versionToReleaseString"
   runCommand("git", "checkout", "-b", bumpVersionBranchName)
 
-  val nextSnapshot = getNextSnapshot(versionToRelease)
+  val nextSnapshot = versionToRelease.next().copy(isSnapshot = true).toString()
   setCurrentVersion(nextSnapshot)
   runCommand("git", "commit", "-a", "-m", "version is now $nextSnapshot")
   runCommand("git", "push", "origin", bumpVersionBranchName)
@@ -106,7 +92,7 @@ fun getCurrentVersion(): String {
   var version: String? = null
 
   for (line in file.readLines()) {
-    val mr = Regex("pom.version=(.*)-SNAPSHOT.*").matchEntire(line)
+    val mr = Regex("pom.version=(.*)").matchEntire(line)
     if (mr != null) {
       version = mr.groupValues.get(1)
       break
@@ -117,7 +103,7 @@ fun getCurrentVersion(): String {
     "Cannot find pom.version in ${file.absolutePath}"
   }
 
-  return "$version-SNAPSHOT"
+  return version
 }
 
 internal fun setVersionInDocs(version: String) {
@@ -142,8 +128,6 @@ internal fun mergeAndWait(branchName: String) {
     Thread.sleep(1000)
   }
 }
-
-
 
 internal fun checkCwd() {
   File(".git").apply {

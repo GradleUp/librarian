@@ -9,13 +9,14 @@ plugins {
 librarianModule()
 
 dependencies {
+    api(libs.bcv)
+    api(libs.dokkatoo)
+
+    implementation(project(":librarian-core"))
     implementation(libs.coroutines)
     implementation(libs.vespene)
     implementation(libs.maven.sympathy)
     implementation(libs.okhttp)
-    api(libs.dokkatoo)
-    implementation(project(":librarian-core"))
-    api(libs.bcv)
 
     compileOnly(libs.gradle.api)
     compileOnly(libs.agp)

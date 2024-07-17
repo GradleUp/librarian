@@ -1,69 +1,10 @@
 package com.gradleup.librarian.core.tooling
 
-internal fun getNextPatch(version: String): String {
-  val components = version.split(".").toMutableList()
-  val part = components.removeLast()
-  var digitCount = 0
-  for (i in part.indices.reversed()) {
-    if (part[i] < '0' || part[i] > '9') {
-      break
-    }
-    digitCount++
-  }
-
-  check(digitCount > 0) {
-    "Cannot find a number to bump in $version"
-  }
-
-  // prefix can be "alpha", "dev", etc...
-  val prefix = if (digitCount < part.length) {
-    part.substring(0, part.length - digitCount)
-  } else {
-    ""
-  }
-  val numericPart = part.substring(part.length - digitCount, part.length)
-  val asNumber = numericPart.toInt()
-
-  val nextPart = if (numericPart[0] == '0') {
-    // https://docs.gradle.org/current/userguide/single_versions.html#version_ordering
-    // Gradle understands that alpha2 > alpha10 but it might not be the case for everyone so
-    // use the same naming schemes as other libs and keep the prefix
-    val width = numericPart.length
-    String.format("%0${width}d", asNumber + 1)
-  } else {
-    (asNumber + 1).toString()
-  }
-
-  components.add("$prefix$nextPart")
-  return components.joinToString(".")
-}
-
-internal fun getNextSnapshot(version: String): String {
-  return getNextPatch(version) + "-SNAPSHOT"
-}
-
 class PreRelease(
     val name: String,
     val version: Int,
 )
 
-internal fun PreRelease?.compareTo(other: PreRelease?): Int {
-  return if (this == null && other == null) {
-    0
-  } else if (this == null) {
-    1
-  } else if (other == null) {
-    -1
-  } else {
-    // XXX: should we handle non-lexicographic order here?
-    val ret = name.compareTo(other.name)
-    if (ret != 0) {
-      return ret
-    }
-
-    return version.compareTo(other.version)
-  }
-}
 
 class Version(
     val major: Int,
@@ -90,6 +31,75 @@ class Version(
 
     return 0
   }
+
+  override fun toString(): String {
+    return buildString {
+      append("$major.$minor.$patch")
+      if (preRelease != null) {
+        append("-${preRelease.name}.${preRelease.version}")
+      }
+      if (isSnapshot) {
+        append("-SNAPSHOT")
+      }
+    }
+  }
+}
+
+internal fun PreRelease?.compareTo(other: PreRelease?): Int {
+  return if (this == null && other == null) {
+    0
+  } else if (this == null) {
+    1
+  } else if (other == null) {
+    -1
+  } else {
+    // XXX: should we handle non-lexicographic order here?
+    val ret = name.compareTo(other.name)
+    if (ret != 0) {
+      return ret
+    }
+
+    return version.compareTo(other.version)
+  }
+}
+
+fun Version.copy(
+    major: Int = this.major,
+    minor: Int = this.minor,
+    patch: Int = this.patch,
+    preRelease: PreRelease? = this.preRelease,
+    isSnapshot: Boolean = this.isSnapshot,
+): Version {
+  return Version(
+      major,
+      minor,
+      patch,
+      preRelease,
+      isSnapshot
+  )
+}
+
+fun PreRelease.copy(
+    name: String = this.name,
+    version: Int = this.version
+): PreRelease {
+  return PreRelease(name, version)
+}
+
+fun Version.nextPatch(): Version {
+  return copy(patch = patch + 1, preRelease = null, isSnapshot = false)
+}
+
+fun Version.nextMinor(): Version {
+  return copy(minor = minor + 1, patch = 0, preRelease = null, isSnapshot = false)
+}
+
+fun Version.next(): Version {
+  return if (preRelease != null) {
+    copy(preRelease = preRelease.copy(version = preRelease.version + 1), isSnapshot = false)
+  } else {
+    copy(patch = patch + 1, isSnapshot = false)
+  }
 }
 
 fun String.toVersionOrNull(): Version? {
@@ -108,8 +118,8 @@ fun String.toVersionOrNull(): Version? {
 
   var preRelease: PreRelease? = null
 
-  val snapshot = rem.endsWith("-SNAPSHOT")
-  if (snapshot) {
+  val isSnapshot = rem.endsWith("-SNAPSHOT")
+  if (isSnapshot) {
     rem = rem.removeSuffix("-SNAPSHOT")
   }
   if (rem.isNotEmpty()) {
@@ -128,6 +138,6 @@ fun String.toVersionOrNull(): Version? {
       minor,
       patch,
       preRelease,
-      snapshot
+      isSnapshot
   )
 }

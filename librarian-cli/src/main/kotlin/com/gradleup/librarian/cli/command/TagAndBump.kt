@@ -3,22 +3,36 @@ package com.gradleup.librarian.cli.command
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.optional
-import com.github.ajalt.clikt.parameters.options.flag
-import com.github.ajalt.clikt.parameters.options.option
 import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.promptConfirm
-import com.gradleup.librarian.core.tooling.BumpMajor
-import com.gradleup.librarian.core.tooling.DowngradeVersion
-import com.gradleup.librarian.core.tooling.UseDefaultVersion
+import com.gradleup.librarian.core.tooling.Version
+import com.gradleup.librarian.core.tooling.next
 import com.gradleup.librarian.core.tooling.getCurrentVersion
+import com.gradleup.librarian.core.tooling.nextMinor
+import com.gradleup.librarian.core.tooling.nextPatch
+import com.gradleup.librarian.core.tooling.runCommand
 import com.gradleup.librarian.core.tooling.tagAndBump
 import com.gradleup.librarian.core.tooling.toVersionOrNull
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+import kotlin.io.path.Path
 import kotlin.system.exitProcess
 
-internal class TagAndBump: CliktCommand() {
+@OptIn(ExperimentalContracts::class)
+internal fun checkOrExit(condition: Boolean, message: () -> String) {
+  contract {
+    returns() implies condition
+  }
+  if (!condition) {
+    println(message())
+    exitProcess(1)
+  }
+}
+
+internal abstract class AbstractTagAndBump: CliktCommand() {
   val versionToRelease by argument().optional()
-  val patch by option().flag()
-  val minor by option().flag()
+
+  abstract fun run(versionToRelease: Version)
 
   private fun confirmOrExit(message: String) {
     if (!KInquirer.promptConfirm(message, true)) {
@@ -29,24 +43,29 @@ internal class TagAndBump: CliktCommand() {
   override fun run() {
     val currentVersion = getCurrentVersion()
     val currentVersionParsed = currentVersion.toVersionOrNull()
-    check(currentVersionParsed != null) {
+    checkOrExit(currentVersionParsed != null) {
       "Cannot parse current version: '${currentVersion}'"
     }
-    check(currentVersionParsed.isSnapshot) {
+    checkOrExit(currentVersionParsed.isSnapshot) {
       "Version '${currentVersion} is not a -SNAPSHOT, check your working directory"
     }
 
-    val expectedVersion = currentVersion.removeSuffix("-SNAPSHOT")
-
     var versionToRelease = this.versionToRelease
     if (versionToRelease == null) {
-      confirmOrExit("Tag version '${expectedVersion}' and bump?")
-      versionToRelease = expectedVersion
+      val expected = currentVersionParsed.next().toString()
+      confirmOrExit("Tag version '${expected}' and bump?")
+      versionToRelease = expected
+    } else if (versionToRelease == "next"){
+      versionToRelease = currentVersionParsed.next().toString()
+    } else if (versionToRelease == "patch"){
+      versionToRelease = currentVersionParsed.nextPatch().toString()
+    } else if (versionToRelease == "minor") {
+      versionToRelease = currentVersionParsed.nextMinor().toString()
     }
 
     val tagVersionParsed = versionToRelease.toVersionOrNull()
-    check(tagVersionParsed != null) {
-      "Version must start with 'major.minor.patch' (found '$versionToRelease')"
+    checkOrExit(tagVersionParsed != null) {
+      "Version '$versionToRelease' cannot be parsed (expected 'major.minor.patch[-prerelease.version][-SNAPSHOT]')"
     }
     if (tagVersionParsed < currentVersionParsed) {
       confirmOrExit("Downgrade version to '${versionToRelease}' and bump? (current version is ${currentVersion})")
@@ -54,6 +73,18 @@ internal class TagAndBump: CliktCommand() {
       confirmOrExit("Bump major version to '${versionToRelease}' and bump? (current version is ${currentVersion})")
     }
 
+    run(tagVersionParsed)
+  }
+}
+
+internal class TriggerTagAndBump: AbstractTagAndBump(){
+  override fun run(versionToRelease: Version) {
+    Path(".").runCommand("gh", "workflow", "run", "tag-and-bump.yaml", "-f", "versionToRelease=$versionToRelease")
+  }
+}
+
+internal class TagAndBump: AbstractTagAndBump(){
+  override fun run(versionToRelease: Version) {
     tagAndBump(versionToRelease)
   }
 }
