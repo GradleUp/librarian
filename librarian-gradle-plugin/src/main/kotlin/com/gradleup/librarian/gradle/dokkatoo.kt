@@ -8,10 +8,12 @@ import dev.adamko.dokkatoo.tasks.DokkatooGenerateTask
 import org.gradle.api.Project
 import org.gradle.api.UnknownTaskException
 import org.gradle.api.attributes.Usage
+import org.gradle.api.internal.file.FileOperations
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
 import java.io.File
+import javax.inject.Inject
 
 class KdocAggregate(
     val currentVersion: String,
@@ -129,8 +131,10 @@ fun Project.configureDokkatooAggregate(currentVersion: String, olderVersions: Li
         it.dependencies.add(project.dependencies.create("$version:javadoc"))
       }
 
+      val fileOperations = objects.newInstance(FileOperationsHolder::class.java).fileOperations
+
       tasks.register("librarianExtractKdocVersion_$versionString", Copy::class.java) {
-        it.from(configuration.elements.map { it.map { zipTree(it) } })
+        it.from(configuration.elements.map { it.map { fileOperations.zipTree(it) } })
         it.into(layout.buildDirectory.dir("kdoc-versions/${version.version}"))
       }
     }
@@ -167,6 +171,7 @@ fun Project.configureDokkatooAggregate(currentVersion: String, olderVersions: Li
   }
 }
 
+private abstract class FileOperationsHolder @Inject constructor(val fileOperations: FileOperations)
 
 private val kdocWithoutOlder = "kdocWithoutOlder"
 

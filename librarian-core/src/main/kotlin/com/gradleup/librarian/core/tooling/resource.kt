@@ -2,19 +2,24 @@ package com.gradleup.librarian.core.tooling
 
 import java.nio.file.Path
 import java.nio.file.attribute.PosixFilePermissions
+import kotlin.ByteArray
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.setPosixFilePermissions
 import kotlin.io.path.writeText
 
-fun readResource(resourceName: String): String {
+fun readTextResource(resourceName: String): String {
   return GH::class.java.classLoader.getResourceAsStream(resourceName)?.reader()?.buffered()?.readText() ?: error("No resource found for $resourceName")
 }
 
-internal fun readResource(resourceName: String, values: Map<String, String>): String {
-  return readResource(resourceName).substituteVariables(values)
+fun readBinaryResource(resourceName: String): ByteArray {
+  return GH::class.java.classLoader.getResourceAsStream(resourceName)?.readAllBytes() ?: error("No resource found for $resourceName")
 }
 
-fun String.writeTo(path: Path) {
+internal fun readTextResource(resourceName: String, values: Map<String, String>): String {
+  return readTextResource(resourceName).substituteVariables(values)
+}
+
+fun String.writeTextTo(path: Path) {
   path.createParentDirectories()
   path.writeText(this)
 }

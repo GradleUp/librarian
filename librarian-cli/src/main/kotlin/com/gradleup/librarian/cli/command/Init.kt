@@ -36,7 +36,7 @@ import kotlin.io.path.name
 import kotlin.system.exitProcess
 
 
-internal class InitCommand : CliktCommand(invokeWithoutSubcommand = true) {
+internal class Init : CliktCommand(invokeWithoutSubcommand = true) {
   init {
     subcommands(ActionsCommand(),
         ChangelogCommand(),
@@ -78,12 +78,12 @@ internal class InitCommand : CliktCommand(invokeWithoutSubcommand = true) {
           exitProcess(1)
         }
 
-        val changelogCandidates = Files.list(this).filter { it.name.startsWith("CHANGELOG.md") }.toListPolyfill()
+        val changelogCandidates = Files.list(this).filter { it.name.startsWith("CHANGELOG") }.toListPolyfill()
         if (changelogCandidates.isEmpty()) {
           println("Creating CHANGELOG.md...")
           initChangelog()
-        } else if (licenseCandidates.size == 1) {
-          val changelogPath = licenseCandidates.single()
+        } else if (changelogCandidates.size == 1) {
+          val changelogPath = changelogCandidates.single()
           if (changelogPath.name != "CHANGELOG.md") {
             println("Moving '${changelogPath.name}' to 'CHANGELOG.md'...")
             changelogPath.moveTo(resolve("CHANGELOG.md"))

@@ -2,13 +2,13 @@ package com.gradleup.librarian.core.tooling.init
 
 import com.gradleup.librarian.core.VERSION
 import com.gradleup.librarian.core.tooling.GitHubRepository
-import com.gradleup.librarian.core.tooling.readResource
-import com.gradleup.librarian.core.tooling.writeTo
+import com.gradleup.librarian.core.tooling.readTextResource
+import com.gradleup.librarian.core.tooling.writeTextTo
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 import kotlin.io.path.createDirectory
-import kotlin.io.path.createParentDirectories
+import kotlin.io.path.writeBytes
 import kotlin.io.path.writeText
 
 val kotlinPluginVersion = "2.0.0"
@@ -23,8 +23,9 @@ fun Path.initProject(
     addDocumentationSite: Boolean,
     sonatypeBackend: SonatypeBackend,
 ) {
-  readResource("project/gradle.properties").writeTo(resolve("gradle.properties"))
-  readResource("project/gradle/libs.versions.toml").writeTo(resolve("gradle/libs.versions.toml"))
+  readTextResource("project/gradle.properties").writeTextTo(resolve("gradle.properties"))
+  readTextResource("project/gradle/libs.versions.toml").writeTextTo(resolve("gradle/libs.versions.toml"))
+  readTextResource("project/settings.gradle.kts").writeTextTo(resolve("settings.gradle.kts"))
 
   val kotlinPluginId = if (multiplatform) "org.jetbrains.kotlin.multiplatform" else "org.jetbrains.kotlin.jvm"
 
@@ -61,6 +62,7 @@ fun Path.initProject(
       )
     }
 
+    appendLine()
     appendLine("## $projectTitle")
     appendLine(readmeDescription)
 
@@ -74,6 +76,10 @@ fun Path.initProject(
     appendLine("The Kdoc API reference can be found at: <br/>")
     appendLine("[https://${repository.owner}.github.io/${repository.name}/kdoc](https://${repository.owner}.github.io/${repository.name}/kdoc)")
   })
+}
+
+fun ByteArray.writeBinaryTo(destination: Path) {
+  destination.writeBytes(this)
 }
 
 private fun String.urlencode(): String = URLEncoder.encode(this, StandardCharsets.UTF_8.toString())

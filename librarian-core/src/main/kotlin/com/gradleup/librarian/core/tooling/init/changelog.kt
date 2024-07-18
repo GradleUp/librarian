@@ -1,10 +1,10 @@
 package com.gradleup.librarian.core.tooling.init
 
-import com.gradleup.librarian.core.tooling.readResource
-import com.gradleup.librarian.core.tooling.writeTo
+import com.gradleup.librarian.core.tooling.readTextResource
+import com.gradleup.librarian.core.tooling.writeTextTo
 import java.nio.file.Path
 
 fun Path.initChangelog() {
-  readResource("CHANGELOG.md")
-      .writeTo(resolve("CHANGELOG.md"))
+  readTextResource("CHANGELOG.md")
+      .writeTextTo(resolve("CHANGELOG.md"))
 }

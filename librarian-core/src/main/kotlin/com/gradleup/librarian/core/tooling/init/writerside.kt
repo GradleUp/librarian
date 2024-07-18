@@ -1,8 +1,8 @@
 package com.gradleup.librarian.core.tooling.init
 
 import com.gradleup.librarian.core.tooling.GitHubRepository
-import com.gradleup.librarian.core.tooling.readResource
-import com.gradleup.librarian.core.tooling.writeTo
+import com.gradleup.librarian.core.tooling.readTextResource
+import com.gradleup.librarian.core.tooling.writeTextTo
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.createParentDirectories
@@ -21,7 +21,7 @@ fun Path.initWriterside(repository: GitHubRepository) {
       "Writerside/v.list",
       "Writerside/writerside.cfg",
   ).forEach {
-    readResource(it, variables).writeTo(resolve(it))
+    readTextResource(it, variables).writeTextTo(resolve(it))
   }
   Path("Writerside").createParentDirectories()
 }

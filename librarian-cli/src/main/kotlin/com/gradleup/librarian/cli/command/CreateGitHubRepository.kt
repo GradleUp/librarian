@@ -6,45 +6,40 @@ import com.github.kinquirer.components.promptConfirm
 import com.github.kinquirer.components.promptInput
 import com.github.kinquirer.components.promptList
 import com.gradleup.librarian.cli.command.init.setSecrets
-import com.gradleup.librarian.cli.promptMultilinePassword
-import com.gradleup.librarian.cli.requirePassword
 import com.gradleup.librarian.core.tooling.GH
 import com.gradleup.librarian.core.tooling.GitHubRepository
 import com.gradleup.librarian.core.tooling.getAvailableOrganizations
-import com.gradleup.librarian.core.tooling.init.Secrets
 import com.gradleup.librarian.core.tooling.init.initMetadata
-import com.gradleup.librarian.core.tooling.init.initSecrets
-import com.gradleup.librarian.core.tooling.repositoryOrNull
 import com.gradleup.librarian.core.tooling.runCommand
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.absolute
 import kotlin.io.path.name
 
-internal class UploadResult(val uploaded: Boolean, val secretsSet: Boolean)
+internal class UploadResult(val created: Boolean, val secretsSet: Boolean)
 
-class UploadCommand : CliktCommand() {
+class CreateGitHubRepository : CliktCommand() {
   override fun run() {
 
     Path(".").apply {
       val gitHubProjectName = KInquirer.promptInput(message = "GitHub repository name", this.absolute().normalize().name)
       val gitHubProjectOwner = KInquirer.promptList(message = "GitHub repository owner", getAvailableOrganizations())
       val repository = GitHubRepository(gitHubProjectOwner, gitHubProjectName)
-      upload(repository, "")
+      createGitHubRepository(repository, "")
     }
   }
 }
 
-internal fun Path.upload(repository: GitHubRepository, defaultDescription: String): UploadResult {
+internal fun Path.createGitHubRepository(repository: GitHubRepository, defaultDescription: String): UploadResult {
   val upload = KInquirer.promptConfirm(
-      "Upload your project to GitHub at ${repository.owner}/${repository.name} and make it public?",
+      "Create public GitHub repository at ${repository.owner}/${repository.name}?",
       default = true
   )
   if (!upload) {
     return UploadResult(false, false)
   }
 
-  runCommand("gh", "repo", "create", "--public", "-s", ".", "--push")
+  runCommand("gh", "repo", "create", "--public", "-s", ".")
 
   val gitHubDescription = KInquirer.promptInput("GitHub description", defaultDescription)
   val gitHubTopics = KInquirer.promptInput("GitHub topics (use comma separated list)", "kotlin").split(",").map { it.trim() }

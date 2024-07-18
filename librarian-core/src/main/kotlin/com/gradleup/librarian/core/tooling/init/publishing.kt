@@ -43,9 +43,9 @@ fun SonatypeBackend.toBaseUrl(): String {
 }
 
 enum class SonatypeBackend {
-  Default,
+  Portal,
   S01,
-  Portal
+  Default,
 }
 
 enum class SonatypeRelease {

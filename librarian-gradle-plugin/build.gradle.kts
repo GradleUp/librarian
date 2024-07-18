@@ -24,7 +24,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(gradleTestKit())
-    testImplementation(libs.mockwebserver)
+    testImplementation(libs.mockserver)
 }
 
 configurations.getByName("api").dependencies.removeIf {

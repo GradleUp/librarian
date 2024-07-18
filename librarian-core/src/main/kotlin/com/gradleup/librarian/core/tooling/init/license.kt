@@ -1,16 +1,11 @@
 package com.gradleup.librarian.core.tooling.init
 
-import com.gradleup.librarian.core.tooling.readResource
-import com.gradleup.librarian.core.tooling.writeTo
-import java.nio.file.Files
+import com.gradleup.librarian.core.tooling.readTextResource
+import com.gradleup.librarian.core.tooling.writeTextTo
 import java.nio.file.Path
 import java.time.Instant
 import java.time.ZoneOffset
-import java.util.stream.Stream
-import kotlin.io.path.exists
-import kotlin.io.path.name
 import kotlin.io.path.useLines
-import kotlin.streams.toList
 
 fun currentYear(): String {
   return Instant.now().atOffset(ZoneOffset.UTC).year.toString()
@@ -29,8 +24,8 @@ enum class SupportedLicense(val displayName: String) {
 fun Path.initLicense(license: SupportedLicense, year: String, copyright: String) {
   val variableValues = mapOf("year" to year, "copyright" to copyright)
 
-  readResource("licenses/${license.name}", variableValues)
-      .writeTo(resolve("LICENSE"))
+  readTextResource("licenses/${license.name}", variableValues)
+      .writeTextTo(resolve("LICENSE"))
 }
 
 fun Path.guessLicenseOrNull(): SupportedLicense? {

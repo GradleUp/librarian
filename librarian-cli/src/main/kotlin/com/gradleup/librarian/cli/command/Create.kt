@@ -117,16 +117,21 @@ internal class Create : CliktCommand() {
       print("""
         
         Your project is now created ✅
+        
         Peek around and if everything looks good, make it public!
+        
         
       """.trimIndent())
 
-      val result = upload(repository, pomDescription)
+      val result = createGitHubRepository(repository, pomDescription)
 
+      println()
       println("All done \uD83C\uDF89")
+      println()
       println("Next steps:")
-      if (!result.uploaded) {
-        println("- run `librarian upload` to upload your project to GitHub")
+      println("- cd $directory")
+      if (!result.created) {
+        println("- run `librarian create-github-repository` to upload your project to GitHub")
       }
       if (!result.secretsSet) {
         println("- run `librarian init secrets` to set your publishing secrets")

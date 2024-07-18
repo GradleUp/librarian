@@ -11,8 +11,11 @@ dependencies {
     implementation(libs.jsonpath)
     implementation(libs.jsonpathkt)
     implementation(libs.okhttp)
+    implementation(libs.bouncycastle.prov)
+    implementation(libs.bouncycastle.pg)
     implementation(libs.serialization.json)
 
     testImplementation(kotlin("test"))
+    testImplementation(libs.mockserver)
 }
 

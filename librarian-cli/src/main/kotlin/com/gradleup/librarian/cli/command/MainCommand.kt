@@ -11,7 +11,7 @@ internal class MainCommand: CliktCommand(invokeWithoutSubcommand = true) {
   val version by option().flag()
 
   init {
-    subcommands(Create(), UploadCommand(), InitCommand(), TagAndBump(), TriggerTagAndBump(), )
+    subcommands(Create(), CreateGitHubRepository(), Init(), TagAndBump(), TriggerTagAndBump(), GenerateKey(), UploadKey() )
   }
 
   override fun run() {

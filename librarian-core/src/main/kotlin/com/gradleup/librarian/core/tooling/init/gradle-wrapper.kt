@@ -1,16 +1,17 @@
 package com.gradleup.librarian.core.tooling.init
 
 import com.gradleup.librarian.core.tooling.makeExecutable
-import com.gradleup.librarian.core.tooling.readResource
-import com.gradleup.librarian.core.tooling.writeTo
+import com.gradleup.librarian.core.tooling.readBinaryResource
+import com.gradleup.librarian.core.tooling.readTextResource
+import com.gradleup.librarian.core.tooling.writeTextTo
 import java.nio.file.Path
 
 fun Path.initGradleWrapper() {
-  readResource("gradle/gradle-wrapper.jar").writeTo(resolve("gradle/wrapper/gradle-wrapper.jar"))
-  readResource("gradle/gradle-wrapper.properties").writeTo(resolve("gradle/wrapper/gradle-wrapper.properties"))
-  readResource("gradle/gradlew").writeTo(resolve("gradle/wrapper/gradlew"))
-  readResource("gradle/gradlew.bat").writeTo(resolve("gradle/wrapper/gradlew.bat"))
+  readTextResource("gradle/gradle-wrapper.properties").writeTextTo(resolve("gradle/wrapper/gradle-wrapper.properties"))
+  readBinaryResource("gradle/gradle-wrapper.jar").writeBinaryTo(resolve("gradle/wrapper/gradle-wrapper.jar"))
+  readTextResource("gradle/gradlew").writeTextTo(resolve("gradlew"))
+  readTextResource("gradle/gradlew.bat").writeTextTo(resolve("gradlew.bat"))
 
-  resolve("gradle/wrapper/gradlew").makeExecutable()
-  resolve("gradle/wrapper/gradlew.bat").makeExecutable()
+  resolve("gradlew").makeExecutable()
+  resolve("gradlew.bat").makeExecutable()
 }
