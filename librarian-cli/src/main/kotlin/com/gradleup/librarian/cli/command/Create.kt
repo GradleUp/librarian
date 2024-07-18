@@ -6,95 +6,143 @@ import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.promptConfirm
 import com.github.kinquirer.components.promptInput
 import com.github.kinquirer.components.promptList
-import com.gradleup.librarian.cli.promptMultilinePassword
-import com.gradleup.librarian.cli.requirePassword
 import com.gradleup.librarian.core.tooling.GitHubRepository
 import com.gradleup.librarian.core.tooling.getAvailableOrganizations
-import com.gradleup.librarian.core.tooling.init.Secrets
 import com.gradleup.librarian.core.tooling.init.SonatypeBackend
 import com.gradleup.librarian.core.tooling.init.SupportedLicense
 import com.gradleup.librarian.core.tooling.init.currentYear
 import com.gradleup.librarian.core.tooling.init.initActions
 import com.gradleup.librarian.core.tooling.init.initChangelog
 import com.gradleup.librarian.core.tooling.init.initCodeStyle
-import com.gradleup.librarian.core.tooling.init.initGitHub
 import com.gradleup.librarian.core.tooling.init.initGitIgnore
 import com.gradleup.librarian.core.tooling.init.initGradleWrapper
+import com.gradleup.librarian.core.tooling.init.initLibrarian
 import com.gradleup.librarian.core.tooling.init.initLicense
-import com.gradleup.librarian.core.tooling.init.initMetadata
 import com.gradleup.librarian.core.tooling.init.initProject
-import com.gradleup.librarian.core.tooling.init.initPublishing
-import com.gradleup.librarian.core.tooling.init.initSecrets
 import com.gradleup.librarian.core.tooling.init.initWriterside
+import com.gradleup.librarian.core.tooling.init.toBaseUrl
+import com.gradleup.librarian.core.tooling.init.toSupportedLicense
 import com.gradleup.librarian.core.tooling.runCommand
+import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.Path
-import kotlin.io.path.name
+import kotlin.io.path.createDirectory
+import kotlin.io.path.deleteRecursively
+import kotlin.io.path.exists
 import kotlin.system.exitProcess
 
 internal class Create : CliktCommand() {
   private val directory by argument()
 
+  @OptIn(ExperimentalPathApi::class)
   override fun run() {
+
     with(Path(directory)) {
-      val repository = GitHubRepository(
-          KInquirer.promptInput(message = "GitHub repository name", name),
-          KInquirer.promptList(message = "GitHub repository owner", getAvailableOrganizations())
-      )
-      val copyright = KInquirer.promptInput("Copyright holder")
-      val multiplatform = KInquirer.promptConfirm("Multiplatform")
-      val indent = KInquirer.promptInput("Indent size", "4")
-      val shortDescription = KInquirer.promptInput("Short description", repository.name)
-      val topics = KInquirer.promptInput("Topics", repository.name).split(",").map { it.trim() }
-      val groupId = KInquirer.promptInput("Maven group id", "io.github.${repository.owner}.${repository.name}")
+      if (exists()) {
+        if(KInquirer.promptConfirm("'$directory' already exists. Overwrite?", false)) {
+          deleteRecursively()
+        } else {
+          exitProcess(1)
+        }
+      }
+      createDirectory()
+
+      println("""
+        
+        📚 Welcome to librarian 📚
+        
+        Librarian helps you build and maintain Kotlin libraries.
+        
+        ℹ️  Librarian requires a GitHub repository. 
+        
+        We'll now ask a few questions and prepare a brand new project in the '$directory' directory. 
+        Once this is done, you'll have a chance to review the project and push it to GitHub (or do it later).
+        
+      """.trimIndent())
+
+      val gitHubProjectName = KInquirer.promptInput(message = "GitHub repository name", directory)
+      val gitHubProjectOwner = KInquirer.promptList(message = "GitHub repository owner", getAvailableOrganizations())
+      val license = KInquirer.promptList("License", SupportedLicense.entries.map { it.name }).toSupportedLicense()
+      val copyrightHolder = KInquirer.promptInput("Copyright holder", "$gitHubProjectName authors")
+      val groupId = KInquirer.promptInput("Maven group id", "io.github.${gitHubProjectOwner}.${gitHubProjectName}")
+      val pomDescription = KInquirer.promptInput("Maven pom description")
+      val pomDeveloper = KInquirer.promptInput("Maven pom developer", copyrightHolder)
       val sonatypeBackend = KInquirer.promptList("Sonatype backend", SonatypeBackend.entries.map { it.name })
+      val multiplatform = KInquirer.promptConfirm("Kotlin multiplatform project")
       val javaCompatibility = KInquirer.promptInput("Java compatibility", "8")
       val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", "2.0.0")
+      val indent = KInquirer.promptInput("Indent size", "4")
+      val addDocumentationSite = KInquirer.promptConfirm("Add Writerside documentation site?", true)
 
-      initActions(if (multiplatform) "macos-latest" else "ubuntu-latest")
+      val repository = GitHubRepository(gitHubProjectOwner, gitHubProjectName)
+      val backend = SonatypeBackend.valueOf(sonatypeBackend)
+      print("Writing files...")
+
+      initLicense(license, currentYear(), copyrightHolder)
       initChangelog()
+      initLibrarian(javaCompatibility,
+          kotlinCompatibility,
+          backend,
+          groupId,
+          repository,
+          SupportedLicense.MIT,
+          pomDescription,
+          pomDeveloper
+      )
+      if (addDocumentationSite) {
+        initWriterside(repository)
+      }
+      initActions(if (multiplatform) "macos-latest" else "ubuntu-latest", addDocumentationSite)
+
+      /**
+       * Below are the things that are specific to "create" and run only once for a given project
+       */
       initCodeStyle(indent)
       initGitIgnore()
       initGradleWrapper()
-      initLicense(SupportedLicense.MIT, currentYear(), copyright)
-      initPublishing(javaCompatibility, kotlinCompatibility, SonatypeBackend.valueOf(sonatypeBackend), groupId, repository, SupportedLicense.MIT)
-      initWriterside(repository)
-
-      initProject(multiplatform, repository.name, groupId, "module", repository)
-
-      print("Initializing git repository...")
+      initProject(
+          multiplatform,
+          repository.name,
+          pomDescription,
+          groupId,
+          "module",
+          repository,
+          addDocumentationSite,
+          backend
+      )
 
       runCommand("git", "init")
       runCommand("git", "add", ".")
       runCommand("git", "commit", "-a", "-m", "initial commit")
 
-      val upload = KInquirer.promptConfirm(
-          "Upload your project to GitHub at ${repository.owner}/${repository.name} and make it public?",
-          default = true
-      )
-      if (!upload) {
-        println("run 'librarian init' to finish configuration and set GitHub metadata, settings and secrets")
-        exitProcess(0)
+      print("""
+        
+        Your project is now created ✅
+        Peek around and if everything looks good, make it public!
+        
+      """.trimIndent())
+
+      val result = upload(repository, pomDescription)
+
+      println("All done \uD83C\uDF89")
+      println("Next steps:")
+      if (!result.uploaded) {
+        println("- run `librarian upload` to upload your project to GitHub")
       }
-
-      runCommand("gh", "repo", "create", "--public", "-s", ".", "--push")
-
-      initGitHub()
-      initMetadata(shortDescription, null, topics)
-
-      println("Paste your armoured GPG key beginning with '-----BEGIN PGP PRIVATE KEY BLOCK-----' (press Enter 3 times when done)")
-      val signingPrivateKey = KInquirer.promptMultilinePassword("LIBRARIAN_SIGNING_PRIVATE_KEY")
-      val signingPrivateKeyPassword = requirePassword("LIBRARIAN_SIGNING_PRIVATE_KEY_PASSWORD")
-      val sonatypeUsername = requirePassword("LIBRARIAN_SONATYPE_USERNAME")
-      val sonatypePassword = requirePassword("LIBRARIAN_SONATYPE_PASSWORD")
-
-      initSecrets(
-          Secrets(
-              signingPrivateKey = signingPrivateKey,
-              signingPrivateKeyPassword = signingPrivateKeyPassword,
-              sonatypeUsername = sonatypeUsername,
-              sonatypePassword = sonatypePassword
-          )
-      )
+      if (!result.secretsSet) {
+        println("- run `librarian init secrets` to set your publishing secrets")
+      }
+      println("- push commits to `main`")
+      if (addDocumentationSite) {
+        println("- browse Writerside documentation at https://${gitHubProjectOwner}.github.io/$gitHubProjectName/")
+      }
+      println("- browse KDoc API reference at https://${gitHubProjectOwner}.github.io/$gitHubProjectName/kdoc")
+      when (backend) {
+        SonatypeBackend.S01, SonatypeBackend.Default -> {
+          println("- browse SNAPSHOTs at ${backend.toBaseUrl()}/content/repositories/snapshots/${groupId.replace('.', '/')}")
+        }
+        else -> {}
+      }
+      println("- run 'librarian triggerTagAndBump' to kickoff your first release \uD83D\uDE80")
     }
   }
 }

@@ -12,6 +12,7 @@ dependencies {
   implementation(project(":librarian-core"))
   implementation(libs.clikt)
   implementation(libs.inquirer)
+  implementation(libs.mordant)
 
   implementation(libs.jansi)
   testImplementation(kotlin("test"))

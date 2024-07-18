@@ -258,16 +258,8 @@ fun Project.configurePom(
         }
       }
     }
-  }
-}
+  } }
 
-internal fun SonatypeBackend.toBaseUrl(): String {
-  return when (this) {
-    SonatypeBackend.S01 -> "https://s01.oss.sonatype.org"
-    SonatypeBackend.Default -> "https://oss.sonatype.org"
-    SonatypeBackend.Portal -> TODO()
-  }
-}
 
 
 internal fun DependencyHandler.project(path: String, configuration: String) = project(

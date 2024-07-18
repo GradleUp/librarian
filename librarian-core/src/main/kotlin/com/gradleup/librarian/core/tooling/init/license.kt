@@ -6,9 +6,11 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Instant
 import java.time.ZoneOffset
+import java.util.stream.Stream
 import kotlin.io.path.exists
 import kotlin.io.path.name
 import kotlin.io.path.useLines
+import kotlin.streams.toList
 
 fun currentYear(): String {
   return Instant.now().atOffset(ZoneOffset.UTC).year.toString()
@@ -20,7 +22,7 @@ fun String.toSupportedLicense(): SupportedLicense {
 
 
 // See https://spdx.org/licenses/
-enum class SupportedLicense(val fullName: String) {
+enum class SupportedLicense(val displayName: String) {
   MIT("MIT License")
 }
 
@@ -32,24 +34,14 @@ fun Path.initLicense(license: SupportedLicense, year: String, copyright: String)
 }
 
 fun Path.guessLicenseOrNull(): SupportedLicense? {
-  Files.list(this).forEach {
-    require(!it.name.startsWith("LICENSE.")) {
-      "The LICENSE file must not have an extension (found '${it}'). Please rename your LICENSE file"
-    }
-  }
-
-  resolve("LICENSE").apply {
-    if (!exists()) {
-      return null
-    }
-    useLines {
-      it.take(5).forEach { line ->
-        if (line.contains("MIT License")) {
-          return SupportedLicense.MIT
-        }
+  useLines {
+    it.take(5).forEach { line ->
+      if (line.contains("MIT License")) {
+        return SupportedLicense.MIT
       }
     }
   }
 
-  error("Cannot guess license")
+  return null
 }
+

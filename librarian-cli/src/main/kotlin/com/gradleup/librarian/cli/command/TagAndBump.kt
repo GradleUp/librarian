@@ -24,12 +24,16 @@ internal fun checkOrExit(condition: Boolean, message: () -> String) {
     returns() implies condition
   }
   if (!condition) {
-    println(message())
-    exitProcess(1)
+    exit(message())
   }
 }
 
-internal abstract class AbstractTagAndBump: CliktCommand() {
+internal fun exit(message: String): Nothing {
+  println(message)
+  exitProcess(1)
+}
+
+internal abstract class AbstractTagAndBump : CliktCommand() {
   val versionToRelease by argument().optional()
 
   abstract fun run(versionToRelease: Version)
@@ -55,9 +59,9 @@ internal abstract class AbstractTagAndBump: CliktCommand() {
       val expected = currentVersionParsed.next().toString()
       confirmOrExit("Tag version '${expected}' and bump?")
       versionToRelease = expected
-    } else if (versionToRelease == "next"){
+    } else if (versionToRelease == "next") {
       versionToRelease = currentVersionParsed.next().toString()
-    } else if (versionToRelease == "patch"){
+    } else if (versionToRelease == "patch") {
       versionToRelease = currentVersionParsed.nextPatch().toString()
     } else if (versionToRelease == "minor") {
       versionToRelease = currentVersionParsed.nextMinor().toString()
@@ -77,13 +81,13 @@ internal abstract class AbstractTagAndBump: CliktCommand() {
   }
 }
 
-internal class TriggerTagAndBump: AbstractTagAndBump(){
+internal class TriggerTagAndBump : AbstractTagAndBump() {
   override fun run(versionToRelease: Version) {
     Path(".").runCommand("gh", "workflow", "run", "tag-and-bump.yaml", "-f", "versionToRelease=$versionToRelease")
   }
 }
 
-internal class TagAndBump: AbstractTagAndBump(){
+internal class TagAndBump : AbstractTagAndBump() {
   override fun run(versionToRelease: Version) {
     tagAndBump(versionToRelease)
   }

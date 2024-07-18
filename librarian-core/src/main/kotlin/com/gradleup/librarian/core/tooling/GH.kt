@@ -17,34 +17,35 @@ fun Path.GH(): GH {
   return GH(this)
 }
 
+fun Path.repositoryOrNull(): GitHubRepository? {
+  return runCommandAndCaptureStdout("gh", "repo", "view", "--json", "owner,name")
+      .let {
+        if (it.code != 0) {
+          /*
+           * Assume it's because we have no GitHub remote in this repository
+           * XXX: fine tune error handling
+           */
+          return null
+        }
+        it.stdout
+      }
+      .toJsonElement()
+      .run {
+        GitHubRepository(
+            owner = resolvePathAsStringOrNull("$.owner.login") ?: error("No repository owner found in '${this}'"),
+            name = resolvePathAsStringOrNull("$.name") ?: error("No repository name found in '${this}'"),
+        )
+      }
+}
 class GH(private val path: Path) {
   init {
     requireGh()
   }
 
   fun repository(): GitHubRepository {
-    return repositoryOrNull() ?: error("Cannot find GitHub repository")
+    return path.repositoryOrNull() ?: error("Cannot find GitHub repository")
   }
-  fun repositoryOrNull(): GitHubRepository? {
-    return path.runCommandAndCaptureStdout("gh", "repo", "view", "--json", "owner,name")
-        .let {
-          if (it.code != 0) {
-            /*
-             * Assume it's because we have no GitHub remote in this repository
-             * XXX: fine tune error handling
-             */
-            return null
-          }
-          it.stdout
-        }
-        .toJsonElement()
-        .run {
-          GitHubRepository(
-              owner = resolvePathAsStringOrNull("$.owner.login") ?: error("No repository owner found in '${this}'"),
-              name = resolvePathAsStringOrNull("$.name") ?: error("No repository name found in '${this}'"),
-          )
-        }
-  }
+
 
   fun setDescription(description: String) {
     path.runCommand("gh", "repo", "edit", "-d", description)
