@@ -6,7 +6,7 @@
                  name="{{projectTitle}}"
                  start-page="welcome.md">
 
-    <toc-element topic="welcome.md"/>
     <toc-element toc-title="GitHub" href="https://github.com/{{repositoryOwner}}/{{repositoryName}}"/>
     <toc-element toc-title="Kdoc" href="https://{{repositoryOwner}}.github.io/{{repositoryName}}/kdoc"/>
+    <toc-element topic="welcome.md"/>
 </instance-profile>

@@ -20,6 +20,7 @@ import com.gradleup.librarian.core.tooling.init.initLibrarian
 import com.gradleup.librarian.core.tooling.init.initLicense
 import com.gradleup.librarian.core.tooling.init.initProject
 import com.gradleup.librarian.core.tooling.init.initWriterside
+import com.gradleup.librarian.core.tooling.init.kotlinPluginVersion
 import com.gradleup.librarian.core.tooling.init.toBaseUrl
 import com.gradleup.librarian.core.tooling.init.toSupportedLicense
 import com.gradleup.librarian.core.tooling.runCommand
@@ -52,7 +53,7 @@ internal class Create : CliktCommand() {
         
         Librarian helps you build and maintain Kotlin libraries.
         
-        ℹ️  Librarian requires a GitHub repository. 
+        ℹ️  New projects are created for GitHub.
         
         We'll now ask a few questions and prepare a brand new project in the '$directory' directory. 
         Once this is done, you'll have a chance to review the project and push it to GitHub (or do it later).
@@ -69,7 +70,7 @@ internal class Create : CliktCommand() {
       val sonatypeBackend = KInquirer.promptList("Sonatype backend", SonatypeBackend.entries.map { it.name })
       val multiplatform = KInquirer.promptConfirm("Kotlin multiplatform project")
       val javaCompatibility = KInquirer.promptInput("Java compatibility", "8")
-      val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", "2.0.0")
+      val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", kotlinPluginVersion)
       val indent = KInquirer.promptInput("Indent size", "4")
       val addDocumentationSite = KInquirer.promptConfirm("Add Writerside documentation site?", true)
 
@@ -79,14 +80,16 @@ internal class Create : CliktCommand() {
 
       initLicense(license, currentYear(), copyrightHolder)
       initChangelog()
-      initLibrarian(javaCompatibility,
-          kotlinCompatibility,
-          backend,
-          groupId,
-          repository,
-          SupportedLicense.MIT,
-          pomDescription,
-          pomDeveloper
+      initLibrarian(
+          javaCompatibility = javaCompatibility,
+          kotlinCompatibility = kotlinCompatibility,
+          sonatypeBackend = backend,
+          groupId = groupId,
+          projectUrl = repository.url(),
+          licenseUrl = repository.rawUrl("LICENSE"),
+          license = SupportedLicense.MIT,
+          pomDescription = pomDescription,
+          pomDeveloper = pomDeveloper
       )
       if (addDocumentationSite) {
         initWriterside(repository)
@@ -129,14 +132,13 @@ internal class Create : CliktCommand() {
       println("All done \uD83C\uDF89")
       println()
       println("Next steps:")
-      println("- cd $directory")
+      println("- `cd $directory`")
       if (!result.created) {
-        println("- run `librarian create-github-repository` to upload your project to GitHub")
+        println("- `librarian create-github-repository` to create and configure a GitHub repository for your project")
+      } else if (!result.secretsSet) {
+        println("- `librarian init secrets` to set your publishing secrets")
       }
-      if (!result.secretsSet) {
-        println("- run `librarian init secrets` to set your publishing secrets")
-      }
-      println("- push commits to `main`")
+      println("- push your `main` branch to GitHub")
       if (addDocumentationSite) {
         println("- browse Writerside documentation at https://${gitHubProjectOwner}.github.io/$gitHubProjectName/")
       }
@@ -147,7 +149,7 @@ internal class Create : CliktCommand() {
         }
         else -> {}
       }
-      println("- run 'librarian triggerTagAndBump' to kickoff your first release \uD83D\uDE80")
+      println("- `librarian triggerTagAndBump` to start your first release \uD83D\uDE80")
     }
   }
 }

@@ -30,7 +30,7 @@ fun Path.initLicense(license: SupportedLicense, year: String, copyright: String)
 
 fun Path.guessLicenseOrNull(): SupportedLicense? {
   useLines {
-    it.take(5).forEach { line ->
+    it.forEach { line ->
       if (line.contains("MIT License")) {
         return SupportedLicense.MIT
       }

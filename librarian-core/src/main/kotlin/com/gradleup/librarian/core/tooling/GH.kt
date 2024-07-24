@@ -17,7 +17,7 @@ fun Path.GH(): GH {
   return GH(this)
 }
 
-fun Path.repositoryOrNull(): GitHubRepository? {
+fun Path.gitHubRepositoryOrNull(): GitHubRepository? {
   return runCommandAndCaptureStdout("gh", "repo", "view", "--json", "owner,name")
       .let {
         if (it.code != 0) {
@@ -43,7 +43,7 @@ class GH(private val path: Path) {
   }
 
   fun repository(): GitHubRepository {
-    return path.repositoryOrNull() ?: error("Cannot find GitHub repository")
+    return path.gitHubRepositoryOrNull() ?: error("Cannot find GitHub repository")
   }
 
 
@@ -144,7 +144,10 @@ class GH(private val path: Path) {
   }
 }
 
-class GitHubRepository(val owner: String, val name: String)
+class GitHubRepository(val owner: String, val name: String) {
+  fun url() = "https://github.com/${owner}/${name}"
+  fun rawUrl(path: String) = "https://raw.githubusercontent.com/${name}/${owner}/main/$path"
+}
 
 
 fun getAvailableOrganizations(): List<String> {

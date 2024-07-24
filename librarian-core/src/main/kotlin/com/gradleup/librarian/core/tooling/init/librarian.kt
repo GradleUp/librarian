@@ -1,6 +1,5 @@
 package com.gradleup.librarian.core.tooling.init
 
-import com.gradleup.librarian.core.tooling.GitHubRepository
 import java.nio.file.Path
 import kotlin.io.path.writeText
 
@@ -9,7 +8,8 @@ fun Path.initLibrarian(
     kotlinCompatibility: String,
     sonatypeBackend: SonatypeBackend,
     groupId: String,
-    repository: GitHubRepository,
+    projectUrl: String,
+    licenseUrl: String,
     license: SupportedLicense,
     pomDescription: String,
     pomDeveloper: String
@@ -25,11 +25,11 @@ fun Path.initLibrarian(
 
       pom.groupId=$groupId
       pom.version=0.0.1-SNAPSHOT
-      pom.description=${pomDescription}
-      pom.vcsUrl=https://github.com/${repository.owner}/${repository.name}
+      pom.description=$pomDescription
+      pom.vcsUrl=$projectUrl
       pom.developer=$pomDeveloper
       pom.license=${license.displayName}
-      pom.licenseUrl=https://raw.githubusercontent.com/${repository.name}/${repository.owner}/main/LICENSE
+      pom.licenseUrl=${licenseUrl}
     """.trimIndent()
   )
 }

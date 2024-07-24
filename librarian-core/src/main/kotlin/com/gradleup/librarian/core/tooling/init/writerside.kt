@@ -4,8 +4,6 @@ import com.gradleup.librarian.core.tooling.GitHubRepository
 import com.gradleup.librarian.core.tooling.readTextResource
 import com.gradleup.librarian.core.tooling.writeTextTo
 import java.nio.file.Path
-import kotlin.io.path.Path
-import kotlin.io.path.createParentDirectories
 
 fun Path.initWriterside(repository: GitHubRepository) {
   val variables = mapOf(
@@ -23,5 +21,4 @@ fun Path.initWriterside(repository: GitHubRepository) {
   ).forEach {
     readTextResource(it, variables).writeTextTo(resolve(it))
   }
-  Path("Writerside").createParentDirectories()
 }

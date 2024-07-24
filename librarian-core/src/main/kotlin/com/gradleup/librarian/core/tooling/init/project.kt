@@ -24,33 +24,52 @@ fun Path.initProject(
     sonatypeBackend: SonatypeBackend,
 ) {
   readTextResource("project/gradle.properties").writeTextTo(resolve("gradle.properties"))
-  readTextResource("project/gradle/libs.versions.toml").writeTextTo(resolve("gradle/libs.versions.toml"))
   readTextResource("project/settings.gradle.kts").writeTextTo(resolve("settings.gradle.kts"))
 
-  val kotlinPluginId = if (multiplatform) "org.jetbrains.kotlin.multiplatform" else "org.jetbrains.kotlin.jvm"
+
+  resolve("gradle/libs.versions.toml").writeText("""
+    [libraries]
+
+    [plugins]
+    kgp = { id = "org.jetbrains.kotlin.jvm", version = "$kotlinPluginVersion" }
+    librarian = { id = "com.gradleup.librarian", version = "$VERSION" }    
+  """.trimIndent())
 
   resolve("build.gradle.kts").writeText("""
     import com.gradleup.librarian.gradle.librarianRoot
 
     plugins {
-      id("$kotlinPluginId").version("$kotlinPluginVersion").apply(false)
-      id("com.gradleup.librarian").version("$VERSION").apply(false)
+      alias(libs.plugins.kgp).apply(false)
+      alias(libs.plugins.librarian).apply(false)
     }
 
     librarianRoot()
   """.trimIndent()
   )
 
+  val kotlinPluginId = if (multiplatform) "org.jetbrains.kotlin.multiplatform" else "org.jetbrains.kotlin.jvm"
+
   resolve("module").createDirectory()
-  resolve("module/build.gradle.kts").writeText("""
-    import com.gradleup.librarian.gradle.librarianModule
+  resolve("module/build.gradle.kts").writeText(
+      buildString {
+        append("""
+          import com.gradleup.librarian.gradle.librarianModule
+      
+          plugins {
+            id("$kotlinPluginId")
+          }
+      
+          librarianModule()    
+        """.trimIndent())
 
-    plugins {
-      id("org.jetbrains.kotlin.jvm")
-    }
-
-    librarianModule()    
-  """.trimIndent()
+        if (multiplatform) {
+          append("""
+            kotlin {
+              jvm()
+            }
+          """.trimIndent())
+        }
+      }
   )
 
   resolve("README.md").writeText(buildString {

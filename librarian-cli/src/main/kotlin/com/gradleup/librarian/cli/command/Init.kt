@@ -27,7 +27,7 @@ import com.gradleup.librarian.core.tooling.init.initLicense
 import com.gradleup.librarian.core.tooling.init.initWriterside
 import com.gradleup.librarian.core.tooling.init.kotlinPluginVersion
 import com.gradleup.librarian.core.tooling.init.toSupportedLicense
-import com.gradleup.librarian.core.tooling.repositoryOrNull
+import com.gradleup.librarian.core.tooling.gitHubRepositoryOrNull
 import java.nio.file.Files
 import java.util.stream.Stream
 import kotlin.io.path.Path
@@ -54,16 +54,14 @@ internal class Init : CliktCommand(invokeWithoutSubcommand = true) {
     val subcommand = currentContext.invokedSubcommand
     if (subcommand == null) {
       with(Path(".")) {
-        val repository = repositoryOrNull()
-        checkOrExit(repository != null) {
-          "No GitHub repository found. Call `librarian upload` to upload your repository to GitHub"
-        }
+        val gitHubRepository = gitHubRepositoryOrNull()
 
         val licenseCandidates = Files.list(this).filter { it.name.startsWith("LICENSE") }.toListPolyfill()
         val license: SupportedLicense
         if (licenseCandidates.isEmpty()) {
+          val defaultCopyrightOwners = "${gitHubRepository?.name ?: name} authors"
           license = KInquirer.promptList("License", SupportedLicense.entries.map { it.name }).toSupportedLicense()
-          val copyrightHolder = KInquirer.promptInput("Copyright holder", "${repository.name} authors")
+          val copyrightHolder = KInquirer.promptInput("Copyright holder", defaultCopyrightOwners)
           println("Creating LICENSE...")
           initLicense(license, currentYear(), copyrightHolder)
         } else if (licenseCandidates.size == 1) {
@@ -93,19 +91,37 @@ internal class Init : CliktCommand(invokeWithoutSubcommand = true) {
           exitProcess(1)
         }
 
-        val groupId = KInquirer.promptInput("Maven group id", "io.github.${repository.owner}.${repository.name}")
+        val defaultDevelopers = "${gitHubRepository?.name ?: name} authors"
+
+        val groupId = KInquirer.promptInput("Maven group id")
         val pomDescription = KInquirer.promptInput("Maven pom description")
-        val pomDeveloper = KInquirer.promptInput("Maven pom developer", "${repository.name} authors")
+        val pomDeveloper = KInquirer.promptInput("Maven pom developer", defaultDevelopers)
+        val projectUrl = gitHubRepository?.url() ?: KInquirer.promptInput("Maven pom project url")
+        val licenseUrl = gitHubRepository?.rawUrl("LICENSE") ?: KInquirer.promptInput("Maven pom license url")
         val sonatypeBackend = KInquirer.promptList("Sonatype backend", SonatypeBackend.entries.map { it.name })
         val javaCompatibility = KInquirer.promptInput("Java compatibility", "8")
         val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", kotlinPluginVersion)
-        val addDocumentationSite = KInquirer.promptConfirm("Add Writerside documentation site?", true)
 
-        initLibrarian(javaCompatibility, kotlinCompatibility, SonatypeBackend.valueOf(sonatypeBackend), groupId, repository, license, pomDescription, pomDeveloper)
-        if (addDocumentationSite) {
-          initWriterside(repository)
+        initLibrarian(
+            javaCompatibility = javaCompatibility,
+            kotlinCompatibility = kotlinCompatibility,
+            sonatypeBackend = SonatypeBackend.valueOf(sonatypeBackend),
+            groupId = groupId,
+            projectUrl = projectUrl,
+            license = license,
+            licenseUrl = licenseUrl,
+            pomDescription = pomDescription,
+            pomDeveloper = pomDeveloper
+        )
+
+        if (gitHubRepository != null) {
+          val addDocumentationSite = KInquirer.promptConfirm("Add Writerside documentation site?", true)
+          if (addDocumentationSite) {
+            // Writer side "edit on GitHub" requires GitHub
+            initWriterside(gitHubRepository)
+          }
+          initActions("macos-latest", addDocumentationSite)
         }
-        initActions("macos-latest", addDocumentationSite)
       }
     }
   }
