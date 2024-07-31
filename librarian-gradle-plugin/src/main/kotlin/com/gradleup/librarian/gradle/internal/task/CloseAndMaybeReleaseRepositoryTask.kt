@@ -10,7 +10,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import kotlin.time.Duration.Companion.minutes
 
-abstract class ReleaseRepositoryTask: DefaultTask() {
+abstract class CloseAndMaybeReleaseRepositoryTask: DefaultTask() {
   @get:Input
   abstract val username: Property<String>
 

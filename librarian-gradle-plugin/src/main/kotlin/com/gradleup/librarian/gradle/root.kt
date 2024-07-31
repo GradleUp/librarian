@@ -11,7 +11,7 @@ import org.gradle.api.tasks.TaskProvider
 
 internal val librarianCreateStagingRepo = "librarianCreateStagingRepo"
 internal val librarianUploadFilesToStaging = "librarianUploadFilesToStaging"
-internal val librarianReleaseRepository = "librarianReleaseRepository"
+internal val librarianCloseAndMaybeReleaseRepository = "librarianCloseAndMaybeReleaseRepository"
 
 internal val librarianUploadFilesToSnapshots = "librarianUploadFilesToSnapshots"
 
@@ -85,7 +85,7 @@ fun Project.librarianRoot() {
       it.files.from(allFiles)
     }
 
-    mavenCentralTaskProvider = tasks.register(librarianReleaseRepository, ReleaseRepositoryTask::class.java) {
+    mavenCentralTaskProvider = tasks.register(librarianCloseAndMaybeReleaseRepository, CloseAndMaybeReleaseRepositoryTask::class.java) {
       it.baseUrl.set(stagingBaseUrl(sonatype.backend, sonatype.baseUrl))
       it.username.set(sonatype.username)
       it.password.set(sonatype.password)
