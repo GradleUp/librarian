@@ -60,9 +60,15 @@ private fun uploadNexus(
 ) {
   val okHttpClient = OkHttpClient(username, password)
   files.toInputFiles().forEachIndexed { index, inputFile ->
-    // add progress
+    val fileUrl = buildString {
+      append(url)
+      if (!url.endsWith('/')) {
+        append("/")
+      }
+      append(inputFile.path)
+    }
+    // TDOD: add progress
     // See https://github.com/gradle/gradle/issues/3654
-    val fileUrl = "${url}/${inputFile.path}"
     logger.info("Uploading $fileUrl")
 
     val request = Request.Builder()
