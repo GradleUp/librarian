@@ -72,7 +72,6 @@ internal class Create : CliktCommand() {
       val javaCompatibility = KInquirer.promptInput("Java compatibility", "8")
       val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", kotlinPluginVersion)
       val indent = KInquirer.promptInput("Indent size", "4")
-      val addDocumentationSite = KInquirer.promptConfirm("Add Writerside documentation site?", true)
 
       val repository = GitHubRepository(gitHubProjectOwner, gitHubProjectName)
       val backend = SonatypeBackend.valueOf(sonatypeBackend)
@@ -91,10 +90,8 @@ internal class Create : CliktCommand() {
           pomDescription = pomDescription,
           pomDeveloper = pomDeveloper
       )
-      if (addDocumentationSite) {
-        initWriterside(repository)
-      }
-      initActions(if (multiplatform) "macos-latest" else "ubuntu-latest", addDocumentationSite)
+      initWriterside(repository)
+      initActions(if (multiplatform) "macos-latest" else "ubuntu-latest", true)
 
       /**
        * Below are the things that are specific to "create" and run only once for a given project
@@ -109,7 +106,7 @@ internal class Create : CliktCommand() {
           groupId,
           "module",
           repository,
-          addDocumentationSite,
+          true,
           backend
       )
 
@@ -139,9 +136,7 @@ internal class Create : CliktCommand() {
         println("- `librarian init secrets` to set your publishing secrets")
       }
       println("- push your `main` branch to GitHub")
-      if (addDocumentationSite) {
-        println("- browse Writerside documentation at https://${gitHubProjectOwner}.github.io/$gitHubProjectName/")
-      }
+      println("- browse Writerside documentation at https://${gitHubProjectOwner}.github.io/$gitHubProjectName/")
       println("- browse KDoc API reference at https://${gitHubProjectOwner}.github.io/$gitHubProjectName/kdoc")
       when (backend) {
         SonatypeBackend.S01, SonatypeBackend.Default -> {

@@ -8,9 +8,9 @@ fun Path.initActions(runner: String, addDocumentationSite: Boolean) {
   val variableValues = mapOf("githubRunner" to runner)
 
   val docsWorkflow = if (addDocumentationSite) {
-    "publish-docs"
+    "publish-pages-with-writerside"
   } else {
-    "publish-kdoc"
+    "publish-pages"
   }
   for (name in listOf("build-pull-request", "publish-release", "publish-snapshot", "tag-and-bump", docsWorkflow)) {
     readTextResource("actions/$name.yaml", variableValues)
