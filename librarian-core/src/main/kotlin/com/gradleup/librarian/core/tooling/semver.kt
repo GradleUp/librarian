@@ -95,10 +95,16 @@ fun Version.nextMinor(): Version {
 }
 
 fun Version.next(): Version {
-  return if (preRelease != null) {
-    copy(preRelease = preRelease.copy(version = preRelease.version + 1), isSnapshot = false)
-  } else {
-    copy(patch = patch + 1, isSnapshot = false)
+  return when {
+    isSnapshot -> {
+      copy(isSnapshot = false)
+    }
+    preRelease != null -> {
+      copy(preRelease = preRelease.copy(version = preRelease.version + 1), isSnapshot = false)
+    }
+    else -> {
+      copy(patch = patch + 1, isSnapshot = false)
+    }
   }
 }
 
