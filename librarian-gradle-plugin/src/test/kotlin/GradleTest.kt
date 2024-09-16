@@ -1,5 +1,4 @@
 import com.apollographql.mockserver.MockServer
-import com.apollographql.mockserver.MultipartBody
 import com.apollographql.mockserver.enqueueString
 import kotlinx.coroutines.runBlocking
 import okhttp3.MultipartReader
@@ -23,27 +22,28 @@ class GradleTest {
     withTestProject("simple") { projectDir ->
 
       projectDir.resolve("librarian.properties")
-          .replace(Regex("sonatype.baseUrl=.*"), "sonatype.baseUrl=http://127.0.0.1:${mockWebServer.port()}")
+        .replace(Regex("sonatype.baseUrl=.*"), "sonatype.baseUrl=http://127.0.0.1:${mockWebServer.port()}")
 
       GradleRunner.create()
-          .withProjectDir(projectDir)
-          .withArguments("librarianPublishToMavenCentral", "--stacktrace")
-          .forwardOutput()
-          .withEnvironment(mapOf(
-              "LIBRARIAN_SONATYPE_USERNAME" to "fake_user",
-              "LIBRARIAN_SONATYPE_PASSWORD" to "fake_password"
+        .withProjectDir(projectDir)
+        .withArguments("librarianPublishToMavenCentral", "--stacktrace")
+        .forwardOutput()
+        .withEnvironment(
+          mapOf(
+            "LIBRARIAN_SONATYPE_USERNAME" to "fake_user",
+            "LIBRARIAN_SONATYPE_PASSWORD" to "fake_password"
           )
-          )
-          .run()
-          .apply {
-            assertEquals(TaskOutcome.SUCCESS, task(":librarianDeployToPortal")?.outcome)
-          }
+        )
+        .run()
+        .apply {
+          assertEquals(TaskOutcome.SUCCESS, task(":librarianDeployToPortal")?.outcome)
+        }
 
       mockWebServer.takeRequest().apply {
-          /*
-           * XXX: better parsing
-           */
-          val boundary = headers.get("Content-Type")?.substringAfterLast("boundary=") ?: error("no Content-Type")
+        /*
+         * XXX: better parsing
+         */
+        val boundary = headers.get("Content-Type")?.substringAfterLast("boundary=") ?: error("no Content-Type")
         MultipartReader(Buffer().write(body), boundary = boundary).use {
           it.nextPart()!!.use {
             ZipInputStream(it.body.inputStream()).use {
