@@ -3,6 +3,7 @@ package com.gradleup.librarian.gradle
 import com.gradleup.librarian.core.tooling.init.SonatypeBackend
 import com.gradleup.librarian.core.tooling.init.SonatypeRelease
 import com.gradleup.librarian.gradle.internal.createAndroidPublication
+import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
 import com.gradleup.librarian.gradle.internal.hasAndroid
 import net.mbonnin.vespene.lib.NexusStagingClient
 import org.gradle.api.Project
@@ -13,7 +14,8 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import java.time.Instant
+import java.time.temporal.ChronoField
 import java.util.Properties
 
 internal const val librarianPublication = "librarianPublication"
@@ -32,11 +34,32 @@ class Sonatype(
     val baseUrl: String?
 )
 
-fun PomMetadata(artifactId: String, properties: Properties): PomMetadata {
+class Gcp(
+  val bucketUrl: String?,
+)
+
+fun Gcp(properties: Properties): Gcp {
+  return Gcp(
+    properties.getProperty("gcp.bucketUrl"),
+  )
+}
+
+fun PomMetadata(project: Project, artifactId: String, properties: Properties): PomMetadata {
+  var version = properties.getRequiredProperty("pom.version")
+  val sha1 = project.findEnvironmentVariable("LIBRARIAN_VERSION_SHA1")
+  if (sha1.isNullOrBlank().not()) {
+    val now = Instant.now()
+    val year = now.get(ChronoField.YEAR)
+    val month = now.get(ChronoField.MONTH_OF_YEAR)
+    val day = now.get(ChronoField.DAY_OF_MONTH)
+    val hour = now.get(ChronoField.HOUR_OF_DAY)
+    val minute = now.get(ChronoField.MINUTE_OF_HOUR)
+    version = "$version-${year}_${month}_${day}_${hour}_${minute}_${sha1}"
+  }
   return PomMetadata(
           groupId = properties.getRequiredProperty("pom.groupId"),
           artifactId = artifactId,
-          version = properties.getRequiredProperty("pom.version"),
+          version = version,
           description = properties.getRequiredProperty("pom.description"),
           vcsUrl = properties.getRequiredProperty("pom.vcsUrl"),
           developer = properties.getRequiredProperty("pom.developer"),
@@ -64,10 +87,11 @@ class PomMetadata(
 )
 
 fun Project.configurePublishing(
-    createMissingPublications: Boolean,
-    publishPlatformArtifactsInRootModule: Boolean,
-    pomMetadata: PomMetadata,
-    signing: Signing,
+  createMissingPublications: Boolean,
+  publishPlatformArtifactsInRootModule: Boolean,
+  pomMetadata: PomMetadata,
+  signing: Signing,
+  gcp: Gcp,
 ) {
   if (createMissingPublications) {
     createMissingPublications(pomMetadata.vcsUrl)
@@ -84,6 +108,13 @@ fun Project.configurePublishing(
       it.maven {
         it.name = "librarian"
         it.setUrl(uri(librarianRepository.asFile.path))
+      }
+    }
+
+    repositories {
+      it.maven {
+        it.name = "googleCloud"
+        it.setUrl(gcp.bucketUrl)
       }
     }
   }

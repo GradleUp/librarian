@@ -7,7 +7,7 @@ import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
-abstract class GenerateStaticContentTask: DefaultTask() {
+internal abstract class GenerateStaticContentTask: DefaultTask() {
   @get:InputFiles
   abstract val repositoryFiles: ConfigurableFileCollection
 

@@ -28,6 +28,11 @@ public final class com/gradleup/librarian/gradle/DokkatooKt {
 	public static final fun configureDokkatooAggregate (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/util/List;)Lorg/gradle/api/tasks/TaskProvider;
 }
 
+public final class com/gradleup/librarian/gradle/Gcp {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getBucketUrl ()Ljava/lang/String;
+}
+
 public abstract class com/gradleup/librarian/gradle/GeneratePluginVersion : org/gradle/api/DefaultTask {
 	public fun <init> ()V
 	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
@@ -96,9 +101,10 @@ public final class com/gradleup/librarian/gradle/Project_kotlinKt {
 }
 
 public final class com/gradleup/librarian/gradle/PublishingKt {
-	public static final fun PomMetadata (Ljava/lang/String;Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/PomMetadata;
+	public static final fun Gcp (Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/Gcp;
+	public static final fun PomMetadata (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/PomMetadata;
 	public static final fun configurePom (Lorg/gradle/api/Project;Lcom/gradleup/librarian/gradle/PomMetadata;)V
-	public static final fun configurePublishing (Lorg/gradle/api/Project;ZZLcom/gradleup/librarian/gradle/PomMetadata;Lcom/gradleup/librarian/gradle/Signing;)V
+	public static final fun configurePublishing (Lorg/gradle/api/Project;ZZLcom/gradleup/librarian/gradle/PomMetadata;Lcom/gradleup/librarian/gradle/Signing;Lcom/gradleup/librarian/gradle/Gcp;)V
 	public static final fun createMissingPublications (Lorg/gradle/api/Project;Ljava/lang/String;)V
 	public static synthetic fun createMissingPublications$default (Lorg/gradle/api/Project;Ljava/lang/String;ILjava/lang/Object;)V
 }
@@ -133,56 +139,5 @@ public final class com/gradleup/librarian/gradle/internal/Project_androidKt {
 
 public final class com/gradleup/librarian/gradle/internal/Publishing_androidKt {
 	public static final fun createAndroidPublication (Lorg/gradle/api/Project;Ljava/lang/String;)V
-}
-
-public abstract class com/gradleup/librarian/gradle/internal/task/CloseAndMaybeReleaseRepositoryTask : org/gradle/api/DefaultTask {
-	public fun <init> ()V
-	public abstract fun getAutomatic ()Lorg/gradle/api/provider/Property;
-	public abstract fun getBaseUrl ()Lorg/gradle/api/provider/Property;
-	public abstract fun getPassword ()Lorg/gradle/api/provider/Property;
-	public abstract fun getRepoId ()Lorg/gradle/api/provider/Property;
-	public abstract fun getUsername ()Lorg/gradle/api/provider/Property;
-	public final fun taskAction ()V
-}
-
-public abstract class com/gradleup/librarian/gradle/internal/task/CreateRepositoryTask : org/gradle/api/DefaultTask {
-	public fun <init> ()V
-	public abstract fun getBaseUrl ()Lorg/gradle/api/provider/Property;
-	public abstract fun getGroupId ()Lorg/gradle/api/provider/Property;
-	public abstract fun getOutput ()Lorg/gradle/api/file/RegularFileProperty;
-	public abstract fun getPassword ()Lorg/gradle/api/provider/Property;
-	public abstract fun getRepoDescription ()Lorg/gradle/api/provider/Property;
-	public abstract fun getUsername ()Lorg/gradle/api/provider/Property;
-	public abstract fun getVersion ()Lorg/gradle/api/provider/Property;
-	public final fun taskAction ()V
-}
-
-public abstract class com/gradleup/librarian/gradle/internal/task/DeployToPortalTask : org/gradle/api/DefaultTask {
-	public fun <init> ()V
-	public abstract fun getAutomatic ()Lorg/gradle/api/provider/Property;
-	public abstract fun getBaseUrl ()Lorg/gradle/api/provider/Property;
-	public abstract fun getDeploymentDescription ()Lorg/gradle/api/provider/Property;
-	public abstract fun getFiles ()Lorg/gradle/api/file/ConfigurableFileCollection;
-	public abstract fun getPassword ()Lorg/gradle/api/provider/Property;
-	public abstract fun getUsername ()Lorg/gradle/api/provider/Property;
-	public abstract fun getVersion ()Lorg/gradle/api/provider/Property;
-	public final fun taskAction ()V
-}
-
-public abstract class com/gradleup/librarian/gradle/internal/task/GenerateStaticContentTask : org/gradle/api/DefaultTask {
-	public fun <init> ()V
-	public abstract fun getKdocFiles ()Lorg/gradle/api/file/ConfigurableFileCollection;
-	public abstract fun getOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
-	public abstract fun getRepositoryFiles ()Lorg/gradle/api/file/ConfigurableFileCollection;
-	public final fun taskAction ()V
-}
-
-public abstract class com/gradleup/librarian/gradle/internal/task/UploadFilesTask : org/gradle/api/DefaultTask {
-	public fun <init> ()V
-	public abstract fun getFiles ()Lorg/gradle/api/file/ConfigurableFileCollection;
-	public abstract fun getPassword ()Lorg/gradle/api/provider/Property;
-	public abstract fun getUrl ()Lorg/gradle/api/provider/Property;
-	public abstract fun getUsername ()Lorg/gradle/api/provider/Property;
-	public final fun taskAction ()V
 }
 

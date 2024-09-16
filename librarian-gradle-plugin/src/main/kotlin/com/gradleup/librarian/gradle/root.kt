@@ -28,7 +28,7 @@ fun Project.librarianRoot() {
   }
 
   val properties = project.rootProperties()
-  val pomMetadata = PomMetadata(properties.kdocArtifactId(), properties)
+  val pomMetadata = PomMetadata(project, properties.kdocArtifactId(), properties)
   val sonatype = Sonatype(project, properties)
   val signing = Signing(project, properties)
 

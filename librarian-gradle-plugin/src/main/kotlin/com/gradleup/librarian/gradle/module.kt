@@ -24,13 +24,13 @@ internal fun Properties.kdocArtifactId(): String {
 
 internal fun Properties.olderVersions(): List<Coordinates> {
   return getProperty("kdoc.olderVersions")?.split(",")
-      .orEmpty()
-      .filter {
-        it.isNotEmpty()
-      }
-      .map {
-        Coordinates(it)
-      }
+    .orEmpty()
+    .filter {
+      it.isNotEmpty()
+    }
+    .map {
+      Coordinates(it)
+    }
 }
 
 fun Project.configureMavenFriendlyDependencies() {
@@ -75,7 +75,9 @@ fun Project.librarianModule(publish: Boolean = true) {
     configureKotlinCompatibility(it)
   }
 
-  val pomMetadata = PomMetadata(project.name, rootProperties)
+  val pomMetadata = PomMetadata(project, project.name, rootProperties)
+
+  val gcp = Gcp(rootProperties)
 
   moduleProperties.versionPackageName()?.let {
     configureGeneratedVersion(it, pomMetadata.version)
@@ -85,10 +87,11 @@ fun Project.librarianModule(publish: Boolean = true) {
     configureDokkatoo()
 
     configurePublishing(
-        createMissingPublications = true,
-        publishPlatformArtifactsInRootModule = true,
-        pomMetadata = pomMetadata,
-        signing = Signing(project, rootProperties)
+      createMissingPublications = true,
+      publishPlatformArtifactsInRootModule = true,
+      pomMetadata = pomMetadata,
+      signing = Signing(project, rootProperties),
+      gcp = gcp
     )
   }
 }
@@ -104,15 +107,17 @@ private fun String.toSonatypeHost(): SonatypeBackend {
 }
 
 internal fun Sonatype(project: Project, properties: Properties): Sonatype {
-  val usernameVariable = properties.getProperty("sonatype.username.environmentVariable") ?: "LIBRARIAN_SONATYPE_USERNAME"
-  val passwordVariable = properties.getProperty("sonatype.password.environmentVariable") ?: "LIBRARIAN_SONATYPE_PASSWORD"
+  val usernameVariable =
+    properties.getProperty("sonatype.username.environmentVariable") ?: "LIBRARIAN_SONATYPE_USERNAME"
+  val passwordVariable =
+    properties.getProperty("sonatype.password.environmentVariable") ?: "LIBRARIAN_SONATYPE_PASSWORD"
 
   return Sonatype(
-      username = project.findEnvironmentVariable(usernameVariable),
-      password = project.findEnvironmentVariable(passwordVariable),
-      backend = properties.getRequiredProperty("sonatype.backend").toSonatypeHost(),
-      release = properties.getProperty("sonatype.release").toSonatypeRelease(),
-      baseUrl = properties.getProperty("sonatype.baseUrl")?.takeIf { it.isNotBlank() }
+    username = project.findEnvironmentVariable(usernameVariable),
+    password = project.findEnvironmentVariable(passwordVariable),
+    backend = properties.getRequiredProperty("sonatype.backend").toSonatypeHost(),
+    release = properties.getProperty("sonatype.release").toSonatypeRelease(),
+    baseUrl = properties.getProperty("sonatype.baseUrl")?.takeIf { it.isNotBlank() }
   )
 }
 
@@ -121,12 +126,13 @@ private fun String?.toSonatypeRelease(): SonatypeRelease {
 }
 
 internal fun Signing(project: Project, properties: Properties): Signing {
-  val usernameVariable = properties.getProperty("signing.privateKey.environmentVariable") ?: "LIBRARIAN_SIGNING_PRIVATE_KEY"
+  val usernameVariable =
+    properties.getProperty("signing.privateKey.environmentVariable") ?: "LIBRARIAN_SIGNING_PRIVATE_KEY"
   val passwordVariable =
     properties.getProperty("signing.privateKeyPassword.environmentVariable") ?: "LIBRARIAN_SIGNING_PRIVATE_KEY_PASSWORD"
   return Signing(
-      privateKey = project.findEnvironmentVariable(usernameVariable),
-      privateKeyPassword = project.findEnvironmentVariable(passwordVariable)
+    privateKey = project.findEnvironmentVariable(usernameVariable),
+    privateKeyPassword = project.findEnvironmentVariable(passwordVariable)
   )
 }
 

@@ -10,7 +10,7 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
-abstract class CreateRepositoryTask: DefaultTask() {
+internal abstract class CreateRepositoryTask: DefaultTask() {
   @get:Input
   @get:Optional
   abstract val username: Property<String>

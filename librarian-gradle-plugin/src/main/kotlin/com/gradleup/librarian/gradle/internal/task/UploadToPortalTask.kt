@@ -22,7 +22,7 @@ import java.io.IOException
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
-abstract class UploadToPortalTask : DefaultTask() {
+internal abstract class UploadToPortalTask : DefaultTask() {
   @get:Input
   @get:Optional
   abstract val username: Property<String>
