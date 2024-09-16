@@ -14,7 +14,6 @@ public final class com/gradleup/librarian/core/tooling/GH {
 	public final fun createBranch (Ljava/lang/String;)V
 	public final fun enablePages (Ljava/lang/String;)V
 	public final fun repository ()Lcom/gradleup/librarian/core/tooling/GitHubRepository;
-	public final fun repositoryOrNull ()Lcom/gradleup/librarian/core/tooling/GitHubRepository;
 	public final fun setDescription (Ljava/lang/String;)V
 	public final fun setSecret (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun setUrl (Ljava/lang/String;)V
@@ -23,16 +22,33 @@ public final class com/gradleup/librarian/core/tooling/GH {
 public final class com/gradleup/librarian/core/tooling/GHKt {
 	public static final fun GH (Ljava/nio/file/Path;)Lcom/gradleup/librarian/core/tooling/GH;
 	public static final fun getAvailableOrganizations ()Ljava/util/List;
+	public static final fun gitHubRepositoryOrNull (Ljava/nio/file/Path;)Lcom/gradleup/librarian/core/tooling/GitHubRepository;
 }
 
 public final class com/gradleup/librarian/core/tooling/GitHubRepository {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun getName ()Ljava/lang/String;
 	public final fun getOwner ()Ljava/lang/String;
+	public final fun rawUrl (Ljava/lang/String;)Ljava/lang/String;
+	public final fun url ()Ljava/lang/String;
 }
 
 public final class com/gradleup/librarian/core/tooling/JsonKt {
 	public static final fun toJsonElement (Ljava/lang/String;)Lkotlinx/serialization/json/JsonElement;
+}
+
+public final class com/gradleup/librarian/core/tooling/KeysKt {
+	public static final fun armored ([B)Ljava/lang/String;
+	public static final fun dearmored (Ljava/lang/String;)[B
+	public static final fun secretKeyRing (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/SecretKeyRing;
+	public static final fun secretKeyRingOrNull (Ljava/nio/file/Path;)Lcom/gradleup/librarian/core/tooling/SecretKeyRing;
+	public static final fun uploadKey (Ljava/lang/String;[B)Lcom/gradleup/librarian/core/tooling/UploadResult;
+}
+
+public final class com/gradleup/librarian/core/tooling/PreRelease {
+	public fun <init> (Ljava/lang/String;I)V
+	public final fun getName ()Ljava/lang/String;
+	public final fun getVersion ()I
 }
 
 public final class com/gradleup/librarian/core/tooling/ProcessKt {
@@ -49,18 +65,61 @@ public final class com/gradleup/librarian/core/tooling/ProcessResult {
 
 public final class com/gradleup/librarian/core/tooling/ResourceKt {
 	public static final fun makeExecutable (Ljava/nio/file/Path;)Ljava/nio/file/Path;
-	public static final fun readResource (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun readBinaryResource (Ljava/lang/String;)[B
+	public static final fun readTextResource (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun substituteVariables (Ljava/lang/String;Ljava/util/Map;)Ljava/lang/String;
 	public static final fun substituteVariables (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
-	public static final fun writeTo (Ljava/lang/String;Ljava/nio/file/Path;)V
+	public static final fun writeTextTo (Ljava/lang/String;Ljava/nio/file/Path;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/SecretKeyRing {
+	public fun <init> (Lorg/bouncycastle/openpgp/PGPSecretKeyRing;)V
+	public final fun publicKey ()[B
+	public final fun secretKey ()[B
+}
+
+public final class com/gradleup/librarian/core/tooling/SemverKt {
+	public static final fun copy (Lcom/gradleup/librarian/core/tooling/PreRelease;Ljava/lang/String;I)Lcom/gradleup/librarian/core/tooling/PreRelease;
+	public static final fun copy (Lcom/gradleup/librarian/core/tooling/Version;IIILcom/gradleup/librarian/core/tooling/PreRelease;Z)Lcom/gradleup/librarian/core/tooling/Version;
+	public static synthetic fun copy$default (Lcom/gradleup/librarian/core/tooling/PreRelease;Ljava/lang/String;IILjava/lang/Object;)Lcom/gradleup/librarian/core/tooling/PreRelease;
+	public static synthetic fun copy$default (Lcom/gradleup/librarian/core/tooling/Version;IIILcom/gradleup/librarian/core/tooling/PreRelease;ZILjava/lang/Object;)Lcom/gradleup/librarian/core/tooling/Version;
+	public static final fun next (Lcom/gradleup/librarian/core/tooling/Version;)Lcom/gradleup/librarian/core/tooling/Version;
+	public static final fun nextMinor (Lcom/gradleup/librarian/core/tooling/Version;)Lcom/gradleup/librarian/core/tooling/Version;
+	public static final fun nextPatch (Lcom/gradleup/librarian/core/tooling/Version;)Lcom/gradleup/librarian/core/tooling/Version;
+	public static final fun toVersionOrNull (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/Version;
 }
 
 public final class com/gradleup/librarian/core/tooling/Tag_and_bumpKt {
-	public static final fun tagAndBump (Ljava/lang/String;)V
+	public static final fun getCurrentVersion ()Ljava/lang/String;
+	public static final fun tagAndBump (Lcom/gradleup/librarian/core/tooling/Version;)V
+}
+
+public final class com/gradleup/librarian/core/tooling/UploadError : com/gradleup/librarian/core/tooling/UploadResult {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getMessage ()Ljava/lang/String;
+}
+
+public abstract interface class com/gradleup/librarian/core/tooling/UploadResult {
+}
+
+public final class com/gradleup/librarian/core/tooling/UploadSuccess : com/gradleup/librarian/core/tooling/UploadResult {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getUrl ()Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/core/tooling/Version {
+	public fun <init> (IIILcom/gradleup/librarian/core/tooling/PreRelease;Z)V
+	public final fun compareTo (Lcom/gradleup/librarian/core/tooling/Version;)I
+	public final fun getMajor ()I
+	public final fun getMinor ()I
+	public final fun getPatch ()I
+	public final fun getPreRelease ()Lcom/gradleup/librarian/core/tooling/PreRelease;
+	public final fun isSnapshot ()Z
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/gradleup/librarian/core/tooling/init/ActionsKt {
-	public static final fun initActions (Ljava/nio/file/Path;Ljava/lang/String;)V
+	public static final fun initActions (Ljava/nio/file/Path;Ljava/lang/String;Z)V
 }
 
 public final class com/gradleup/librarian/core/tooling/init/ChangelogKt {
@@ -83,6 +142,11 @@ public final class com/gradleup/librarian/core/tooling/init/Gradle_wrapperKt {
 	public static final fun initGradleWrapper (Ljava/nio/file/Path;)V
 }
 
+public final class com/gradleup/librarian/core/tooling/init/LibrarianKt {
+	public static final fun initLibrarian (Ljava/nio/file/Path;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;Ljava/lang/String;Ljava/lang/String;)V
+	public static final fun toBaseUrl (Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;)Ljava/lang/String;
+}
+
 public final class com/gradleup/librarian/core/tooling/init/LicenseKt {
 	public static final fun currentYear ()Ljava/lang/String;
 	public static final fun guessLicenseOrNull (Ljava/nio/file/Path;)Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;
@@ -95,11 +159,9 @@ public final class com/gradleup/librarian/core/tooling/init/MetadataKt {
 }
 
 public final class com/gradleup/librarian/core/tooling/init/ProjectKt {
-	public static final fun initProject (Ljava/nio/file/Path;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/GitHubRepository;)V
-}
-
-public final class com/gradleup/librarian/core/tooling/init/PublishingKt {
-	public static final fun initPublishing (Ljava/nio/file/Path;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/GitHubRepository;Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;)V
+	public static final fun getKotlinPluginVersion ()Ljava/lang/String;
+	public static final fun initProject (Ljava/nio/file/Path;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/GitHubRepository;ZLcom/gradleup/librarian/core/tooling/init/SonatypeBackend;)V
+	public static final fun writeBinaryTo ([BLjava/nio/file/Path;)V
 }
 
 public final class com/gradleup/librarian/core/tooling/init/Secrets {
@@ -133,8 +195,8 @@ public final class com/gradleup/librarian/core/tooling/init/SonatypeRelease : ja
 
 public final class com/gradleup/librarian/core/tooling/init/SupportedLicense : java/lang/Enum {
 	public static final field MIT Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;
+	public final fun getDisplayName ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public final fun getFullName ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;
 	public static fun values ()[Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;
 }

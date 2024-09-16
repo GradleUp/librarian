@@ -11,16 +11,35 @@ public final class com/gradleup/librarian/cli/MultilineSecretComponent : com/git
 	public fun value ()Ljava/lang/String;
 }
 
+public final class com/gradleup/librarian/cli/UtilsKt {
+	public static final fun requireInteraction ()V
+}
+
 public final class com/gradleup/librarian/cli/VersionKt {
 	public static final field VERSION Ljava/lang/String;
 }
 
-public final class com/gradleup/librarian/cli/command/init/GradleWrapperCommand : com/github/ajalt/clikt/core/CliktCommand {
+public final class com/gradleup/librarian/cli/command/CreateGitHubRepository : com/github/ajalt/clikt/core/CliktCommand {
 	public fun <init> ()V
 	public fun run ()V
 }
 
-public final class com/gradleup/librarian/cli/command/init/PublishingCommand : com/github/ajalt/clikt/core/CliktCommand {
+public final class com/gradleup/librarian/cli/command/GenerateKey : com/github/ajalt/clikt/core/CliktCommand {
+	public fun <init> ()V
+	public fun run ()V
+}
+
+public final class com/gradleup/librarian/cli/command/UploadKey : com/github/ajalt/clikt/core/CliktCommand {
+	public fun <init> ()V
+	public final fun getKeyFile ()Ljava/lang/String;
+	public fun run ()V
+}
+
+public final class com/gradleup/librarian/cli/command/init/GitHubSecretsKt {
+	public static final fun setSecrets (Ljava/nio/file/Path;)V
+}
+
+public final class com/gradleup/librarian/cli/command/init/GradleWrapperCommand : com/github/ajalt/clikt/core/CliktCommand {
 	public fun <init> ()V
 	public fun run ()V
 }
