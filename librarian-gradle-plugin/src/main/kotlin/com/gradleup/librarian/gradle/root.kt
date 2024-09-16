@@ -75,7 +75,7 @@ fun Project.librarianRoot() {
   val snapshotsTaskProvider: TaskProvider<*>?
 
   if (sonatype.backend == SonatypeBackend.Portal) {
-    mavenCentralTaskProvider = tasks.register(librarianDeployToPortal, DeployToPortalTask::class.java) {
+    mavenCentralTaskProvider = tasks.register(librarianDeployToPortal, UploadToPortalTask::class.java) {
       it.username.set(sonatype.username)
       it.password.set(sonatype.password)
       it.files.from(allFiles)
@@ -86,7 +86,7 @@ fun Project.librarianRoot() {
     }
     snapshotsTaskProvider = null
   } else {
-    val uploadToStaging = tasks.register(librarianUploadFilesToStaging, UploadFilesTask::class.java) {
+    val uploadToStaging = tasks.register(librarianUploadFilesToStaging, UploadToNexusTask::class.java) {
       it.url.set(repoId.map { stagingRepositoryUrl(sonatype.backend, sonatype.baseUrl, it) })
       it.username.set(sonatype.username)
       it.password.set(sonatype.password)
@@ -102,7 +102,7 @@ fun Project.librarianRoot() {
       it.dependsOn(uploadToStaging)
     }
 
-    snapshotsTaskProvider = tasks.register(librarianUploadFilesToSnapshots, UploadFilesTask::class.java) {
+    snapshotsTaskProvider = tasks.register(librarianUploadFilesToSnapshots, UploadToNexusTask::class.java) {
       it.url.set(snapshotsUrl(sonatype.backend, sonatype.baseUrl))
       it.username.set(sonatype.username)
       it.password.set(sonatype.password)

@@ -8,9 +8,6 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okio.Buffer
 import okio.BufferedSink
-import okio.Timeout
-import okio.buffer
-import okio.sink
 import okio.use
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
@@ -21,13 +18,11 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
-import java.io.File
 import java.io.IOException
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
-import kotlin.math.sin
 
-abstract class DeployToPortalTask : DefaultTask() {
+abstract class UploadToPortalTask : DefaultTask() {
   @get:Input
   @get:Optional
   abstract val username: Property<String>

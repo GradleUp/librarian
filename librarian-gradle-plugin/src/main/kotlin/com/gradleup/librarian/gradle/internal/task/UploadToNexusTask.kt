@@ -16,7 +16,7 @@ import org.gradle.api.tasks.TaskAction
 import java.io.File
 import java.io.IOException
 
-abstract class UploadFilesTask : DefaultTask() {
+abstract class UploadToNexusTask : DefaultTask() {
   @get:Input
   abstract val username: Property<String>
 
