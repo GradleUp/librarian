@@ -9,10 +9,12 @@ import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import java.io.File
 import java.util.zip.ZipInputStream
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class GradleTest {
+  @Ignore // Blocked on https://github.com/apollographql/apollo-kotlin-mockserver/pull/10
   @Test
   fun portalEndToEndTest() = runBlocking {
     val mockWebServer = MockServer()
