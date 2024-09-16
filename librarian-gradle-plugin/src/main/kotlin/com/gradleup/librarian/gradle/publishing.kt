@@ -109,7 +109,7 @@ fun Project.configurePublishing(
 }
 
 private fun Project.emptyJavadoc(repositoryUrl: String?): TaskProvider<Jar> {
-  return tasks.register("librarianEmptyJavadoc", org.gradle.jvm.tasks.Jar::class.java) {
+  return tasks.register("librarianEmptyJavadoc", Jar::class.java) {
     it.archiveClassifier.set("javadoc")
     val extra = repositoryUrl?.let { " or $repositoryUrl" }
     it.from(

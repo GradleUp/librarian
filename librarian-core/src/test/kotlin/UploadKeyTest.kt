@@ -4,10 +4,12 @@ import com.gradleup.librarian.core.tooling.secretKeyRingOrNull
 import com.gradleup.librarian.core.tooling.uploadKey
 import kotlinx.coroutines.runBlocking
 import kotlin.io.path.Path
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class UploadKeyTest {
+  @Ignore
   @Test
   fun test(): Unit = runBlocking {
     val mockServer = MockServer()

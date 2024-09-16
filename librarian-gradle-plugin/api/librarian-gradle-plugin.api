@@ -59,10 +59,6 @@ public final class com/gradleup/librarian/gradle/KmpKt {
 	public static final fun allAppleTargets (Lorg/jetbrains/kotlin/gradle/dsl/KotlinMultiplatformExtension;)V
 }
 
-public final class com/gradleup/librarian/gradle/LibrarianKt {
-	public static final fun librarianProperties (Lorg/gradle/api/Project;)Ljava/util/Properties;
-}
-
 public final class com/gradleup/librarian/gradle/LibrarianPlugin : org/gradle/api/Plugin {
 	public fun <init> ()V
 	public synthetic fun apply (Ljava/lang/Object;)V
@@ -139,6 +135,16 @@ public final class com/gradleup/librarian/gradle/internal/Publishing_androidKt {
 	public static final fun createAndroidPublication (Lorg/gradle/api/Project;Ljava/lang/String;)V
 }
 
+public abstract class com/gradleup/librarian/gradle/internal/task/CloseAndMaybeReleaseRepositoryTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public abstract fun getAutomatic ()Lorg/gradle/api/provider/Property;
+	public abstract fun getBaseUrl ()Lorg/gradle/api/provider/Property;
+	public abstract fun getPassword ()Lorg/gradle/api/provider/Property;
+	public abstract fun getRepoId ()Lorg/gradle/api/provider/Property;
+	public abstract fun getUsername ()Lorg/gradle/api/provider/Property;
+	public final fun taskAction ()V
+}
+
 public abstract class com/gradleup/librarian/gradle/internal/task/CreateRepositoryTask : org/gradle/api/DefaultTask {
 	public fun <init> ()V
 	public abstract fun getBaseUrl ()Lorg/gradle/api/provider/Property;
@@ -163,13 +169,11 @@ public abstract class com/gradleup/librarian/gradle/internal/task/DeployToPortal
 	public final fun taskAction ()V
 }
 
-public abstract class com/gradleup/librarian/gradle/internal/task/ReleaseRepositoryTask : org/gradle/api/DefaultTask {
+public abstract class com/gradleup/librarian/gradle/internal/task/GenerateStaticContentTask : org/gradle/api/DefaultTask {
 	public fun <init> ()V
-	public abstract fun getAutomatic ()Lorg/gradle/api/provider/Property;
-	public abstract fun getBaseUrl ()Lorg/gradle/api/provider/Property;
-	public abstract fun getPassword ()Lorg/gradle/api/provider/Property;
-	public abstract fun getRepoId ()Lorg/gradle/api/provider/Property;
-	public abstract fun getUsername ()Lorg/gradle/api/provider/Property;
+	public abstract fun getKdocFiles ()Lorg/gradle/api/file/ConfigurableFileCollection;
+	public abstract fun getOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getRepositoryFiles ()Lorg/gradle/api/file/ConfigurableFileCollection;
 	public final fun taskAction ()V
 }
 

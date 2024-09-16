@@ -61,6 +61,14 @@ fun Project.librarianRoot() {
   }
   val allFiles = allFilesConfiguration.incoming.artifactView { it.lenient(true) }.files
 
+  val librarianStaticContent = tasks.register("librarianStaticContent", GenerateStaticContentTask::class.java) {
+    it.dependsOn("dokkatooGeneratePublicationHtml")
+
+    it.repositoryFiles.from(allFiles)
+    it.kdocFiles.from(file("build/dokka/html"))
+
+    it.outputDirectory.set(layout.buildDirectory.dir("static"))
+  }
   val repoId = createRepoTask.map { it.output.get().asFile.readText() }
 
   val mavenCentralTaskProvider: TaskProvider<*>
