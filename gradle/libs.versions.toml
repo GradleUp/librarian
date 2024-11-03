@@ -20,3 +20,7 @@ mockserver = "com.apollographql.mockserver:apollo-mockserver:0.0.3"
 bouncycastle-prov = "org.bouncycastle:bcprov-jdk18on:1.78.1"
 bouncycastle-pg = "org.bouncycastle:bcpg-jdk18on:1.78.1"
 google-auth = "com.google.auth:google-auth-library-oauth2-http:1.19.0"
+
+librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.0.7-SNAPSHOT"
+kotlin-gradle-plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21"
+

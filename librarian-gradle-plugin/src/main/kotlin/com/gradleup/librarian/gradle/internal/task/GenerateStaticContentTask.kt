@@ -26,7 +26,7 @@ internal abstract class GenerateStaticContentTask: DefaultTask() {
         if (source.file.isDirectory) {
           return@visit
         }
-        base.resolve("repository").resolve(source.path).let { destination ->
+        base.resolve("m2").resolve(source.path).let { destination ->
           destination.parentFile.mkdirs()
           source.file.copyTo(destination)
         }
