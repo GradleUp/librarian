@@ -1,9 +1,15 @@
 pluginManagement {
   listOf(repositories, dependencyResolutionManagement.repositories).forEach {
     it.apply {
-      mavenLocal()
       mavenCentral()
       google()
+
+      exclusiveContent {
+        forRepository { maven("https://storage.googleapis.com/gradleup/m2") }
+        filter {
+          includeGroup("com.gradleup.librarian")
+        }
+      }
 
       exclusiveContent {
         forRepository { maven("https://jitpack.io") }

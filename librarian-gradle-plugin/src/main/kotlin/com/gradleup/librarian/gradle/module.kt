@@ -69,7 +69,7 @@ internal fun Project.moduleProperties(): Properties {
   }
 }
 
-@Deprecated("use Librarian.module() instead.", ReplaceWith("Librarian.module()"))
+@Deprecated("use Librarian.module() instead.", ReplaceWith("Librarian.module(project)", "import com.gradleup.librarian.gradle.Librarian"))
 fun Project.librarianModule() {
   val rootProperties = rootProperties()
   val moduleProperties = moduleProperties()

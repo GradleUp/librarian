@@ -21,7 +21,7 @@ internal val librarianPublishToGcs = "librarianPublishToGcs"
 
 internal val skipProjectIsolationIncompatibleParts = false
 
-@Deprecated("use Librarian.root() instead", ReplaceWith("Librarian.root()"))
+@Deprecated("use Librarian.root() instead", ReplaceWith("Librarian.module(project)", "import com.gradleup.librarian.gradle.Librarian"))
 fun Project.librarianRoot() {
   if (!skipProjectIsolationIncompatibleParts) {
     configureBcv()

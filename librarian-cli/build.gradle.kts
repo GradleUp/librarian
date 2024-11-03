@@ -1,4 +1,4 @@
-import com.gradleup.librarian.gradle.librarianModule
+import com.gradleup.librarian.gradle.Librarian
 
 plugins {
   id("java")
@@ -6,7 +6,7 @@ plugins {
   id("distribution")
 }
 
-librarianModule()
+Librarian.module(project)
 
 dependencies {
   implementation(project(":librarian-core"))
