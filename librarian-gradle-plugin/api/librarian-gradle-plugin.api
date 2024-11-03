@@ -64,6 +64,16 @@ public final class com/gradleup/librarian/gradle/KmpKt {
 	public static final fun allAppleTargets (Lorg/jetbrains/kotlin/gradle/dsl/KotlinMultiplatformExtension;)V
 }
 
+public final class com/gradleup/librarian/gradle/Librarian {
+	public static final field Companion Lcom/gradleup/librarian/gradle/Librarian$Companion;
+	public fun <init> ()V
+}
+
+public final class com/gradleup/librarian/gradle/Librarian$Companion {
+	public final fun module (Lorg/gradle/api/Project;)V
+	public final fun root (Lorg/gradle/api/Project;)V
+}
+
 public final class com/gradleup/librarian/gradle/LibrarianPlugin : org/gradle/api/Plugin {
 	public fun <init> ()V
 	public synthetic fun apply (Ljava/lang/Object;)V
@@ -78,8 +88,8 @@ public final class com/gradleup/librarian/gradle/ModuleKt {
 	public static final fun configureMavenFriendlyDependencies (Lorg/gradle/api/Project;)V
 	public static final fun javaCompatibility (Ljava/util/Properties;)Ljava/lang/Integer;
 	public static final fun kotlinCompatibility (Ljava/util/Properties;)Ljava/lang/String;
-	public static final fun librarianModule (Lorg/gradle/api/Project;Z)V
-	public static synthetic fun librarianModule$default (Lorg/gradle/api/Project;ZILjava/lang/Object;)V
+	public static final fun librarianModule (Lorg/gradle/api/Project;)V
+	public static final fun publish (Ljava/util/Properties;)Ljava/lang/Boolean;
 	public static final fun versionPackageName (Ljava/util/Properties;)Ljava/lang/String;
 }
 

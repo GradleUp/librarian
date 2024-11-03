@@ -1,4 +1,4 @@
-import com.gradleup.librarian.core.librarianModule
+import com.gradleup.librarian.gradle.librarianModule
 import org.gradle.api.internal.artifacts.dependencies.DefaultFileCollectionDependency
 
 plugins {

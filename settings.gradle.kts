@@ -1,6 +1,7 @@
 pluginManagement {
   listOf(repositories, dependencyResolutionManagement.repositories).forEach {
     it.apply {
+      mavenLocal()
       mavenCentral()
       google()
 
@@ -14,4 +15,5 @@ pluginManagement {
   }
 }
 
-include(":librarian-gradle-plugin", ":librarian-cli", ":librarian-core")
+include(":librarian-gradle-plugin", ":librarian-cli", ":librarian-core", "librarian-publishing")
+

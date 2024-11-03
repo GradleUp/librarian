@@ -1,5 +1,6 @@
 package com.gradleup.librarian.core.tooling
 
+import com.gradleup.librarian.core.tooling.init.rootPropertiesFilename
 import java.io.File
 
 fun tagAndBump(versionToRelease: Version) {
@@ -76,7 +77,7 @@ internal fun runCommand(vararg args: String): String {
 }
 
 internal fun setCurrentVersion(version: String) {
-  val file = File("librarian.properties")
+  val file = File(rootPropertiesFilename)
   val newContent = file.readLines().map {
     it.replace(Regex("pom.version=.*"), "pom.version=$version")
   }.joinToString(separator = "\n", postfix = "\n")
@@ -84,7 +85,7 @@ internal fun setCurrentVersion(version: String) {
 }
 
 fun getCurrentVersion(): String {
-  val file = File("librarian.properties")
+  val file = File(rootPropertiesFilename)
   require(file.exists()) {
     "Cannot find file ${file.absolutePath}"
   }

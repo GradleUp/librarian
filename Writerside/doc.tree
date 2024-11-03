@@ -3,10 +3,10 @@
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
 <instance-profile id="doc"
-                 name="{{projectTitle}}"
+                 name="librarian"
                  start-page="welcome.md">
 
-    <toc-element toc-title="GitHub" href="https://github.com/{{repositoryOwnerLC}}/{{repositoryNameLC}}"/>
-    <toc-element toc-title="Kdoc" href="https://{{repositoryOwnerLC}}.github.io/{{repositoryNameLC}}/kdoc"/>
+    <toc-element toc-title="GitHub" href="https://github.com/gradleup/librarian"/>
+    <toc-element toc-title="Kdoc" href="https://gradleup.github.io/librarian/kdoc"/>
     <toc-element topic="welcome.md"/>
 </instance-profile>

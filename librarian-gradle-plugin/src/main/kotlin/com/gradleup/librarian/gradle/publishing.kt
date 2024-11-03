@@ -47,14 +47,8 @@ fun Gcp(properties: Properties): Gcp {
 fun PomMetadata(project: Project, artifactId: String, properties: Properties): PomMetadata {
   var version = properties.getRequiredProperty("pom.version")
   val sha1 = project.findEnvironmentVariable("LIBRARIAN_VERSION_SHA1")
-  if (sha1.isNullOrBlank().not()) {
-    val now = Instant.now()
-    val year = now.get(ChronoField.YEAR)
-    val month = now.get(ChronoField.MONTH_OF_YEAR)
-    val day = now.get(ChronoField.DAY_OF_MONTH)
-    val hour = now.get(ChronoField.HOUR_OF_DAY)
-    val minute = now.get(ChronoField.MINUTE_OF_HOUR)
-    version = "$version-${year}_${month}_${day}_${hour}_${minute}_${sha1}"
+  if (!sha1.isNullOrBlank()) {
+    version = "$version-${sha1}"
   }
   return PomMetadata(
           groupId = properties.getRequiredProperty("pom.groupId"),
@@ -71,6 +65,7 @@ fun PomMetadata(project: Project, artifactId: String, properties: Properties): P
 internal fun Properties.getRequiredProperty(name: String): String {
   return getProperty(name) ?: error("Librarian: '$name' is required.")
 }
+
 /**
  * User metadata for .pom or .module metadata associated with the repository.
  * This metadata is the same in all modules
@@ -289,9 +284,8 @@ fun Project.configurePom(
         }
       }
     }
-  } }
-
-
+  }
+}
 
 internal fun DependencyHandler.project(path: String, configuration: String) = project(
     mapOf("path" to path, "configuration" to configuration)

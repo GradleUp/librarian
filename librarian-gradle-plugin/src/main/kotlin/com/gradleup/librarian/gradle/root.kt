@@ -3,8 +3,6 @@ package com.gradleup.librarian.gradle
 import com.gradleup.librarian.core.tooling.init.SonatypeBackend
 import com.gradleup.librarian.core.tooling.init.SonatypeRelease
 import com.gradleup.librarian.gradle.internal.task.*
-import com.gradleup.librarian.gradle.internal.task.snapshotsUrl
-import com.gradleup.librarian.gradle.internal.task.stagingRepositoryUrl
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.TaskProvider
@@ -22,6 +20,7 @@ internal val librarianPublishToSnapshots = "librarianPublishToSnapshots"
 
 internal val skipProjectIsolationIncompatibleParts = false
 
+@Deprecated("use Librarian.root() instead", ReplaceWith("Librarian.root()"))
 fun Project.librarianRoot() {
   if (!skipProjectIsolationIncompatibleParts) {
     configureBcv()

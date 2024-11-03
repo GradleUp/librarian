@@ -2,6 +2,8 @@ package com.gradleup.librarian.gradle
 
 import com.gradleup.librarian.core.tooling.init.SonatypeBackend
 import com.gradleup.librarian.core.tooling.init.SonatypeRelease
+import com.gradleup.librarian.core.tooling.init.modulePropertiesFilename
+import com.gradleup.librarian.core.tooling.init.rootPropertiesFilename
 import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
 import org.gradle.api.Project
 import java.util.Properties
@@ -16,6 +18,10 @@ fun Properties.kotlinCompatibility(): String? {
 
 fun Properties.versionPackageName(): String? {
   return getProperty("version.packageName")
+}
+
+fun Properties.publish(): Boolean? {
+  return getProperty("publish")?.toBoolean()
 }
 
 internal fun Properties.kdocArtifactId(): String {
@@ -38,9 +44,9 @@ fun Project.configureMavenFriendlyDependencies() {
 }
 
 internal fun Project.rootProperties(): Properties {
-  val propertiesFile = rootDir.resolve("librarian.properties")
+  val propertiesFile = rootDir.resolve(rootPropertiesFilename)
   check(propertiesFile.exists()) {
-    "No librarian.properties file found at ${propertiesFile.absolutePath}"
+    "No $rootPropertiesFilename file found at ${propertiesFile.absolutePath}"
   }
 
   return Properties().apply {
@@ -51,7 +57,7 @@ internal fun Project.rootProperties(): Properties {
 }
 
 internal fun Project.moduleProperties(): Properties {
-  val propertiesFile = file("librarian.properties")
+  val propertiesFile = file(modulePropertiesFilename)
   if (!propertiesFile.exists()) {
     return Properties()
   }
@@ -63,7 +69,8 @@ internal fun Project.moduleProperties(): Properties {
   }
 }
 
-fun Project.librarianModule(publish: Boolean = true) {
+@Deprecated("use Librarian.module() instead.", ReplaceWith("Librarian.module()"))
+fun Project.librarianModule() {
   val rootProperties = rootProperties()
   val moduleProperties = moduleProperties()
 
@@ -82,7 +89,8 @@ fun Project.librarianModule(publish: Boolean = true) {
   moduleProperties.versionPackageName()?.let {
     configureGeneratedVersion(it, pomMetadata.version)
   }
-
+  val publish = moduleProperties.publish() ?: true
+  println("Publish $name? $publish")
   if (publish) {
     configureDokkatoo()
 

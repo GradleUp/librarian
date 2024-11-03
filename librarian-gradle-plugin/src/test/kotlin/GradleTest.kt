@@ -1,5 +1,6 @@
 import com.apollographql.mockserver.MockServer
 import com.apollographql.mockserver.enqueueString
+import com.gradleup.librarian.core.tooling.init.rootPropertiesFilename
 import kotlinx.coroutines.runBlocking
 import okhttp3.MultipartReader
 import okio.Buffer
@@ -21,7 +22,7 @@ class GradleTest {
 
     withTestProject("simple") { projectDir ->
 
-      projectDir.resolve("librarian.properties")
+      projectDir.resolve(rootPropertiesFilename)
         .replace(Regex("sonatype.baseUrl=.*"), "sonatype.baseUrl=http://127.0.0.1:${mockWebServer.port()}")
 
       GradleRunner.create()
