@@ -17,6 +17,7 @@ dependencies {
     implementation(libs.vespene)
     implementation(libs.maven.sympathy)
     implementation(libs.okhttp)
+    implementation(libs.google.auth)
 
     compileOnly(libs.gradle.api)
     compileOnly(libs.agp)

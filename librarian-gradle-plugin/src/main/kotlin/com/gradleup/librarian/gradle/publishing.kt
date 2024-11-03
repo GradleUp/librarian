@@ -14,8 +14,6 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
-import java.time.Instant
-import java.time.temporal.ChronoField
 import java.util.Properties
 
 internal const val librarianPublication = "librarianPublication"
@@ -35,12 +33,14 @@ class Sonatype(
 )
 
 class Gcp(
-  val bucketUrl: String?,
+  val bucket: String?,
+  val prefix: String // The prefix, always ending with '/'
 )
 
-fun Gcp(properties: Properties): Gcp {
+fun Gcs(properties: Properties): Gcp {
   return Gcp(
-    properties.getProperty("gcp.bucketUrl"),
+    properties.getProperty("gcs.bucket"),
+    properties.getProperty("gcs.prefix").orEmpty().trimEnd('/') + '/',
   )
 }
 
@@ -86,7 +86,6 @@ fun Project.configurePublishing(
   publishPlatformArtifactsInRootModule: Boolean,
   pomMetadata: PomMetadata,
   signing: Signing,
-  gcp: Gcp,
 ) {
   if (createMissingPublications) {
     createMissingPublications(pomMetadata.vcsUrl)
@@ -103,13 +102,6 @@ fun Project.configurePublishing(
       it.maven {
         it.name = "librarian"
         it.setUrl(uri(librarianRepository.asFile.path))
-      }
-    }
-
-    repositories {
-      it.maven {
-        it.name = "googleCloud"
-        it.setUrl(gcp.bucketUrl)
       }
     }
   }

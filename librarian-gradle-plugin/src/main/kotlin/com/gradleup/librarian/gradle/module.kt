@@ -84,13 +84,10 @@ fun Project.librarianModule() {
 
   val pomMetadata = PomMetadata(project, project.name, rootProperties)
 
-  val gcp = Gcp(rootProperties)
-
   moduleProperties.versionPackageName()?.let {
     configureGeneratedVersion(it, pomMetadata.version)
   }
   val publish = moduleProperties.publish() ?: true
-  println("Publish $name? $publish")
   if (publish) {
     configureDokkatoo()
 
@@ -99,7 +96,6 @@ fun Project.librarianModule() {
       publishPlatformArtifactsInRootModule = true,
       pomMetadata = pomMetadata,
       signing = Signing(project, rootProperties),
-      gcp = gcp
     )
   }
 }

@@ -17,6 +17,7 @@ internal val librarianDeployToPortal = "librarianDeployToPortal"
 
 internal val librarianPublishToMavenCentral = "librarianPublishToMavenCentral"
 internal val librarianPublishToSnapshots = "librarianPublishToSnapshots"
+internal val librarianPublishToGcs = "librarianPublishToGcs"
 
 internal val skipProjectIsolationIncompatibleParts = false
 
@@ -32,8 +33,8 @@ fun Project.librarianRoot() {
   val signing = Signing(project, properties)
 
   val kdocWithoutOlder = configureDokkatooAggregate(
-      currentVersion = pomMetadata.version,
-      olderVersions = properties.olderVersions()
+    currentVersion = pomMetadata.version,
+    olderVersions = properties.olderVersions()
   )
   configurePublishingInternal {
     publications.create("kdoc", MavenPublication::class.java) {
@@ -60,7 +61,7 @@ fun Project.librarianRoot() {
   }
   val allFiles = allFilesConfiguration.incoming.artifactView { it.lenient(true) }.files
 
-  val librarianStaticContent = tasks.register("librarianStaticContent", GenerateStaticContentTask::class.java) {
+  tasks.register("librarianStaticContent", GenerateStaticContentTask::class.java) {
     it.dependsOn("dokkatooGeneratePublicationHtml")
 
     it.repositoryFiles.from(allFiles)
@@ -92,14 +93,15 @@ fun Project.librarianRoot() {
       it.files.from(allFiles)
     }
 
-    mavenCentralTaskProvider = tasks.register(librarianCloseAndMaybeReleaseRepository, CloseAndMaybeReleaseRepositoryTask::class.java) {
-      it.baseUrl.set(stagingBaseUrl(sonatype.backend, sonatype.baseUrl))
-      it.username.set(sonatype.username)
-      it.password.set(sonatype.password)
-      it.repoId.set(repoId)
-      it.automatic.set(sonatype.release == SonatypeRelease.Automatic)
-      it.dependsOn(uploadToStaging)
-    }
+    mavenCentralTaskProvider =
+      tasks.register(librarianCloseAndMaybeReleaseRepository, CloseAndMaybeReleaseRepositoryTask::class.java) {
+        it.baseUrl.set(stagingBaseUrl(sonatype.backend, sonatype.baseUrl))
+        it.username.set(sonatype.username)
+        it.password.set(sonatype.password)
+        it.repoId.set(repoId)
+        it.automatic.set(sonatype.release == SonatypeRelease.Automatic)
+        it.dependsOn(uploadToStaging)
+      }
 
     snapshotsTaskProvider = tasks.register(librarianUploadFilesToSnapshots, UploadToNexusTask::class.java) {
       it.url.set(snapshotsUrl(sonatype.backend, sonatype.baseUrl))
@@ -122,5 +124,13 @@ fun Project.librarianRoot() {
         error("The central portal doesn't support SNAPSHOTs")
       }
     }
+  }
+
+  val gcs = Gcs(properties)
+  tasks.register(librarianPublishToGcs, UploadToGcsTask::class.java) {
+    it.files.from(allFiles)
+    it.bucket.set(gcs.bucket)
+    it.prefix.set(gcs.prefix)
+    it.googleServicesJson.set(System.getenv("LIBRARIAN_GOOGLE_SERVICES_JSON"))
   }
 }
