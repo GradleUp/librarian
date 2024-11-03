@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.gradleup.librarian</groupId>
+  <artifactId>librarian-gradle-plugin</artifactId>
+  <versioning>
+    <latest>0.0.7-SNAPSHOT</latest>
+    <versions>
+      <version>0.0.7-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20241103213715</lastUpdated>
+  </versioning>
+</metadata>

@@ -1,0 +1,1 @@
+sourceset_dependencies = '{":librarian-gradle-plugin/main":[],":librarian-cli/main":[],":librarian-core/main":[]}'

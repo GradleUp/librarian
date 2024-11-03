@@ -1,0 +1,14 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:librarian-cli
+com.gradleup.librarian.cli
+com.gradleup.librarian.cli.command
+com.gradleup.librarian.cli.command.init
+module:librarian-core
+com.gradleup.librarian.core
+com.gradleup.librarian.core.tooling
+com.gradleup.librarian.core.tooling.init
+module:librarian-gradle-plugin
+com.gradleup.librarian.gradle
+com.gradleup.librarian.gradle.internal
