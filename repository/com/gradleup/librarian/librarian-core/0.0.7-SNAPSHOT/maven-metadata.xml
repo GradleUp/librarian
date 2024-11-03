@@ -3,38 +3,38 @@
   <groupId>com.gradleup.librarian</groupId>
   <artifactId>librarian-core</artifactId>
   <versioning>
-    <lastUpdated>20241103214424</lastUpdated>
+    <lastUpdated>20241103215222</lastUpdated>
     <snapshot>
-      <timestamp>20241103.214424</timestamp>
+      <timestamp>20241103.215222</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <classifier>javadoc</classifier>
         <extension>jar</extension>
-        <value>0.0.7-20241103.214424-1</value>
-        <updated>20241103214424</updated>
+        <value>0.0.7-20241103.215222-1</value>
+        <updated>20241103215222</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>module</extension>
+        <value>0.0.7-20241103.215222-1</value>
+        <updated>20241103215222</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.0.7-20241103.215222-1</value>
+        <updated>20241103215222</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.0.7-20241103.215222-1</value>
+        <updated>20241103215222</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>0.0.7-20241103.214424-1</value>
-        <updated>20241103214424</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <extension>module</extension>
-        <value>0.0.7-20241103.214424-1</value>
-        <updated>20241103214424</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <extension>pom</extension>
-        <value>0.0.7-20241103.214424-1</value>
-        <updated>20241103214424</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <extension>jar</extension>
-        <value>0.0.7-20241103.214424-1</value>
-        <updated>20241103214424</updated>
+        <value>0.0.7-20241103.215222-1</value>
+        <updated>20241103215222</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
