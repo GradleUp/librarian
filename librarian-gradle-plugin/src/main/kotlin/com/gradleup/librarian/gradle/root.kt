@@ -86,6 +86,7 @@ fun Project.librarianRoot() {
     snapshotsTaskProvider = null
   } else {
     val uploadToStaging = tasks.register(librarianUploadFilesToStaging, UploadToNexusTask::class.java) {
+      // Beware of https://github.com/gradle/gradle/issues/31125 before touching this line
       it.url.set(createRepoTask.flatMap { it.output }.map { stagingRepositoryUrl(sonatype.backend, sonatype.baseUrl, it.asFile.readText()) })
       it.username.set(sonatype.username)
       it.password.set(sonatype.password)
@@ -97,6 +98,7 @@ fun Project.librarianRoot() {
         it.baseUrl.set(stagingBaseUrl(sonatype.backend, sonatype.baseUrl))
         it.username.set(sonatype.username)
         it.password.set(sonatype.password)
+        // Beware of https://github.com/gradle/gradle/issues/31125 before touching this line
         it.repoId.set(createRepoTask.flatMap { it.output }.map { it.asFile.readText() })
         it.automatic.set(sonatype.release == SonatypeRelease.Automatic)
         it.dependsOn(uploadToStaging)
