@@ -69,7 +69,6 @@ fun Project.librarianRoot() {
 
     it.outputDirectory.set(layout.buildDirectory.dir("static"))
   }
-  val repoId = createRepoTask.map { it.output.get().asFile.readText() }
 
   val mavenCentralTaskProvider: TaskProvider<*>
   val snapshotsTaskProvider: TaskProvider<*>?
@@ -87,7 +86,7 @@ fun Project.librarianRoot() {
     snapshotsTaskProvider = null
   } else {
     val uploadToStaging = tasks.register(librarianUploadFilesToStaging, UploadToNexusTask::class.java) {
-      it.url.set(repoId.map { stagingRepositoryUrl(sonatype.backend, sonatype.baseUrl, it) })
+      it.url.set(createRepoTask.flatMap { it.output }.map { stagingRepositoryUrl(sonatype.backend, sonatype.baseUrl, it.asFile.readText()) })
       it.username.set(sonatype.username)
       it.password.set(sonatype.password)
       it.files.from(allFiles)
@@ -98,7 +97,7 @@ fun Project.librarianRoot() {
         it.baseUrl.set(stagingBaseUrl(sonatype.backend, sonatype.baseUrl))
         it.username.set(sonatype.username)
         it.password.set(sonatype.password)
-        it.repoId.set(repoId)
+        it.repoId.set(createRepoTask.flatMap { it.output }.map { it.asFile.readText() })
         it.automatic.set(sonatype.release == SonatypeRelease.Automatic)
         it.dependsOn(uploadToStaging)
       }
