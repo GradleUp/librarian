@@ -11,7 +11,7 @@ import kotlin.io.path.createDirectory
 import kotlin.io.path.writeBytes
 import kotlin.io.path.writeText
 
-val kotlinPluginVersion = "2.0.0"
+val kotlinPluginVersion = "2.0.21"
 
 fun Path.initProject(
     multiplatform: Boolean,
