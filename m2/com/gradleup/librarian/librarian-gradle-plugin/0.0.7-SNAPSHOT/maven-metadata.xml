@@ -3,38 +3,38 @@
   <groupId>com.gradleup.librarian</groupId>
   <artifactId>librarian-gradle-plugin</artifactId>
   <versioning>
-    <lastUpdated>20241103222626</lastUpdated>
+    <lastUpdated>20241104160339</lastUpdated>
     <snapshot>
-      <timestamp>20241103.222626</timestamp>
+      <timestamp>20241104.160339</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
+        <classifier>javadoc</classifier>
         <extension>jar</extension>
-        <value>0.0.7-20241103.222626-1</value>
-        <updated>20241103222626</updated>
+        <value>0.0.7-20241104.160339-1</value>
+        <updated>20241104160339</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.0.7-20241103.222626-1</value>
-        <updated>20241103222626</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <classifier>javadoc</classifier>
-        <extension>jar</extension>
-        <value>0.0.7-20241103.222626-1</value>
-        <updated>20241103222626</updated>
+        <value>0.0.7-20241104.160339-1</value>
+        <updated>20241104160339</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>0.0.7-20241103.222626-1</value>
-        <updated>20241103222626</updated>
+        <value>0.0.7-20241104.160339-1</value>
+        <updated>20241104160339</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>module</extension>
-        <value>0.0.7-20241103.222626-1</value>
-        <updated>20241103222626</updated>
+        <value>0.0.7-20241104.160339-1</value>
+        <updated>20241104160339</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.0.7-20241104.160339-1</value>
+        <updated>20241104160339</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
