@@ -3,16 +3,16 @@
   <groupId>com.gradleup.librarian</groupId>
   <artifactId>com.gradleup.librarian.gradle.plugin</artifactId>
   <versioning>
-    <lastUpdated>20241104170403</lastUpdated>
+    <lastUpdated>20241104173955</lastUpdated>
     <snapshot>
-      <timestamp>20241104.170403</timestamp>
+      <timestamp>20241104.173955</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.0.7-20241104.170403-1</value>
-        <updated>20241104170403</updated>
+        <value>0.0.7-20241104.173955-1</value>
+        <updated>20241104173955</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>

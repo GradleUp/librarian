@@ -1,0 +1,152 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.gradleup.librarian",
+    "module": "librarian-gradle-plugin",
+    "version": "0.0.7-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.10"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "binary-compatibility-validator",
+          "version": {
+            "requires": "0.15.0-Beta.2"
+          }
+        },
+        {
+          "group": "dev.adamko.dokkatoo",
+          "module": "dokkatoo-plugin",
+          "version": {
+            "requires": "2.3.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "librarian-gradle-plugin-0.0.7-SNAPSHOT.jar",
+          "url": "librarian-gradle-plugin-0.0.7-SNAPSHOT.jar",
+          "size": 115173,
+          "sha512": "2198328e2bd5ae5dc8b3952072f1368d3121a3b08feb8e0aee5e4d1e965cc869501a089e487dd4f565f53afd51a2d2bcca0b9e76ea3561582b7dcce2f1eba215",
+          "sha256": "734b89e5f58802b56f5f266beaf1e5a15ff11e5837b7896aa0a64bb4cd0a58bf",
+          "sha1": "1e4d680651e2952e2c13fa45be8ab08e82fe2799",
+          "md5": "6366ef1e9c912a4abba9a5ce775d2bf4"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.gradleup.librarian",
+          "module": "librarian-core",
+          "version": {
+            "requires": "0.0.7-SNAPSHOT"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.8.0"
+          }
+        },
+        {
+          "group": "net.mbonnin.vespene",
+          "module": "vespene-lib",
+          "version": {
+            "requires": "0.6.0"
+          }
+        },
+        {
+          "group": "com.gradleup.maven-sympathy",
+          "module": "maven-sympathy",
+          "version": {
+            "requires": "0.0.2"
+          }
+        },
+        {
+          "group": "com.squareup.okhttp3",
+          "module": "okhttp",
+          "version": {
+            "requires": "4.12.0"
+          }
+        },
+        {
+          "group": "com.google.auth",
+          "module": "google-auth-library-oauth2-http",
+          "version": {
+            "requires": "1.19.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "binary-compatibility-validator",
+          "version": {
+            "requires": "0.15.0-Beta.2"
+          }
+        },
+        {
+          "group": "dev.adamko.dokkatoo",
+          "module": "dokkatoo-plugin",
+          "version": {
+            "requires": "2.3.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "librarian-gradle-plugin-0.0.7-SNAPSHOT.jar",
+          "url": "librarian-gradle-plugin-0.0.7-SNAPSHOT.jar",
+          "size": 115173,
+          "sha512": "2198328e2bd5ae5dc8b3952072f1368d3121a3b08feb8e0aee5e4d1e965cc869501a089e487dd4f565f53afd51a2d2bcca0b9e76ea3561582b7dcce2f1eba215",
+          "sha256": "734b89e5f58802b56f5f266beaf1e5a15ff11e5837b7896aa0a64bb4cd0a58bf",
+          "sha1": "1e4d680651e2952e2c13fa45be8ab08e82fe2799",
+          "md5": "6366ef1e9c912a4abba9a5ce775d2bf4"
+        }
+      ]
+    }
+  ]
+}
