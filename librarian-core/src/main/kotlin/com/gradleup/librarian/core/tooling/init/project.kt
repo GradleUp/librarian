@@ -36,14 +36,14 @@ fun Path.initProject(
   """.trimIndent())
 
   resolve("build.gradle.kts").writeText("""
-    import com.gradleup.librarian.gradle.librarianRoot
+    import com.gradleup.librarian.gradle.Librarian
 
     plugins {
       alias(libs.plugins.kgp).apply(false)
       alias(libs.plugins.librarian).apply(false)
     }
 
-    librarianRoot()
+    Librarian.root(project)
   """.trimIndent()
   )
 
@@ -53,13 +53,13 @@ fun Path.initProject(
   resolve("module/build.gradle.kts").writeText(
       buildString {
         append("""
-          import com.gradleup.librarian.gradle.librarianModule
+          import com.gradleup.librarian.gradle.Librarian
       
           plugins {
             id("$kotlinPluginId")
           }
       
-          librarianModule()    
+          Librarian.module(project)    
         """.trimIndent())
 
         if (multiplatform) {

@@ -27,7 +27,7 @@ fun Path.initLibrarian(
       sonatype.backend=$sonatypeBackend
 
       pom.groupId=$groupId
-      pom.version=0.0.1-SNAPSHOT
+      pom.version=0.0.0-SNAPSHOT
       pom.description=$pomDescription
       pom.vcsUrl=$projectUrl
       pom.developer=$pomDeveloper
