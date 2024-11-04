@@ -39,8 +39,7 @@ internal fun Path.createGitHubRepository(repository: GitHubRepository, defaultDe
     return UploadResult(false, false)
   }
 
-  runCommand("gh", "repo", "create", "--public", "-s", ".")
-  runCommand("git", "push", "origin", ".")
+  runCommand("gh", "repo", "create", "--public", "-s",  ".", "--push", "${repository.owner}/${repository.name}",)
 
   val gitHubDescription = KInquirer.promptInput("GitHub description", defaultDescription)
   val gitHubTopics = KInquirer.promptInput("GitHub topics (use comma separated list)", "kotlin").split(",").map { it.trim() }
