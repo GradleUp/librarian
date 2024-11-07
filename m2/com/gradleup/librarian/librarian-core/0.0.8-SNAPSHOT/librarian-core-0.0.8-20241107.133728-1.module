@@ -1,0 +1,124 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.gradleup.librarian",
+    "module": "librarian-core",
+    "version": "0.0.8-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.10"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "librarian-core-0.0.8-SNAPSHOT.jar",
+          "url": "librarian-core-0.0.8-SNAPSHOT.jar",
+          "size": 120914,
+          "sha512": "ae3dee2127d18d2ba5244a58891260a7aaf0f35cc0386e2da2eed7a22cebaf11aeb4ddcdc4f277d06f40758cfd1542b32a2b38f9f1687d92676423e6d379e12e",
+          "sha256": "419c7103b369735eeeccd099ae8586943e74ba3e42efc4c3cebe7e32817ef62a",
+          "sha1": "13cf11bd70c1d9a081571b807443b6c40813b134",
+          "md5": "2abd78841d10153f6e740999ea194f9f"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.8.0"
+          }
+        },
+        {
+          "group": "com.eygraber",
+          "module": "jsonpathkt-kotlinx",
+          "version": {
+            "requires": "3.0.2"
+          }
+        },
+        {
+          "group": "com.squareup.okhttp3",
+          "module": "okhttp",
+          "version": {
+            "requires": "4.12.0"
+          }
+        },
+        {
+          "group": "org.bouncycastle",
+          "module": "bcprov-jdk18on",
+          "version": {
+            "requires": "1.78.1"
+          }
+        },
+        {
+          "group": "org.bouncycastle",
+          "module": "bcpg-jdk18on",
+          "version": {
+            "requires": "1.78.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-json",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "librarian-core-0.0.8-SNAPSHOT.jar",
+          "url": "librarian-core-0.0.8-SNAPSHOT.jar",
+          "size": 120914,
+          "sha512": "ae3dee2127d18d2ba5244a58891260a7aaf0f35cc0386e2da2eed7a22cebaf11aeb4ddcdc4f277d06f40758cfd1542b32a2b38f9f1687d92676423e6d379e12e",
+          "sha256": "419c7103b369735eeeccd099ae8586943e74ba3e42efc4c3cebe7e32817ef62a",
+          "sha1": "13cf11bd70c1d9a081571b807443b6c40813b134",
+          "md5": "2abd78841d10153f6e740999ea194f9f"
+        }
+      ]
+    }
+  ]
+}

@@ -3,11 +3,10 @@
   <groupId>com.gradleup.librarian</groupId>
   <artifactId>librarian-core</artifactId>
   <versioning>
-    <latest>0.0.7</latest>
-    <release>0.0.7</release>
+    <latest>0.0.8-SNAPSHOT</latest>
     <versions>
-      <version>0.0.7</version>
+      <version>0.0.8-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20241107133710</lastUpdated>
+    <lastUpdated>20241107133748</lastUpdated>
   </versioning>
 </metadata>
