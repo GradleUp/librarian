@@ -2,6 +2,9 @@
 
 Librarian is an opinionated toolkit to build Kotlin libraries. 
 
+> This project is work in progress
+{style=info}
+
 Librarian:
 
 * publishes your KMP/Android/JVM libraries to:
