@@ -97,7 +97,6 @@ internal class Init : CliktCommand(invokeWithoutSubcommand = true) {
         val pomDescription = KInquirer.promptInput("Maven pom description")
         val pomDeveloper = KInquirer.promptInput("Maven pom developer", defaultDevelopers)
         val projectUrl = gitHubRepository?.url() ?: KInquirer.promptInput("Maven pom project url")
-        val licenseUrl = gitHubRepository?.rawUrl("LICENSE") ?: KInquirer.promptInput("Maven pom license url")
         val sonatypeBackend = KInquirer.promptList("Sonatype backend", SonatypeBackend.entries.map { it.name })
         val javaCompatibility = KInquirer.promptInput("Java compatibility", "8")
         val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", kotlinPluginVersion)
@@ -109,7 +108,6 @@ internal class Init : CliktCommand(invokeWithoutSubcommand = true) {
             groupId = groupId,
             projectUrl = projectUrl,
             license = license,
-            licenseUrl = licenseUrl,
             pomDescription = pomDescription,
             pomDeveloper = pomDeveloper
         )

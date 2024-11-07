@@ -57,7 +57,6 @@ pom.description=Librarian
 pom.vcsUrl=https://github.com/gradleup/librarian
 pom.developer=GradleUp authors
 pom.license=MIT License
-pom.licenseUrl=https://raw.githubusercontent.com/gradleup/librarian/main/LICENSE
 
 # Optional: publish to Google Cloud Storage
 gcs.bucket=gradleup

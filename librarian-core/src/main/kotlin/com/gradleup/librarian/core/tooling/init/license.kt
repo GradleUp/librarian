@@ -17,8 +17,8 @@ fun String.toSupportedLicense(): SupportedLicense {
 
 
 // See https://spdx.org/licenses/
-enum class SupportedLicense(val displayName: String) {
-  MIT("MIT License")
+enum class SupportedLicense(val spdxIdentifier: String) {
+  MIT("MIT")
 }
 
 fun Path.initLicense(license: SupportedLicense, year: String, copyright: String) {

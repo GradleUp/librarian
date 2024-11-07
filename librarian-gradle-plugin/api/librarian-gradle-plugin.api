@@ -29,8 +29,9 @@ public final class com/gradleup/librarian/gradle/DokkatooKt {
 }
 
 public final class com/gradleup/librarian/gradle/Gcp {
-	public fun <init> (Ljava/lang/String;)V
-	public final fun getBucketUrl ()Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getBucket ()Ljava/lang/String;
+	public final fun getPrefix ()Ljava/lang/String;
 }
 
 public abstract class com/gradleup/librarian/gradle/GeneratePluginVersion : org/gradle/api/DefaultTask {
@@ -94,13 +95,12 @@ public final class com/gradleup/librarian/gradle/ModuleKt {
 }
 
 public final class com/gradleup/librarian/gradle/PomMetadata {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun getArtifactId ()Ljava/lang/String;
 	public final fun getDescription ()Ljava/lang/String;
 	public final fun getDeveloper ()Ljava/lang/String;
 	public final fun getGroupId ()Ljava/lang/String;
 	public final fun getLicense ()Ljava/lang/String;
-	public final fun getLicenseUrl ()Ljava/lang/String;
 	public final fun getVcsUrl ()Ljava/lang/String;
 	public final fun getVersion ()Ljava/lang/String;
 }
@@ -111,10 +111,10 @@ public final class com/gradleup/librarian/gradle/Project_kotlinKt {
 }
 
 public final class com/gradleup/librarian/gradle/PublishingKt {
-	public static final fun Gcp (Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/Gcp;
+	public static final fun Gcs (Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/Gcp;
 	public static final fun PomMetadata (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/PomMetadata;
 	public static final fun configurePom (Lorg/gradle/api/Project;Lcom/gradleup/librarian/gradle/PomMetadata;)V
-	public static final fun configurePublishing (Lorg/gradle/api/Project;ZZLcom/gradleup/librarian/gradle/PomMetadata;Lcom/gradleup/librarian/gradle/Signing;Lcom/gradleup/librarian/gradle/Gcp;)V
+	public static final fun configurePublishing (Lorg/gradle/api/Project;ZZLcom/gradleup/librarian/gradle/PomMetadata;Lcom/gradleup/librarian/gradle/Signing;)V
 	public static final fun createMissingPublications (Lorg/gradle/api/Project;Ljava/lang/String;)V
 	public static synthetic fun createMissingPublications$default (Lorg/gradle/api/Project;Ljava/lang/String;ILjava/lang/Object;)V
 }

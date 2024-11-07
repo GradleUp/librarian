@@ -12,7 +12,6 @@ fun Path.initLibrarian(
     sonatypeBackend: SonatypeBackend,
     groupId: String,
     projectUrl: String,
-    licenseUrl: String,
     license: SupportedLicense,
     pomDescription: String,
     pomDeveloper: String
@@ -31,8 +30,7 @@ fun Path.initLibrarian(
       pom.description=$pomDescription
       pom.vcsUrl=$projectUrl
       pom.developer=$pomDeveloper
-      pom.license=${license.displayName}
-      pom.licenseUrl=${licenseUrl}
+      pom.license=${license.spdxIdentifier}
     """.trimIndent()
   )
 }

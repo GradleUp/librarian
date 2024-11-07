@@ -57,7 +57,6 @@ fun PomMetadata(project: Project, artifactId: String, properties: Properties): P
           description = properties.getRequiredProperty("pom.description"),
           vcsUrl = properties.getRequiredProperty("pom.vcsUrl"),
           developer = properties.getRequiredProperty("pom.developer"),
-          licenseUrl = properties.getRequiredProperty("pom.licenseUrl"),
           license = properties.getRequiredProperty("pom.license"),
   )
 }
@@ -78,7 +77,6 @@ class PomMetadata(
     val vcsUrl: String,
     val developer: String,
     val license: String,
-    val licenseUrl: String,
 )
 
 fun Project.configurePublishing(
@@ -264,8 +262,12 @@ fun Project.configurePom(
         }
         it.licenses {
           it.license {
+            /**
+             * We set the license name to the SPDX identifier
+             * We omit the licenseUrl to play nice with licensee
+             * See https://github.com/cashapp/licensee/issues/374
+             */
             it.name.set(pomMetadata.license)
-            it.url.set(pomMetadata.licenseUrl)
           }
         }
         it.developers {

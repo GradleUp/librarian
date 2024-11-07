@@ -85,7 +85,6 @@ internal class Create : CliktCommand() {
           sonatypeBackend = backend,
           groupId = groupId,
           projectUrl = repository.url(),
-          licenseUrl = repository.rawUrl("LICENSE"),
           license = SupportedLicense.MIT,
           pomDescription = pomDescription,
           pomDeveloper = pomDeveloper
