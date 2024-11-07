@@ -1,4 +1,4 @@
-import com.gradleup.librarian.gradle.librarianModule
+import com.gradleup.librarian.gradle.Librarian
 import org.gradle.api.internal.artifacts.dependencies.DefaultFileCollectionDependency
 
 plugins {
@@ -6,7 +6,7 @@ plugins {
     id("java-gradle-plugin")
 }
 
-librarianModule()
+Librarian.module(project)
 
 dependencies {
     api(libs.bcv)
