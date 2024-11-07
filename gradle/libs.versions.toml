@@ -21,6 +21,6 @@ bouncycastle-prov = "org.bouncycastle:bcprov-jdk18on:1.78.1"
 bouncycastle-pg = "org.bouncycastle:bcpg-jdk18on:1.78.1"
 google-auth = "com.google.auth:google-auth-library-oauth2-http:1.19.0"
 
-librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.0.7-SNAPSHOT-e1cf13d841eaf4a9f345fe7a72c58581347129f9"
+librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.0.7-SNAPSHOT-d33b978eb643d9db101e0c4d0dcd389562d26541"
 kotlin-gradle-plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21"
 
