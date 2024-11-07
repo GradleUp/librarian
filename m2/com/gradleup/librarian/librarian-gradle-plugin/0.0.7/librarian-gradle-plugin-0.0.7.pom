@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- This module was also published with a richer model, Gradle metadata,  -->
+  <!-- which should be used instead. Do not delete the following line which  -->
+  <!-- is to indicate to Gradle or any Gradle module metadata file consumer  -->
+  <!-- that they should prefer consuming it instead. -->
+  <!-- do_not_remove: published-with-gradle-metadata -->
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.gradleup.librarian</groupId>
+  <artifactId>librarian-gradle-plugin</artifactId>
+  <version>0.0.7</version>
+  <name>librarian-gradle-plugin</name>
+  <description>Librarian</description>
+  <url>https://github.com/gradleup/librarian</url>
+  <licenses>
+    <license>
+      <name>MIT</name>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>GradleUp authors</id>
+      <name>GradleUp authors</name>
+    </developer>
+  </developers>
+  <scm>
+    <connection>https://github.com/gradleup/librarian</connection>
+    <developerConnection>https://github.com/gradleup/librarian</developerConnection>
+    <url>https://github.com/gradleup/librarian</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>binary-compatibility-validator</artifactId>
+      <version>0.15.0-Beta.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>dev.adamko.dokkatoo</groupId>
+      <artifactId>dokkatoo-plugin</artifactId>
+      <version>2.3.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib</artifactId>
+      <version>2.0.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.gradleup.librarian</groupId>
+      <artifactId>librarian-core</artifactId>
+      <version>0.0.7</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-coroutines-core</artifactId>
+      <version>1.8.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.mbonnin.vespene</groupId>
+      <artifactId>vespene-lib</artifactId>
+      <version>0.6.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.gradleup.maven-sympathy</groupId>
+      <artifactId>maven-sympathy</artifactId>
+      <version>0.0.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.12.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.auth</groupId>
+      <artifactId>google-auth-library-oauth2-http</artifactId>
+      <version>1.19.0</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</project>

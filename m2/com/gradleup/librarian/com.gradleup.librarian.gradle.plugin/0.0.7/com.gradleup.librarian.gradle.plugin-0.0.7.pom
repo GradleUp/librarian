@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.gradleup.librarian</groupId>
+  <artifactId>com.gradleup.librarian.gradle.plugin</artifactId>
+  <version>0.0.7</version>
+  <packaging>pom</packaging>
+  <name>librarian-gradle-plugin</name>
+  <description>Librarian</description>
+  <url>https://github.com/gradleup/librarian</url>
+  <licenses>
+    <license>
+      <name>MIT</name>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>GradleUp authors</id>
+      <name>GradleUp authors</name>
+    </developer>
+  </developers>
+  <scm>
+    <connection>https://github.com/gradleup/librarian</connection>
+    <developerConnection>https://github.com/gradleup/librarian</developerConnection>
+    <url>https://github.com/gradleup/librarian</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>com.gradleup.librarian</groupId>
+      <artifactId>librarian-gradle-plugin</artifactId>
+      <version>0.0.7</version>
+    </dependency>
+  </dependencies>
+</project>
