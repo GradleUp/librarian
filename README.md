@@ -12,7 +12,7 @@ An opiniated toolkit to help you build libraries.
 ## 📚 Documentation
 
 See the project website for documentation:<br/>
-[https://gradleup.github.io/librarian/](https://apollographql.github.io/librarian/)
+[https://gradleup.github.io/librarian/](https://gradleup.github.io/librarian/)
 
 The Kdoc API reference can be found at:<br/>
-[https://gradleup.github.io/librarian/kdoc](https://apollographql.github.io/librarian/kdoc)
+[https://gradleup.github.io/librarian/kdoc](https://gradleup.github.io/librarian/kdoc)
