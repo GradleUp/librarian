@@ -1,0 +1,117 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.gradleup.librarian",
+    "module": "librarian-cli",
+    "version": "0.0.8-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.10"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "librarian-cli-0.0.8-SNAPSHOT.jar",
+          "url": "librarian-cli-0.0.8-SNAPSHOT.jar",
+          "size": 55919,
+          "sha512": "2f661255c9a2dcf310d0064ea263169810b6836238b0c8bfdb4f71278764886a375f84183fc24f32cf9da600972f857b10ef23a9317f9bdfa11619241256c0f5",
+          "sha256": "98b7fdd3d3642e91951ba2229d8a073b416f01c43f906bd1028b282c56316eb4",
+          "sha1": "2f86f3730b2128d14a26a54b846691c84480b82c",
+          "md5": "647166663bafd6b62cb6fd3c71f70dff"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.gradleup.librarian",
+          "module": "librarian-core",
+          "version": {
+            "requires": "0.0.8-SNAPSHOT"
+          }
+        },
+        {
+          "group": "com.github.ajalt.clikt",
+          "module": "clikt",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "com.github.kotlin-inquirer",
+          "module": "kotlin-inquirer",
+          "version": {
+            "requires": "0.1.0"
+          }
+        },
+        {
+          "group": "com.github.ajalt.mordant",
+          "module": "mordant",
+          "version": {
+            "requires": "2.7.1"
+          }
+        },
+        {
+          "group": "org.fusesource.jansi",
+          "module": "jansi",
+          "version": {
+            "requires": "2.4.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "librarian-cli-0.0.8-SNAPSHOT.jar",
+          "url": "librarian-cli-0.0.8-SNAPSHOT.jar",
+          "size": 55919,
+          "sha512": "2f661255c9a2dcf310d0064ea263169810b6836238b0c8bfdb4f71278764886a375f84183fc24f32cf9da600972f857b10ef23a9317f9bdfa11619241256c0f5",
+          "sha256": "98b7fdd3d3642e91951ba2229d8a073b416f01c43f906bd1028b282c56316eb4",
+          "sha1": "2f86f3730b2128d14a26a54b846691c84480b82c",
+          "md5": "647166663bafd6b62cb6fd3c71f70dff"
+        }
+      ]
+    }
+  ]
+}
