@@ -50,6 +50,9 @@ fun PomMetadata(project: Project, artifactId: String, properties: Properties): P
   if (!sha1.isNullOrBlank()) {
     version = "$version-${sha1}"
   }
+  check(properties.getProperty("pom.licenseUrl") == null) {
+    "licenseUrl is not used anymore"
+  }
   return PomMetadata(
           groupId = properties.getRequiredProperty("pom.groupId"),
           artifactId = artifactId,
