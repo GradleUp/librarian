@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.gradleup.librarian</groupId>
+  <artifactId>publishing</artifactId>
+  <versioning>
+    <latest>0.0.8-SNAPSHOT</latest>
+    <versions>
+      <version>0.0.8-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20250104172026</lastUpdated>
+  </versioning>
+</metadata>
