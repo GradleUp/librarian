@@ -3,38 +3,38 @@
   <groupId>com.gradleup.librarian</groupId>
   <artifactId>publishing</artifactId>
   <versioning>
-    <lastUpdated>20250104173149</lastUpdated>
+    <lastUpdated>20250104173930</lastUpdated>
     <snapshot>
-      <timestamp>20250104.173149</timestamp>
+      <timestamp>20250104.173930</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
-        <extension>jar</extension>
-        <value>0.0.8-20250104.173149-1</value>
-        <updated>20250104173149</updated>
-      </snapshotVersion>
-      <snapshotVersion>
         <classifier>javadoc</classifier>
         <extension>jar</extension>
-        <value>0.0.8-20250104.173149-1</value>
-        <updated>20250104173149</updated>
+        <value>0.0.8-20250104.173930-1</value>
+        <updated>20250104173930</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.0.8-20250104.173149-1</value>
-        <updated>20250104173149</updated>
+        <value>0.0.8-20250104.173930-1</value>
+        <updated>20250104173930</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>module</extension>
+        <value>0.0.8-20250104.173930-1</value>
+        <updated>20250104173930</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.0.8-20250104.173930-1</value>
+        <updated>20250104173930</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>0.0.8-20250104.173149-1</value>
-        <updated>20250104173149</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <extension>module</extension>
-        <value>0.0.8-20250104.173149-1</value>
-        <updated>20250104173149</updated>
+        <value>0.0.8-20250104.173930-1</value>
+        <updated>20250104173930</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
