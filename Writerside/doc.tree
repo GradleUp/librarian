@@ -3,7 +3,7 @@
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
 <instance-profile id="doc"
-                 name="librarian"
+                 name="Librarian"
                  start-page="welcome.md">
 
     <toc-element toc-title="GitHub" href="https://github.com/gradleup/librarian"/>
