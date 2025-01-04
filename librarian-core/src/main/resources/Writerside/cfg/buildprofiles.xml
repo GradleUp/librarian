@@ -7,10 +7,10 @@
     <variables>
       <noindex-content>true</noindex-content>
       <download-title>GitHub</download-title>
-      <download-page>https://github.com/{{repositoryOwner}}/{{repositoryName}}/</download-page>
+      <download-page>https://github.com/GradleUp/librarian/</download-page>
       <showDownloadButton>true</showDownloadButton>
       <enable-browser-edits>true</enable-browser-edits>
-      <browser-edits-url>https://github.com/{{repositoryOwner}}/{{repositoryName}}/edit/main/Writerside/</browser-edits-url>
+      <browser-edits-url>https://github.com/GradleUp/librarian/edit/main/Writerside/</browser-edits-url>
     </variables>
   </build-profile>
 </buildprofiles>
