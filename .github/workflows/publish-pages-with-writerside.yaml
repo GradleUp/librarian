@@ -28,7 +28,8 @@ jobs:
       - run: |
           export JAVA_HOME=$JAVA_HOME_21_X64 # Remove when ubuntu-latest updates to Java 21
           ./gradlew librarianStaticContent
-          unzip artifacts/webHelpDOC2-all.zip -d build/static
+          find Writerside
+          unzip artifacts/${{ env.ARTIFACT }} -d build/static
 
       - uses: JamesIves/github-pages-deploy-action@94f3c658273cf92fb48ef99e5fbc02bd2dc642b2 #v4.6.3
         with:
