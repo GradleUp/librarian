@@ -3,38 +3,38 @@
   <groupId>com.gradleup.librarian</groupId>
   <artifactId>librarian-core</artifactId>
   <versioning>
-    <lastUpdated>20250104171920</lastUpdated>
+    <lastUpdated>20250104173149</lastUpdated>
     <snapshot>
-      <timestamp>20250104.171920</timestamp>
+      <timestamp>20250104.173149</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
-        <extension>module</extension>
-        <value>0.0.8-20250104.171920-1</value>
-        <updated>20250104171920</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>0.0.8-20250104.171920-1</value>
-        <updated>20250104171920</updated>
+        <value>0.0.8-20250104.173149-1</value>
+        <updated>20250104173149</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.0.8-20250104.171920-1</value>
-        <updated>20250104171920</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <extension>jar</extension>
-        <value>0.0.8-20250104.171920-1</value>
-        <updated>20250104171920</updated>
+        <value>0.0.8-20250104.173149-1</value>
+        <updated>20250104173149</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>javadoc</classifier>
         <extension>jar</extension>
-        <value>0.0.8-20250104.171920-1</value>
-        <updated>20250104171920</updated>
+        <value>0.0.8-20250104.173149-1</value>
+        <updated>20250104173149</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>module</extension>
+        <value>0.0.8-20250104.173149-1</value>
+        <updated>20250104173149</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <classifier>sources</classifier>
+        <extension>jar</extension>
+        <value>0.0.8-20250104.173149-1</value>
+        <updated>20250104173149</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>

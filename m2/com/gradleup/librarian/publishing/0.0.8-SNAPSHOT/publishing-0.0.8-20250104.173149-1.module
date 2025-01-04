@@ -1,0 +1,89 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.gradleup.librarian",
+    "module": "publishing",
+    "version": "0.0.8-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.10"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "publishing-0.0.8-SNAPSHOT.jar",
+          "url": "publishing-0.0.8-SNAPSHOT.jar",
+          "size": 261,
+          "sha512": "e80eeb8e311594a033c6c8bbb81cd432b2a16f8c9d771cac6e14bc0ec2ed7f936f1ffb2b3d292efe70f02dbe4456374de3f37524cc028d2702d344caa042e26c",
+          "sha256": "44c9913e1899f216e2a6c1519b1a473a20982ed4d3bb00015d42126c76e9ca94",
+          "sha1": "ee33a5d35b69278af6a8cdae0e4bfbd504c5d325",
+          "md5": "863ec311590c030e4468a36f596e4126"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.gradleup.librarian",
+          "module": "librarian-core",
+          "version": {
+            "requires": "0.0.8-SNAPSHOT"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "publishing-0.0.8-SNAPSHOT.jar",
+          "url": "publishing-0.0.8-SNAPSHOT.jar",
+          "size": 261,
+          "sha512": "e80eeb8e311594a033c6c8bbb81cd432b2a16f8c9d771cac6e14bc0ec2ed7f936f1ffb2b3d292efe70f02dbe4456374de3f37524cc028d2702d344caa042e26c",
+          "sha256": "44c9913e1899f216e2a6c1519b1a473a20982ed4d3bb00015d42126c76e9ca94",
+          "sha1": "ee33a5d35b69278af6a8cdae0e4bfbd504c5d325",
+          "md5": "863ec311590c030e4468a36f596e4126"
+        }
+      ]
+    }
+  ]
+}
