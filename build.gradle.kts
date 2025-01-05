@@ -13,7 +13,16 @@ buildscript {
 
 Librarian.root(project)
 
+tasks.register("librarianInstallNpm", Exec::class.java) {
+  enabled = file("docs").exists()
+
+  commandLine("npm", "ci")
+  workingDir("docs")
+}
+
 tasks.register("librarianBuildDocs", Exec::class.java) {
+  dependsOn("librarianInstallNpm")
+  
   enabled = file("docs").exists()
 
   commandLine("npm", "run", "build")
