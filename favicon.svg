@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400px" height="400px" viewBox="0 0 400 400" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Slice</title>
+    <defs>
+        <linearGradient x1="71.9659316%" y1="-0.0107311249%" x2="28.0344531%" y2="100.010253%" id="linearGradient-1">
+            <stop stop-color="#E44857" offset="0.3435144%"></stop>
+            <stop stop-color="#C711E1" offset="46.89%"></stop>
+            <stop stop-color="#7F52FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path" fill="url(#linearGradient-1)" fill-rule="nonzero" points="265.413694 400.4 8.52651283e-14 400.4 8.52651283e-14 0.4 67.4148435 0 67.4148435 336.381539 265.413694 336.381539"></polygon>
+        <polygon id="Path" fill="url(#linearGradient-1)" fill-rule="nonzero" transform="translate(265.706847, 200.200000) scale(-1, -1) translate(-265.706847, -200.200000) " points="398.413694 400.4 133 400.4 133 0.4 200.414844 0 200.414844 336.381539 398.413694 336.381539"></polygon>
+    </g>
+</svg>

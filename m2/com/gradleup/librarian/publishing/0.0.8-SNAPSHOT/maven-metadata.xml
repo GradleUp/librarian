@@ -3,38 +3,38 @@
   <groupId>com.gradleup.librarian</groupId>
   <artifactId>publishing</artifactId>
   <versioning>
-    <lastUpdated>20250104173930</lastUpdated>
+    <lastUpdated>20250105171234</lastUpdated>
     <snapshot>
-      <timestamp>20250104.173930</timestamp>
+      <timestamp>20250105.171234</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
-        <classifier>javadoc</classifier>
+        <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>0.0.8-20250104.173930-1</value>
-        <updated>20250104173930</updated>
+        <value>0.0.8-20250105.171234-1</value>
+        <updated>20250105171234</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.0.8-20250105.171234-1</value>
+        <updated>20250105171234</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.0.8-20250104.173930-1</value>
-        <updated>20250104173930</updated>
+        <value>0.0.8-20250105.171234-1</value>
+        <updated>20250105171234</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <classifier>javadoc</classifier>
+        <extension>jar</extension>
+        <value>0.0.8-20250105.171234-1</value>
+        <updated>20250105171234</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>module</extension>
-        <value>0.0.8-20250104.173930-1</value>
-        <updated>20250104173930</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <extension>jar</extension>
-        <value>0.0.8-20250104.173930-1</value>
-        <updated>20250104173930</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <classifier>sources</classifier>
-        <extension>jar</extension>
-        <value>0.0.8-20250104.173930-1</value>
-        <updated>20250104173930</updated>
+        <value>0.0.8-20250105.171234-1</value>
+        <updated>20250105171234</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
