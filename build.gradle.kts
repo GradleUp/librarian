@@ -12,3 +12,19 @@ buildscript {
 }
 
 Librarian.root(project)
+
+tasks.register("librarianBuildDocs", Exec::class.java) {
+  enabled = file("docs").exists()
+
+  commandLine("npm", "run", "build")
+  workingDir("docs")
+}
+
+tasks.named("librarianStaticContent").configure {
+  dependsOn("librarianBuildDocs")
+
+  val from = file("docs/dist")
+  doLast {
+    from.copyRecursively(outputs.files.single(), overwrite = true)
+  }
+}

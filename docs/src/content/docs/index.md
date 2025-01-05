@@ -1,36 +1,40 @@
-# Welcome
+---
+title: Welcome to Librarian
+---
 
-Librarian is an opinionated toolkit to build Kotlin libraries. 
+Librarian is an opinionated toolkit to build Kotlin libraries.
 
-> This project is work in progress
-{style=info}
+:::note
+This project is work in progress
+
+:::
 
 Librarian:
 
 * publishes your KMP/Android/JVM libraries to:
-  * Maven Central using [default host](https://central.sonatype.org/publish/publish-guide/#releasing-to-central)
-  * Maven Central using [S01 host](https://central.sonatype.org/publish/publish-guide/#releasing-to-central)
-  * Maven Central using [the central portal API](https://central.sonatype.com/api-doc)
-  * OSS Sonatype snapshots using the default host
-  * OSS Sonatype snapshots using the S01 host
-  * [Google Cloud Storage](https://cloud.google.com/storage?hl=en)
-  * GitHub pages snapshots
-* generates versioned KDoc using [Dokka](https://github.com/Kotlin/dokka) 
+    * Maven Central using [default host](https://central.sonatype.org/publish/publish-guide/#releasing-to-central)
+    * Maven Central using [S01 host](https://central.sonatype.org/publish/publish-guide/#releasing-to-central)
+    * Maven Central using [the central portal API](https://central.sonatype.com/api-doc)
+    * OSS Sonatype snapshots using the default host
+    * OSS Sonatype snapshots using the S01 host
+    * [Google Cloud Storage](https://cloud.google.com/storage?hl=en)
+    * GitHub pages snapshots
+* generates versioned KDoc using [Dokka](https://github.com/Kotlin/dokka)
 * automates your workflows using GitHub actions:
-  * pull requests
-  * documentation
-  * SNAPSHOTs
-  * releases
+    * pull requests
+    * documentation
+    * SNAPSHOTs
+    * releases
 * generates a Kotlin property holding your library version
-* monitors your binary compatibility using Kotlin Binary Compatibility validator 
-* configures Java and Kotlin compatibility 
+* monitors your binary compatibility using Kotlin Binary Compatibility validator
+* configures Java and Kotlin compatibility
 * ensure your libs can be consumed with maven
 * manages your changelog
 * and more!
 
-This is a lot of things for a single tool, and a lot of opinions too! 
+This is a lot of things for a single tool, and a lot of opinions too!
 
-Because every lib is different and opinions may differ, Librarian is also shipped as low level libraries that you can use on a case by case basis. 
+Because every lib is different and opinions may differ, Librarian is also shipped as low level libraries that you can use on a case by case basis.
 
 Just want the publishing without the GitHub workflows, use `librarian-publishing`. Just want maven sympathy, use `librarian-maven-sympathy`, etc... For more information, read the [libraries page](libraries.md).
 
