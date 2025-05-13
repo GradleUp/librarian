@@ -71,7 +71,6 @@ fun Project.librarianRoot() {
   }
 
   val mavenCentralTaskProvider: TaskProvider<*>
-  val snapshotsTaskProvider: TaskProvider<*>?
 
   if (sonatype.backend == SonatypeBackend.Portal) {
     mavenCentralTaskProvider = tasks.register(librarianDeployToPortal, UploadToPortalTask::class.java) {
@@ -83,7 +82,6 @@ fun Project.librarianRoot() {
       it.version.set(pomMetadata.version)
       it.baseUrl.set(deployBaseUrl(sonatype.baseUrl))
     }
-    snapshotsTaskProvider = null
   } else {
     val uploadToStaging = tasks.register(librarianUploadFilesToStaging, UploadToNexusTask::class.java) {
       // Beware of https://github.com/gradle/gradle/issues/31125 before touching this line
@@ -103,28 +101,22 @@ fun Project.librarianRoot() {
         it.automatic.set(sonatype.release == SonatypeRelease.Automatic)
         it.dependsOn(uploadToStaging)
       }
+  }
 
-    snapshotsTaskProvider = tasks.register(librarianUploadFilesToSnapshots, UploadToNexusTask::class.java) {
-      it.url.set(snapshotsUrl(sonatype.backend, sonatype.baseUrl))
-      it.username.set(sonatype.username)
-      it.password.set(sonatype.password)
-      it.files.from(allFiles)
+  val snapshotsTaskProvider = tasks.register(librarianUploadFilesToSnapshots, UploadToNexusTask::class.java) {
+    it.url.set(snapshotsUrl(sonatype.backend, sonatype.baseUrl))
+    it.username.set(sonatype.username)
+    it.password.set(sonatype.password)
+    it.files.from(allFiles)
 
-      it.enabled = pomMetadata.version.endsWith("-SNAPSHOT")
-    }
+    it.enabled = pomMetadata.version.endsWith("-SNAPSHOT")
   }
 
   tasks.register(librarianPublishToMavenCentral) {
     it.dependsOn(mavenCentralTaskProvider)
   }
   tasks.register(librarianPublishToSnapshots) {
-    if (snapshotsTaskProvider != null) {
-      it.dependsOn(snapshotsTaskProvider)
-    } else {
-      it.doLast {
-        error("The central portal doesn't support SNAPSHOTs")
-      }
-    }
+    it.dependsOn(snapshotsTaskProvider)
   }
 
   val gcs = Gcs(properties)
