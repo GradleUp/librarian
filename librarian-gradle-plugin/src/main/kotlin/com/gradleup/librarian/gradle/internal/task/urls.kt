@@ -18,10 +18,16 @@ internal fun stagingBaseUrl(sonatypeBackend: SonatypeBackend, baseUrl: String?):
 }
 
 internal fun snapshotsUrl(sonatypeBackend: SonatypeBackend, baseUrl: String?): String {
-  check(sonatypeBackend != SonatypeBackend.Portal) {
-    "The Central portal does not support snapshots"
+  if (baseUrl != null) {
+    return "$baseUrl/content/repositories/snapshots/"
   }
-  return "${baseUrl ?: sonatypeBackend.toBaseUrl()}/content/repositories/snapshots/"
+
+  return if(sonatypeBackend == SonatypeBackend.Portal) {
+    // https://central.sonatype.org/publish/publish-portal-snapshots/#publishing-via-other-methods
+    "https://central.sonatype.com/repository/maven-snapshots/"
+  } else {
+    "${sonatypeBackend.toBaseUrl()}/content/repositories/snapshots/"
+  }
 }
 
 internal fun deployBaseUrl(baseUrl: String?): String {
