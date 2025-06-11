@@ -86,12 +86,7 @@ public final class com/gradleup/librarian/gradle/MavenKt {
 }
 
 public final class com/gradleup/librarian/gradle/ModuleKt {
-	public static final fun configureMavenFriendlyDependencies (Lorg/gradle/api/Project;)V
-	public static final fun javaCompatibility (Ljava/util/Properties;)Ljava/lang/Integer;
-	public static final fun kotlinCompatibility (Ljava/util/Properties;)Ljava/lang/String;
 	public static final fun librarianModule (Lorg/gradle/api/Project;)V
-	public static final fun publish (Ljava/util/Properties;)Ljava/lang/Boolean;
-	public static final fun versionPackageName (Ljava/util/Properties;)Ljava/lang/String;
 }
 
 public final class com/gradleup/librarian/gradle/PomMetadata {
