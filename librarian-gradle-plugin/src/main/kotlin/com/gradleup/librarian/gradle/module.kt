@@ -24,6 +24,11 @@ fun Properties.publish(): Boolean? {
   return getProperty("publish")?.toBoolean()
 }
 
+fun Properties.createMissingPublications(): Boolean? {
+  return getProperty("createMissingPublications")?.toBoolean()
+}
+
+
 internal fun Properties.kdocArtifactId(): String {
   return getProperty("kdoc.artifactId") ?: "kdoc"
 }
@@ -92,7 +97,7 @@ fun Project.librarianModule() {
     configureDokkatoo()
 
     configurePublishing(
-      createMissingPublications = true,
+      createMissingPublications = moduleProperties.createMissingPublications() ?: true,
       publishPlatformArtifactsInRootModule = true,
       pomMetadata = pomMetadata,
       signing = Signing(project, rootProperties),
