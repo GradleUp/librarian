@@ -21,6 +21,6 @@ pluginManagement {
   }
 }
 
-include(":librarian-gradle-plugin", ":librarian-cli", ":librarian-core", "publishing")
+include(":librarian-gradle-plugin", ":librarian-cli", ":librarian-core")
 
 //includeBuild("../gratatouille")
