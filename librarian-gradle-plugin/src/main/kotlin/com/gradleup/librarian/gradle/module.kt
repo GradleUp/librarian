@@ -8,21 +8,26 @@ import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
 import org.gradle.api.Project
 import java.util.Properties
 
-fun Properties.javaCompatibility(): Int? {
+internal fun Properties.javaCompatibility(): Int? {
   return getProperty("java.compatibility")?.toInt()
 }
 
-fun Properties.kotlinCompatibility(): String? {
+internal fun Properties.kotlinCompatibility(): String? {
   return getProperty("kotlin.compatibility")
 }
 
-fun Properties.versionPackageName(): String? {
+internal fun Properties.versionPackageName(): String? {
   return getProperty("version.packageName")
 }
 
-fun Properties.publish(): Boolean? {
+internal fun Properties.publish(): Boolean? {
   return getProperty("publish")?.toBoolean()
 }
+
+internal fun Properties.createMissingPublications(): Boolean? {
+  return getProperty("createMissingPublications")?.toBoolean()
+}
+
 
 internal fun Properties.kdocArtifactId(): String {
   return getProperty("kdoc.artifactId") ?: "kdoc"
@@ -39,7 +44,7 @@ internal fun Properties.olderVersions(): List<Coordinates> {
     }
 }
 
-fun Project.configureMavenFriendlyDependencies() {
+internal fun Project.configureMavenFriendlyDependencies() {
   pluginManager.apply("com.gradleup.maven-sympathy")
 }
 
@@ -92,7 +97,7 @@ fun Project.librarianModule() {
     configureDokkatoo()
 
     configurePublishing(
-      createMissingPublications = true,
+      createMissingPublications = moduleProperties.createMissingPublications() ?: true,
       publishPlatformArtifactsInRootModule = true,
       pomMetadata = pomMetadata,
       signing = Signing(project, rootProperties),
