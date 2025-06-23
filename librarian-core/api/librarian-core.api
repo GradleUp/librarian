@@ -180,14 +180,6 @@ public final class com/gradleup/librarian/core/tooling/init/SecretsKt {
 	public static final fun initSecrets (Ljava/nio/file/Path;Lcom/gradleup/librarian/core/tooling/init/Secrets;)V
 }
 
-public final class com/gradleup/librarian/core/tooling/init/SonatypeRelease : java/lang/Enum {
-	public static final field Automatic Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;
-	public static final field Manual Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;
-	public static fun values ()[Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;
-}
-
 public final class com/gradleup/librarian/core/tooling/init/SupportedLicense : java/lang/Enum {
 	public static final field MIT Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;

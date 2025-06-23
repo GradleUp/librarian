@@ -1,18 +1,11 @@
 package com.gradleup.librarian.gradle
 
-import com.gradleup.librarian.core.tooling.init.SonatypeRelease
-import com.gradleup.librarian.core.tooling.init.apiBaseUrl
 import com.gradleup.librarian.core.tooling.init.snapshotsUrl
-import com.gradleup.librarian.gradle.internal.task.UploadToGcsTask
-import com.gradleup.librarian.gradle.internal.task.UploadToNexusTask
-import com.gradleup.librarian.gradle.internal.task.UploadToPortalTask
 import com.gradleup.librarian.gradle.internal.task.registerGenerateStaticContentTaskTask
+import com.gradleup.librarian.gradle.internal.task.registerNmcpPublishWithPublisherApiTask
+import nmcp.internal.task.registerNmcpPublishFileByFileTask
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
-
-internal val librarianUploadFilesToSnapshots = "librarianUploadFilesToSnapshots"
-
-internal val librarianDeployToPortal = "librarianDeployToPortal"
 
 internal val librarianPublishToMavenCentral = "librarianPublishToMavenCentral"
 internal val librarianPublishToSnapshots = "librarianPublishToSnapshots"
@@ -43,8 +36,6 @@ fun Project.librarianRoot() {
   configurePom(pomMetadata)
   configureSigning(signing)
 
-  val deploymentDescription = "${pomMetadata.groupId}:${project.name}:${pomMetadata.version}"
-
   val allFilesConfiguration = configurations.detachedConfiguration()
   subprojects.forEach {
     allFilesConfiguration.dependencies.add(dependencies.project(it.path, librarianPublication))
@@ -60,37 +51,32 @@ fun Project.librarianRoot() {
     it.dependsOn("dokkatooGeneratePublicationHtml")
   }
 
-  val mavenCentralTaskProvider = tasks.register(librarianDeployToPortal, UploadToPortalTask::class.java) {
-    it.username.set(sonatype.username)
-    it.password.set(sonatype.password)
-    it.files.from(allFiles)
-    it.deploymentDescription.set(deploymentDescription)
-    it.automatic.set(SonatypeRelease.Automatic == sonatype.release)
-    it.version.set(pomMetadata.version)
-    it.baseUrl.set(sonatype.baseUrl ?: apiBaseUrl)
-  }
+  registerNmcpPublishWithPublisherApiTask(
+    taskName = librarianPublishToMavenCentral,
+    username = provider { sonatype.username },
+    password = provider { sonatype.password },
+    publicationName = provider { null },
+    publishingType = provider { sonatype.publishingType },
+    baseUrl = provider { null },
+    validationTimeoutSeconds = provider { null },
+    publishingTimeoutSeconds = provider { null },
+    inputFiles = allFiles
+  )
 
-  val snapshotsTaskProvider = tasks.register(librarianUploadFilesToSnapshots, UploadToNexusTask::class.java) {
-    it.url.set(snapshotsUrl)
-    it.username.set(sonatype.username)
-    it.password.set(sonatype.password)
-    it.files.from(allFiles)
-
-    it.enabled = pomMetadata.version.endsWith("-SNAPSHOT")
-  }
-
-  tasks.register(librarianPublishToMavenCentral) {
-    it.dependsOn(mavenCentralTaskProvider)
-  }
-  tasks.register(librarianPublishToSnapshots) {
-    it.dependsOn(snapshotsTaskProvider)
-  }
+  registerNmcpPublishFileByFileTask(
+    taskName = librarianPublishToSnapshots,
+    username = provider { sonatype.username },
+    password = provider { sonatype.password },
+    inputFiles = allFiles,
+    url = provider { snapshotsUrl }
+  )
 
   val gcs = Gcs(properties)
-  tasks.register(librarianPublishToGcs, UploadToGcsTask::class.java) {
-    it.files.from(allFiles)
-    it.bucket.set(gcs.bucket)
-    it.prefix.set(gcs.prefix)
-    it.googleServicesJson.set(System.getenv("LIBRARIAN_GOOGLE_SERVICES_JSON"))
-  }
+  registerNmcpPublishFileByFileTask(
+    taskName = librarianPublishToGcs,
+    username = provider { "unused" },
+    password = provider { System.getenv("LIBRARIAN_GOOGLE_SERVICES_JSON") },
+    inputFiles = allFiles,
+    url = provider { "gcs://${gcs.bucket}/${gcs.prefix}" }
+  )
 }

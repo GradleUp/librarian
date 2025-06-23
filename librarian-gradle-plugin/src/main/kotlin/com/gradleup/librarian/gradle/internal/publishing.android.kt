@@ -3,7 +3,6 @@ package com.gradleup.librarian.gradle.internal
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.gradle.tasks.SourceJarTask
 import com.gradleup.librarian.gradle.LIBRARIAN_GENERATE_VERSION
-import com.gradleup.librarian.gradle.internal.androidExtension
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
