@@ -9,7 +9,6 @@ val modulePropertiesFilename = "librarian.module.properties"
 fun Path.initLibrarian(
     javaCompatibility: String,
     kotlinCompatibility: String,
-    sonatypeBackend: SonatypeBackend,
     groupId: String,
     projectUrl: String,
     license: SupportedLicense,
@@ -23,8 +22,6 @@ fun Path.initLibrarian(
 
       kdoc.olderVersions=
 
-      sonatype.backend=$sonatypeBackend
-
       pom.groupId=$groupId
       pom.version=0.0.0-SNAPSHOT
       pom.description=$pomDescription
@@ -35,21 +32,11 @@ fun Path.initLibrarian(
   )
 }
 
-fun SonatypeBackend.toBaseUrl(): String {
-  return when (this) {
-    SonatypeBackend.S01 -> "https://s01.oss.sonatype.org"
-    SonatypeBackend.Default -> "https://oss.sonatype.org"
-    SonatypeBackend.Portal -> TODO()
-  }
-}
-
-enum class SonatypeBackend {
-  Portal,
-  S01,
-  Default,
-}
-
 enum class SonatypeRelease {
   Automatic,
   Manual
 }
+
+val snapshotsBrowseUrl = "https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/"
+val snapshotsUrl = "https://central.sonatype.com/repository/maven-snapshots/"
+val apiBaseUrl = "https://central.sonatype.com"

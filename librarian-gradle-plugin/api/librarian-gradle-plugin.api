@@ -129,8 +129,7 @@ public final class com/gradleup/librarian/gradle/SigningKt {
 }
 
 public final class com/gradleup/librarian/gradle/Sonatype {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;Ljava/lang/String;)V
-	public final fun getBackend ()Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;Ljava/lang/String;)V
 	public final fun getBaseUrl ()Ljava/lang/String;
 	public final fun getPassword ()Ljava/lang/String;
 	public final fun getRelease ()Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;

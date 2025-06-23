@@ -1,6 +1,5 @@
 package com.gradleup.librarian.gradle
 
-import com.gradleup.librarian.core.tooling.init.SonatypeBackend
 import com.gradleup.librarian.core.tooling.init.SonatypeRelease
 import com.gradleup.librarian.core.tooling.init.modulePropertiesFilename
 import com.gradleup.librarian.core.tooling.init.rootPropertiesFilename
@@ -105,16 +104,6 @@ fun Project.librarianModule() {
   }
 }
 
-private fun String.toSonatypeHost(): SonatypeBackend {
-  SonatypeBackend.entries.forEach {
-    if (it.name == this) {
-      return it
-    }
-  }
-
-  error("You must set sonatype.backend to one of: '${SonatypeBackend.entries.joinToString(",")}'")
-}
-
 internal fun Sonatype(project: Project, properties: Properties): Sonatype {
   val usernameVariable =
     properties.getProperty("sonatype.username.environmentVariable") ?: "LIBRARIAN_SONATYPE_USERNAME"
@@ -124,7 +113,6 @@ internal fun Sonatype(project: Project, properties: Properties): Sonatype {
   return Sonatype(
     username = project.findEnvironmentVariable(usernameVariable),
     password = project.findEnvironmentVariable(passwordVariable),
-    backend = properties.getRequiredProperty("sonatype.backend").toSonatypeHost(),
     release = properties.getProperty("sonatype.release").toSonatypeRelease(),
     baseUrl = properties.getProperty("sonatype.baseUrl")?.takeIf { it.isNotBlank() }
   )
