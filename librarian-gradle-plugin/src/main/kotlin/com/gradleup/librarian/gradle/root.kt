@@ -3,10 +3,10 @@ package com.gradleup.librarian.gradle
 import com.gradleup.librarian.core.tooling.init.SonatypeRelease
 import com.gradleup.librarian.core.tooling.init.apiBaseUrl
 import com.gradleup.librarian.core.tooling.init.snapshotsUrl
-import com.gradleup.librarian.gradle.internal.task.GenerateStaticContentTask
 import com.gradleup.librarian.gradle.internal.task.UploadToGcsTask
 import com.gradleup.librarian.gradle.internal.task.UploadToNexusTask
 import com.gradleup.librarian.gradle.internal.task.UploadToPortalTask
+import com.gradleup.librarian.gradle.internal.task.registerGenerateStaticContentTaskTask
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
 
@@ -51,13 +51,13 @@ fun Project.librarianRoot() {
   }
   val allFiles = allFilesConfiguration.incoming.artifactView { it.lenient(true) }.files
 
-  tasks.register("librarianStaticContent", GenerateStaticContentTask::class.java) {
+  registerGenerateStaticContentTaskTask(
+    taskName = "librarianStaticContent",
+    repositoryFiles = allFiles,
+    kdocFiles = fileTree("build/dokka/html"),
+    outputDirectory = layout.buildDirectory.dir("static")
+  ).configure {
     it.dependsOn("dokkatooGeneratePublicationHtml")
-
-    it.repositoryFiles.from(allFiles)
-    it.kdocFiles.from(file("build/dokka/html"))
-
-    it.outputDirectory.set(layout.buildDirectory.dir("static"))
   }
 
   val mavenCentralTaskProvider = tasks.register(librarianDeployToPortal, UploadToPortalTask::class.java) {

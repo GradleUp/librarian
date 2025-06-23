@@ -75,10 +75,8 @@ public final class com/gradleup/librarian/gradle/Librarian$Companion {
 	public final fun root (Lorg/gradle/api/Project;)V
 }
 
-public final class com/gradleup/librarian/gradle/LibrarianPlugin : org/gradle/api/Plugin {
-	public fun <init> ()V
-	public synthetic fun apply (Ljava/lang/Object;)V
-	public fun apply (Lorg/gradle/api/Project;)V
+public final class com/gradleup/librarian/gradle/LibrarianPluginKt {
+	public static final fun plugin (Lorg/gradle/api/Project;)V
 }
 
 public final class com/gradleup/librarian/gradle/MavenKt {
@@ -87,6 +85,12 @@ public final class com/gradleup/librarian/gradle/MavenKt {
 
 public final class com/gradleup/librarian/gradle/ModuleKt {
 	public static final fun librarianModule (Lorg/gradle/api/Project;)V
+}
+
+public abstract class com/gradleup/librarian/gradle/Plugin : org/gradle/api/Plugin {
+	public fun <init> ()V
+	public synthetic fun apply (Ljava/lang/Object;)V
+	public fun apply (Lorg/gradle/api/Project;)V
 }
 
 public final class com/gradleup/librarian/gradle/PomMetadata {
@@ -143,5 +147,19 @@ public final class com/gradleup/librarian/gradle/internal/Project_androidKt {
 
 public final class com/gradleup/librarian/gradle/internal/Publishing_androidKt {
 	public static final fun createAndroidPublication (Lorg/gradle/api/Project;Ljava/lang/String;)V
+}
+
+public final class com/gradleup/librarian/gradle/internal/task/GenerateStaticContentKt {
+	public static final fun generateStaticContentTask (Ljava/util/List;Ljava/util/List;Ljava/io/File;)V
+}
+
+public final class com/gradleup/librarian/gradle/internal/task/GenerateStaticContentTaskEntryPoint {
+	public static final field Companion Lcom/gradleup/librarian/gradle/internal/task/GenerateStaticContentTaskEntryPoint$Companion;
+	public fun <init> ()V
+	public static final fun run (Ljava/util/List;Ljava/util/List;Ljava/io/File;)V
+}
+
+public final class com/gradleup/librarian/gradle/internal/task/GenerateStaticContentTaskEntryPoint$Companion {
+	public final fun run (Ljava/util/List;Ljava/util/List;Ljava/io/File;)V
 }
 
