@@ -1,6 +1,5 @@
 package com.gradleup.librarian.gradle
 
-import com.gradleup.librarian.core.tooling.init.SonatypeRelease
 import com.gradleup.librarian.core.tooling.init.modulePropertiesFilename
 import com.gradleup.librarian.core.tooling.init.rootPropertiesFilename
 import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
@@ -110,16 +109,18 @@ internal fun Sonatype(project: Project, properties: Properties): Sonatype {
   val passwordVariable =
     properties.getProperty("sonatype.password.environmentVariable") ?: "LIBRARIAN_SONATYPE_PASSWORD"
 
+  check(properties.getProperty("sonatype.backend") == null) {
+    "Librarian: sonatype.backend is not used anymore. All publications go to the central portal."
+  }
+  check(properties.getProperty("sonatype.release") == null) {
+    "Librarian: sonatype.release is not used anymore. Use sonatype.publishingType instead."
+  }
   return Sonatype(
     username = project.findEnvironmentVariable(usernameVariable),
     password = project.findEnvironmentVariable(passwordVariable),
-    release = properties.getProperty("sonatype.release").toSonatypeRelease(),
+    publishingType = properties.getProperty("sonatype.publishingType"),
     baseUrl = properties.getProperty("sonatype.baseUrl")?.takeIf { it.isNotBlank() }
   )
-}
-
-private fun String?.toSonatypeRelease(): SonatypeRelease {
-  return SonatypeRelease.entries.firstOrNull { it.name == this } ?: SonatypeRelease.Automatic
 }
 
 internal fun Signing(project: Project, properties: Properties): Signing {

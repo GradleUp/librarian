@@ -133,10 +133,10 @@ public final class com/gradleup/librarian/gradle/SigningKt {
 }
 
 public final class com/gradleup/librarian/gradle/Sonatype {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun getBaseUrl ()Ljava/lang/String;
 	public final fun getPassword ()Ljava/lang/String;
-	public final fun getRelease ()Lcom/gradleup/librarian/core/tooling/init/SonatypeRelease;
+	public final fun getPublishingType ()Ljava/lang/String;
 	public final fun getUsername ()Ljava/lang/String;
 }
 
@@ -147,6 +147,10 @@ public final class com/gradleup/librarian/gradle/internal/Project_androidKt {
 
 public final class com/gradleup/librarian/gradle/internal/Publishing_androidKt {
 	public static final fun createAndroidPublication (Lorg/gradle/api/Project;Ljava/lang/String;)V
+}
+
+public abstract interface class com/gradleup/librarian/gradle/internal/task/Content {
+	public abstract fun writeTo (Lokio/BufferedSink;)V
 }
 
 public final class com/gradleup/librarian/gradle/internal/task/GenerateStaticContentKt {
@@ -161,5 +165,37 @@ public final class com/gradleup/librarian/gradle/internal/task/GenerateStaticCon
 
 public final class com/gradleup/librarian/gradle/internal/task/GenerateStaticContentTaskEntryPoint$Companion {
 	public final fun run (Ljava/util/List;Ljava/util/List;Ljava/io/File;)V
+}
+
+public final class com/gradleup/librarian/gradle/internal/task/MetadataKt {
+	public static final fun getXml ()Lkotlinx/serialization/StringFormat;
+}
+
+public final class com/gradleup/librarian/gradle/internal/task/NmcpPublishWithPublisherApiEntryPoint {
+	public static final field Companion Lcom/gradleup/librarian/gradle/internal/task/NmcpPublishWithPublisherApiEntryPoint$Companion;
+	public fun <init> ()V
+	public static final fun run (Ljava/util/function/BiConsumer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Ljava/util/List;)V
+}
+
+public final class com/gradleup/librarian/gradle/internal/task/NmcpPublishWithPublisherApiEntryPoint$Companion {
+	public final fun run (Ljava/util/function/BiConsumer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Ljava/util/List;)V
+}
+
+public final class com/gradleup/librarian/gradle/internal/task/NmcpPublishWithPublisherApiKt {
+	public static final fun nmcpPublishWithPublisherApi (Lgratatouille/tasks/GLogger;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Ljava/util/List;)V
+}
+
+public final class nmcp/internal/task/NmcpPublishFileByFileEntryPoint {
+	public static final field Companion Lnmcp/internal/task/NmcpPublishFileByFileEntryPoint$Companion;
+	public fun <init> ()V
+	public static final fun run (Ljava/util/function/BiConsumer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+}
+
+public final class nmcp/internal/task/NmcpPublishFileByFileEntryPoint$Companion {
+	public final fun run (Ljava/util/function/BiConsumer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+}
+
+public final class nmcp/internal/task/NmcpPublishFileByFileKt {
+	public static final fun nmcpPublishFileByFile (Lgratatouille/tasks/GLogger;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
 }
 

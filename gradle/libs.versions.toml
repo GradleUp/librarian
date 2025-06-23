@@ -20,8 +20,7 @@ mockserver = "com.apollographql.mockserver:apollo-mockserver:0.0.3"
 bouncycastle-prov = "org.bouncycastle:bcprov-jdk18on:1.78.1"
 bouncycastle-pg = "org.bouncycastle:bcpg-jdk18on:1.78.1"
 google-auth = "com.google.auth:google-auth-library-oauth2-http:1.19.0"
-gratatouille-wiring-runtime = { module = "com.gradleup.gratatouille:gratatouille-wiring-runtime" }
-gratatouille-tasks-runtime = { module = "com.gradleup.gratatouille:gratatouille-tasks-runtime" }
+xmlutil = "io.github.pdvrieze.xmlutil:serialization:0.91.1"
 
 gratatouille-gradle-plugin = "com.gradleup.gratatouille:com.gradleup.gratatouille.gradle.plugin:0.0.10"
 ksp-gradle-plugin = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.1.21-2.0.2"

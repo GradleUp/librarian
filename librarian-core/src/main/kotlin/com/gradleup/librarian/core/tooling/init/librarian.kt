@@ -32,11 +32,6 @@ fun Path.initLibrarian(
   )
 }
 
-enum class SonatypeRelease {
-  Automatic,
-  Manual
-}
-
 val snapshotsBrowseUrl = "https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/"
 val snapshotsUrl = "https://central.sonatype.com/repository/maven-snapshots/"
 val apiBaseUrl = "https://central.sonatype.com"

@@ -1,6 +1,5 @@
 package com.gradleup.librarian.gradle
 
-import com.gradleup.librarian.core.tooling.init.SonatypeRelease
 import com.gradleup.librarian.gradle.internal.createAndroidPublication
 import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
 import com.gradleup.librarian.gradle.internal.hasAndroid
@@ -24,10 +23,10 @@ internal fun Project.configurePublishingInternal(block: PublishingExtension.() -
 
 
 class Sonatype(
-    val username: String?,
-    val password: String?,
-    val release: SonatypeRelease,
-    val baseUrl: String?
+  val username: String?,
+  val password: String?,
+  val publishingType: String?,
+  val baseUrl: String?
 )
 
 class Gcp(
