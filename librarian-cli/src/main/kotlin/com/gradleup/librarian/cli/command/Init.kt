@@ -16,7 +16,6 @@ import com.gradleup.librarian.cli.command.init.LicenseCommand
 import com.gradleup.librarian.cli.command.init.GitHubSecretsCommand
 import com.gradleup.librarian.cli.command.init.GitHubMetadataCommand
 import com.gradleup.librarian.cli.command.init.WriterSideCommand
-import com.gradleup.librarian.core.tooling.init.SonatypeBackend
 import com.gradleup.librarian.core.tooling.init.SupportedLicense
 import com.gradleup.librarian.core.tooling.init.currentYear
 import com.gradleup.librarian.core.tooling.init.guessLicenseOrNull
@@ -97,14 +96,12 @@ internal class Init : CliktCommand(invokeWithoutSubcommand = true) {
         val pomDescription = KInquirer.promptInput("Maven pom description")
         val pomDeveloper = KInquirer.promptInput("Maven pom developer", defaultDevelopers)
         val projectUrl = gitHubRepository?.url() ?: KInquirer.promptInput("Maven pom project url")
-        val sonatypeBackend = KInquirer.promptList("Sonatype backend", SonatypeBackend.entries.map { it.name })
         val javaCompatibility = KInquirer.promptInput("Java compatibility", "8")
         val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", kotlinPluginVersion)
 
         initLibrarian(
             javaCompatibility = javaCompatibility,
             kotlinCompatibility = kotlinCompatibility,
-            sonatypeBackend = SonatypeBackend.valueOf(sonatypeBackend),
             groupId = groupId,
             projectUrl = projectUrl,
             license = license,

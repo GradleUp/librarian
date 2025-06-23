@@ -8,7 +8,6 @@ import com.github.kinquirer.components.promptInput
 import com.github.kinquirer.components.promptList
 import com.gradleup.librarian.core.tooling.GitHubRepository
 import com.gradleup.librarian.core.tooling.getAvailableOrganizations
-import com.gradleup.librarian.core.tooling.init.SonatypeBackend
 import com.gradleup.librarian.core.tooling.init.SupportedLicense
 import com.gradleup.librarian.core.tooling.init.currentYear
 import com.gradleup.librarian.core.tooling.init.initActions
@@ -21,7 +20,7 @@ import com.gradleup.librarian.core.tooling.init.initLicense
 import com.gradleup.librarian.core.tooling.init.initProject
 import com.gradleup.librarian.core.tooling.init.initWriterside
 import com.gradleup.librarian.core.tooling.init.kotlinPluginVersion
-import com.gradleup.librarian.core.tooling.init.toBaseUrl
+import com.gradleup.librarian.core.tooling.init.snapshotsBrowseUrl
 import com.gradleup.librarian.core.tooling.init.toSupportedLicense
 import com.gradleup.librarian.core.tooling.runCommand
 import kotlin.io.path.ExperimentalPathApi
@@ -67,14 +66,12 @@ internal class Create : CliktCommand() {
       val groupId = KInquirer.promptInput("Maven group id", "io.github.${gitHubProjectOwner}.${gitHubProjectName}")
       val pomDescription = KInquirer.promptInput("Maven pom description")
       val pomDeveloper = KInquirer.promptInput("Maven pom developer", copyrightHolder)
-      val sonatypeBackend = KInquirer.promptList("Sonatype backend", SonatypeBackend.entries.map { it.name })
       val multiplatform = KInquirer.promptConfirm("Kotlin multiplatform project")
       val javaCompatibility = KInquirer.promptInput("Java compatibility", "8")
       val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", kotlinPluginVersion)
       val indent = KInquirer.promptInput("Indent size", "4")
 
       val repository = GitHubRepository(gitHubProjectOwner, gitHubProjectName)
-      val backend = SonatypeBackend.valueOf(sonatypeBackend)
       print("Writing files...")
 
       initLicense(license, currentYear(), copyrightHolder)
@@ -82,7 +79,6 @@ internal class Create : CliktCommand() {
       initLibrarian(
           javaCompatibility = javaCompatibility,
           kotlinCompatibility = kotlinCompatibility,
-          sonatypeBackend = backend,
           groupId = groupId,
           projectUrl = repository.url(),
           license = SupportedLicense.MIT,
@@ -106,7 +102,6 @@ internal class Create : CliktCommand() {
           "module",
           repository,
           true,
-          backend
       )
 
       runCommand("git", "init")
@@ -137,12 +132,7 @@ internal class Create : CliktCommand() {
       println("- push your `main` branch to GitHub")
       println("- browse Writerside documentation at https://${gitHubProjectOwner}.github.io/$gitHubProjectName/")
       println("- browse KDoc API reference at https://${gitHubProjectOwner}.github.io/$gitHubProjectName/kdoc")
-      when (backend) {
-        SonatypeBackend.S01, SonatypeBackend.Default -> {
-          println("- browse SNAPSHOTs at ${backend.toBaseUrl()}/content/repositories/snapshots/${groupId.replace('.', '/')}")
-        }
-        else -> {}
-      }
+      println("- browse SNAPSHOTs at $snapshotsBrowseUrl/${groupId.replace('.', '/')}")
       println("- `librarian triggerTagAndBump` to start your first release \uD83D\uDE80")
     }
   }

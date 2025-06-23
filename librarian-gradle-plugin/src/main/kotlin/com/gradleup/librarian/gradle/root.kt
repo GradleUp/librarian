@@ -1,15 +1,14 @@
 package com.gradleup.librarian.gradle
 
-import com.gradleup.librarian.core.tooling.init.SonatypeBackend
 import com.gradleup.librarian.core.tooling.init.SonatypeRelease
-import com.gradleup.librarian.gradle.internal.task.*
+import com.gradleup.librarian.core.tooling.init.apiBaseUrl
+import com.gradleup.librarian.core.tooling.init.snapshotsUrl
+import com.gradleup.librarian.gradle.internal.task.GenerateStaticContentTask
+import com.gradleup.librarian.gradle.internal.task.UploadToGcsTask
+import com.gradleup.librarian.gradle.internal.task.UploadToNexusTask
+import com.gradleup.librarian.gradle.internal.task.UploadToPortalTask
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.tasks.TaskProvider
-
-internal val librarianCreateStagingRepo = "librarianCreateStagingRepo"
-internal val librarianUploadFilesToStaging = "librarianUploadFilesToStaging"
-internal val librarianCloseAndMaybeReleaseRepository = "librarianCloseAndMaybeReleaseRepository"
 
 internal val librarianUploadFilesToSnapshots = "librarianUploadFilesToSnapshots"
 
@@ -45,15 +44,6 @@ fun Project.librarianRoot() {
   configureSigning(signing)
 
   val deploymentDescription = "${pomMetadata.groupId}:${project.name}:${pomMetadata.version}"
-  val createRepoTask = tasks.register(librarianCreateStagingRepo, CreateRepositoryTask::class.java) {
-    it.output.set(layout.buildDirectory.file("librarian/repositoryId"))
-    it.repoDescription.set(deploymentDescription)
-    it.baseUrl.set(stagingBaseUrl(sonatype.backend, sonatype.baseUrl))
-    it.groupId.set(pomMetadata.groupId)
-    it.username.set(sonatype.username)
-    it.password.set(sonatype.password)
-    it.version.set(pomMetadata.version)
-  }
 
   val allFilesConfiguration = configurations.detachedConfiguration()
   subprojects.forEach {
@@ -70,41 +60,18 @@ fun Project.librarianRoot() {
     it.outputDirectory.set(layout.buildDirectory.dir("static"))
   }
 
-  val mavenCentralTaskProvider: TaskProvider<*>
-
-  if (sonatype.backend == SonatypeBackend.Portal) {
-    mavenCentralTaskProvider = tasks.register(librarianDeployToPortal, UploadToPortalTask::class.java) {
-      it.username.set(sonatype.username)
-      it.password.set(sonatype.password)
-      it.files.from(allFiles)
-      it.deploymentDescription.set(deploymentDescription)
-      it.automatic.set(SonatypeRelease.Automatic == sonatype.release)
-      it.version.set(pomMetadata.version)
-      it.baseUrl.set(deployBaseUrl(sonatype.baseUrl))
-    }
-  } else {
-    val uploadToStaging = tasks.register(librarianUploadFilesToStaging, UploadToNexusTask::class.java) {
-      // Beware of https://github.com/gradle/gradle/issues/31125 before touching this line
-      it.url.set(createRepoTask.flatMap { it.output }.map { stagingRepositoryUrl(sonatype.backend, sonatype.baseUrl, it.asFile.readText()) })
-      it.username.set(sonatype.username)
-      it.password.set(sonatype.password)
-      it.files.from(allFiles)
-    }
-
-    mavenCentralTaskProvider =
-      tasks.register(librarianCloseAndMaybeReleaseRepository, CloseAndMaybeReleaseRepositoryTask::class.java) {
-        it.baseUrl.set(stagingBaseUrl(sonatype.backend, sonatype.baseUrl))
-        it.username.set(sonatype.username)
-        it.password.set(sonatype.password)
-        // Beware of https://github.com/gradle/gradle/issues/31125 before touching this line
-        it.repoId.set(createRepoTask.flatMap { it.output }.map { it.asFile.readText() })
-        it.automatic.set(sonatype.release == SonatypeRelease.Automatic)
-        it.dependsOn(uploadToStaging)
-      }
+  val mavenCentralTaskProvider = tasks.register(librarianDeployToPortal, UploadToPortalTask::class.java) {
+    it.username.set(sonatype.username)
+    it.password.set(sonatype.password)
+    it.files.from(allFiles)
+    it.deploymentDescription.set(deploymentDescription)
+    it.automatic.set(SonatypeRelease.Automatic == sonatype.release)
+    it.version.set(pomMetadata.version)
+    it.baseUrl.set(sonatype.baseUrl ?: apiBaseUrl)
   }
 
   val snapshotsTaskProvider = tasks.register(librarianUploadFilesToSnapshots, UploadToNexusTask::class.java) {
-    it.url.set(snapshotsUrl(sonatype.backend, sonatype.baseUrl))
+    it.url.set(snapshotsUrl)
     it.username.set(sonatype.username)
     it.password.set(sonatype.password)
     it.files.from(allFiles)

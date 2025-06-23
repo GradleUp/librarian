@@ -143,10 +143,12 @@ public final class com/gradleup/librarian/core/tooling/init/Gradle_wrapperKt {
 }
 
 public final class com/gradleup/librarian/core/tooling/init/LibrarianKt {
+	public static final fun getApiBaseUrl ()Ljava/lang/String;
 	public static final fun getModulePropertiesFilename ()Ljava/lang/String;
 	public static final fun getRootPropertiesFilename ()Ljava/lang/String;
-	public static final fun initLibrarian (Ljava/nio/file/Path;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;Ljava/lang/String;Ljava/lang/String;)V
-	public static final fun toBaseUrl (Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;)Ljava/lang/String;
+	public static final fun getSnapshotsBrowseUrl ()Ljava/lang/String;
+	public static final fun getSnapshotsUrl ()Ljava/lang/String;
+	public static final fun initLibrarian (Ljava/nio/file/Path;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/init/SupportedLicense;Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public final class com/gradleup/librarian/core/tooling/init/LicenseKt {
@@ -162,7 +164,7 @@ public final class com/gradleup/librarian/core/tooling/init/MetadataKt {
 
 public final class com/gradleup/librarian/core/tooling/init/ProjectKt {
 	public static final fun getKotlinPluginVersion ()Ljava/lang/String;
-	public static final fun initProject (Ljava/nio/file/Path;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/GitHubRepository;ZLcom/gradleup/librarian/core/tooling/init/SonatypeBackend;)V
+	public static final fun initProject (Ljava/nio/file/Path;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/GitHubRepository;Z)V
 	public static final fun writeBinaryTo ([BLjava/nio/file/Path;)V
 }
 
@@ -176,15 +178,6 @@ public final class com/gradleup/librarian/core/tooling/init/Secrets {
 
 public final class com/gradleup/librarian/core/tooling/init/SecretsKt {
 	public static final fun initSecrets (Ljava/nio/file/Path;Lcom/gradleup/librarian/core/tooling/init/Secrets;)V
-}
-
-public final class com/gradleup/librarian/core/tooling/init/SonatypeBackend : java/lang/Enum {
-	public static final field Default Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
-	public static final field Portal Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
-	public static final field S01 Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
-	public static fun values ()[Lcom/gradleup/librarian/core/tooling/init/SonatypeBackend;
 }
 
 public final class com/gradleup/librarian/core/tooling/init/SonatypeRelease : java/lang/Enum {

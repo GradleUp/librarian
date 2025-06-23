@@ -21,7 +21,6 @@ fun Path.initProject(
     artifactId: String,
     repository: GitHubRepository,
     addDocumentationSite: Boolean,
-    sonatypeBackend: SonatypeBackend,
 ) {
   readTextResource("project/gradle.properties").writeTextTo(resolve("gradle.properties"))
   readTextResource("project/settings.gradle.kts").writeTextTo(resolve("settings.gradle.kts"))
@@ -74,12 +73,7 @@ fun Path.initProject(
 
   resolve("README.md").writeText(buildString {
     appendLine("[![Maven Central](https://img.shields.io/maven-central/v/$groupId/$artifactId?style=flat-square)](https://central.sonatype.com/namespace/$groupId)")
-    if (sonatypeBackend in setOf(SonatypeBackend.S01, SonatypeBackend.Default)) {
-      appendLine("[![OSS Snapshots](https://img.shields.io/nexus/s/$groupId/$artifactId?server=${
-        sonatypeBackend.toBaseUrl().urlencode()
-      }&label=oss-snapshots&style=flat-square)](${sonatypeBackend.toBaseUrl()}/content/repositories/snapshots/${groupId.replace('.', '/')}/)"
-      )
-    }
+    appendLine("[![OSS Snapshots](https://img.shields.io/nexus/s/$groupId/$artifactId?server=${snapshotsUrl.urlencode()}&label=oss-snapshots&style=flat-square)](${snapshotsUrl}/content/repositories/snapshots/${groupId.replace('.', '/')}/)")
 
     appendLine()
     appendLine("## $projectTitle")

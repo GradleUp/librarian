@@ -1,6 +1,5 @@
 package com.gradleup.librarian.gradle
 
-import com.gradleup.librarian.core.tooling.init.SonatypeBackend
 import com.gradleup.librarian.core.tooling.init.SonatypeRelease
 import com.gradleup.librarian.gradle.internal.createAndroidPublication
 import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
@@ -14,7 +13,7 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
-import java.util.Properties
+import java.util.*
 
 internal const val librarianPublication = "librarianPublication"
 
@@ -27,7 +26,6 @@ internal fun Project.configurePublishingInternal(block: PublishingExtension.() -
 class Sonatype(
     val username: String?,
     val password: String?,
-    val backend: SonatypeBackend,
     val release: SonatypeRelease,
     val baseUrl: String?
 )
