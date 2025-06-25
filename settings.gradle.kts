@@ -24,3 +24,4 @@ pluginManagement {
 include(":librarian-gradle-plugin", ":librarian-cli", ":librarian-core")
 
 //includeBuild("../gratatouille")
+//includeBuild("../nmcp")

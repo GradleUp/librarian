@@ -9,12 +9,9 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
 import java.util.*
-
-internal const val librarianPublication = "librarianPublication"
 
 internal fun Project.configurePublishingInternal(block: PublishingExtension.() -> Unit) {
   plugins.apply("maven-publish")
@@ -25,7 +22,7 @@ internal fun Project.configurePublishingInternal(block: PublishingExtension.() -
 class Sonatype(
   val username: String?,
   val password: String?,
-  val publishingType: String?,
+  val publishingType: String,
   val baseUrl: String?
 )
 
@@ -94,34 +91,7 @@ fun Project.configurePublishing(
   }
   configureSigning(signing)
 
-  val librarianRepository = layout.buildDirectory.dir("librarian/repo").get()
-  extensions.getByType(PublishingExtension::class.java).apply {
-    repositories {
-      it.maven {
-        it.name = "librarian"
-        it.setUrl(uri(librarianRepository.asFile.path))
-      }
-    }
-  }
-
-  val librarianPublication = configurations.create(librarianPublication) {
-    it.isVisible = false
-  }
-
-  val librarianCleanup = tasks.register("librarianCleanup") {
-    it.doLast {
-      librarianRepository.asFile.deleteRecursively()
-    }
-  }
-  tasks.withType(AbstractPublishToMaven::class.java).configureEach {
-    it.dependsOn(librarianCleanup)
-  }
-
-  artifacts {
-    it.add(librarianPublication.name, librarianRepository) {
-      it.builtBy("publishAllPublicationsToLibrarianRepository")
-    }
-  }
+  pluginManager.apply("com.gradleup.nmcp")
 }
 
 private fun Project.emptyJavadoc(repositoryUrl: String?): TaskProvider<Jar> {
