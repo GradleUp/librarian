@@ -22,7 +22,7 @@ internal fun Project.configurePublishingInternal(block: PublishingExtension.() -
 class Sonatype(
   val username: String?,
   val password: String?,
-  val publishingType: String,
+  val publishingType: String?,
   val baseUrl: String?
 )
 
