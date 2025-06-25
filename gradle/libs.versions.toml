@@ -26,7 +26,7 @@ google-auth = "com.google.auth:google-auth-library-oauth2-http:1.19.0"
 
 gratatouille-gradle-plugin = "com.gradleup.gratatouille:com.gradleup.gratatouille.gradle.plugin:0.0.10"
 ksp-gradle-plugin = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.1.21-2.0.2"
-librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.0.8-SNAPSHOT-07cba857c7fb7a7edb50a020b42acd5578fc42bf"
+librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.0.8-SNAPSHOT-54d3fa3be1a500e4fad914f898acc8233f72ba10"
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 nmcp = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:0.2.1"
 
