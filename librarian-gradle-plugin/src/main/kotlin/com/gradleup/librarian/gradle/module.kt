@@ -109,11 +109,11 @@ internal fun Sonatype(project: Project, properties: Properties): Sonatype {
   val passwordVariable =
     properties.getProperty("sonatype.password.environmentVariable") ?: "LIBRARIAN_SONATYPE_PASSWORD"
 
-  check(properties.getProperty("sonatype.backend") == null) {
-    "Librarian: sonatype.backend is not used anymore. All publications go to the central portal."
-  }
   check(properties.getProperty("sonatype.release") == null) {
-    "Librarian: sonatype.release is not used anymore. Use sonatype.publishingType instead."
+    "Librarian: sonatype.release is not used anymore, use sonatype.publishingType instead."
+  }
+  check(properties.getProperty("sonatype.backend") == null) {
+    "Librarian: sonatype.backend is not used anymore, sonatype publishing is always done on the central portal."
   }
   return Sonatype(
     username = project.findEnvironmentVariable(usernameVariable),
