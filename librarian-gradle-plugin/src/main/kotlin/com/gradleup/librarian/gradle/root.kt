@@ -66,4 +66,11 @@ fun Project.librarianRoot() {
   ).configure {
     it.dependsOn("dokkatooGeneratePublicationHtml")
   }
+
+  tasks.register("librarianPublishToSnapshots") {
+    it.dependsOn("nmcpPublishAggregationToCentralPortalSnapshots")
+  }
+  tasks.register("librarianPublishToMavenCentral") {
+    it.dependsOn("nmcpPublishAggregationToCentralPortal")
+  }
 }
