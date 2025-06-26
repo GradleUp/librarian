@@ -14,7 +14,6 @@ dependencies {
 
   implementation(project(":librarian-core"))
   implementation(libs.coroutines)
-  implementation(libs.vespene)
   implementation(libs.maven.sympathy)
   implementation(libs.okhttp)
   implementation(libs.google.auth)

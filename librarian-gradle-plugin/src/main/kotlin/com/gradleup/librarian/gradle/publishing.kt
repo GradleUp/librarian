@@ -3,7 +3,6 @@ package com.gradleup.librarian.gradle
 import com.gradleup.librarian.gradle.internal.createAndroidPublication
 import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
 import com.gradleup.librarian.gradle.internal.hasAndroid
-import net.mbonnin.vespene.lib.NexusStagingClient
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.plugins.JavaPluginExtension
@@ -263,11 +262,3 @@ internal fun maybeDropSnapshot(version: String): String {
 internal fun DependencyHandler.project(path: String, configuration: String) = project(
     mapOf("path" to path, "configuration" to configuration)
 )
-
-internal fun nexusStagingClient(host: String, username: String, password: String): NexusStagingClient {
-  return NexusStagingClient(
-      baseUrl = "${host}/service/local/",
-      username = username,
-      password = password
-  )
-}
