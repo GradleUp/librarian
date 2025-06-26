@@ -1,5 +1,18 @@
 # Next version (unreleased)
 
+# Version 0.0.8
+_2025-06-26_
+
+* Remove `const` for generated version by @martinbonnin in https://github.com/GradleUp/librarian/pull/53
+* Allow to not create missing publications by @martinbonnin in https://github.com/GradleUp/librarian/pull/54
+* Remove OSSRH support by @martinbonnin in https://github.com/GradleUp/librarian/pull/55
+* Use gratatouille by @martinbonnin in https://github.com/GradleUp/librarian/pull/56
+* Update `maven-metadata` when updating non-portal repositories by @martinbonnin in https://github.com/GradleUp/librarian/pull/57
+* Use nmcp for publishing by @martinbonnin in https://github.com/GradleUp/librarian/pull/58
+* fix plugin-id by @martinbonnin in https://github.com/GradleUp/librarian/pull/59
+* Allow to omit publishingType by @martinbonnin in https://github.com/GradleUp/librarian/pull/60
+* update bootstrap version by @martinbonnin in https://github.com/GradleUp/librarian/pull/61
+
 # Version 0.0.7
 _2024-11-07_
 
