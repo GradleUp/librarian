@@ -219,7 +219,7 @@ fun Project.configurePom(
       } else {
         pomMetadata.artifactId
       }
-      it.version = pomMetadata.version
+      it.version = maybeDropSnapshot(pomMetadata.version)
 
       it.pom {
         it.name.set(name)
@@ -248,6 +248,15 @@ fun Project.configurePom(
         }
       }
     }
+  }
+}
+
+internal fun maybeDropSnapshot(version: String): String {
+  return if (System.getenv("LIBRARIAN_RELEASE") == "true") {
+    // This is a release, drop the -SNAPSHOT
+    version.removeSuffix("-SNAPSHOT")
+  } else {
+    version
   }
 }
 
