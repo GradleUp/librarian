@@ -1,7 +1,6 @@
 package com.gradleup.librarian.gradle
 
 import com.gradleup.librarian.gradle.internal.task.registerGenerateStaticContentTaskTask
-import com.gradleup.librarian.gradle.internal.task.registerPublishToGcsTask
 import nmcp.NmcpAggregationExtension
 import nmcp.internal.nmcpConsumerConfigurationName
 import org.gradle.api.Project
@@ -16,7 +15,7 @@ fun Project.librarianRoot() {
   }
 
   val properties = project.rootProperties()
-  val pomMetadata = PomMetadata(project, properties.kdocArtifactId(), properties)
+  val pomMetadata = PomMetadata(properties.kdocArtifactId(), properties)
   val sonatype = Sonatype(project, properties)
   val signing = Signing(project, properties)
 
