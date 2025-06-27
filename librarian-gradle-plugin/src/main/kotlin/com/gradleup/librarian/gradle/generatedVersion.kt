@@ -54,6 +54,7 @@ abstract class GeneratePluginVersion : DefaultTask() {
     versionFile.parentFile.mkdirs()
     versionFile.writeText("""// Generated file. Do not edit!
 package ${packageName.get()}
+import kotlin.jvm.JvmField
 @JvmField
 val VERSION = "${version.get()}"
 """
