@@ -27,6 +27,7 @@ fun publishToGcs(
 ) {
   val transport = GcsTransport(logger, bucket, prefix, credentials)
 
+  logger.lifecycle("Uploading files to gcs://$bucket/$prefix")
   publishFileByFile(transport, inputFiles)
 }
 
@@ -51,7 +52,7 @@ internal class GcsTransport(
     val accessToken = credentials.accessToken.tokenValue
 
     val name = "${prefix}${path}"
-    logger.lifecycle("Librarian: gcs-get $name")
+    logger.info("Librarian: gcs-get $name")
     val url = getBaseUrl
       .newBuilder()
       .addPathSegments(name)
@@ -74,7 +75,7 @@ internal class GcsTransport(
     val accessToken = credentials.accessToken.tokenValue
 
     val name = "${prefix}${path}"
-    logger.lifecycle("Librarian: gcs-put $name")
+    logger.info("Librarian: gcs-put $name")
     val url = postBaseUrl
       .newBuilder()
       .addQueryParameter("name", name)
