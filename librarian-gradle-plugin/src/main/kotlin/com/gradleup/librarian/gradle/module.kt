@@ -85,7 +85,7 @@ fun Project.librarianModule() {
     configureKotlinCompatibility(it)
   }
 
-  val pomMetadata = PomMetadata(project, project.name, rootProperties)
+  val pomMetadata = PomMetadata(project.name, rootProperties)
 
   moduleProperties.versionPackageName()?.let {
     configureGeneratedVersion(it, pomMetadata.version)

@@ -1,7 +1,6 @@
 package com.gradleup.librarian.gradle
 
 import com.gradleup.librarian.gradle.internal.createAndroidPublication
-import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
 import com.gradleup.librarian.gradle.internal.hasAndroid
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
@@ -10,7 +9,11 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.*
+
 
 internal fun Project.configurePublishingInternal(block: PublishingExtension.() -> Unit) {
   plugins.apply("maven-publish")
@@ -37,12 +40,9 @@ fun Gcs(properties: Properties): Gcp {
   )
 }
 
-fun PomMetadata(project: Project, artifactId: String, properties: Properties): PomMetadata {
-  var version = properties.getRequiredProperty("pom.version")
-  val sha1 = project.findEnvironmentVariable("LIBRARIAN_VERSION_SHA1")
-  if (!sha1.isNullOrBlank()) {
-    version = "$version-${sha1}"
-  }
+fun PomMetadata(artifactId: String, properties: Properties): PomMetadata {
+  val version = updateVersionAccordingToEnvironment(properties.getRequiredProperty("pom.version"))
+
   check(properties.getProperty("pom.licenseUrl") == null) {
     "licenseUrl is not used anymore"
   }
@@ -218,7 +218,7 @@ fun Project.configurePom(
       } else {
         pomMetadata.artifactId
       }
-      it.version = maybeDropSnapshot(pomMetadata.version)
+      it.version = pomMetadata.version
 
       it.pom {
         it.name.set(name)
@@ -250,13 +250,24 @@ fun Project.configurePom(
   }
 }
 
-internal fun maybeDropSnapshot(version: String): String {
-  return if (System.getenv("LIBRARIAN_RELEASE") == "true") {
+internal fun updateVersionAccordingToEnvironment(version: String): String {
+  if (System.getenv("LIBRARIAN_RELEASE") == "true") {
     // This is a release, drop the -SNAPSHOT
-    version.removeSuffix("-SNAPSHOT")
-  } else {
-    version
+    return version.removeSuffix("-SNAPSHOT")
   }
+
+  val sha1 = System.getenv("LIBRARIAN_VERSION_SHA1")
+  if (!sha1.isNullOrBlank()) {
+    return "$version-${sha1}"
+  }
+
+  if(System.getenv("LIBRARIAN_NIGHTLY") == "true") {
+    val utcNow = Instant.now().atZone(ZoneOffset.UTC)
+    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    return "${version.removeSuffix("-SNAPSHOT")}-${utcNow.format(formatter)}"
+  }
+
+  return version
 }
 
 internal fun DependencyHandler.project(path: String, configuration: String) = project(
