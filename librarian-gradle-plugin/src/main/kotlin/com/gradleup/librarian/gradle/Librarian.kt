@@ -16,6 +16,7 @@ class Librarian {
     fun module(project: Project) {
       project.librarianModule()
     }
+
     fun registerGcsTask(
         project: Project,
         bucket: Provider<String>,
@@ -30,6 +31,10 @@ class Librarian {
         credentials = credentials,
         inputFiles = files
       )
+    }
+
+    fun version(version: String): String {
+      return updateVersionAccordingToEnvironment(version)
     }
   }
 }
