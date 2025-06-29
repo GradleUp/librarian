@@ -204,7 +204,14 @@ fun Project.configurePom(
   afterEvaluate {
     publications.configureEach {
       (it as MavenPublication)
-      it.groupId = pomMetadata.groupId
+      if (it.groupId.isNullOrEmpty()) {
+        /**
+         * Set the groupId if there is none yet.
+         * It might be the case that the publication has a groupId configured already.
+         * This is typically the case for Gradle plugins.
+         */
+        it.groupId = pomMetadata.groupId
+      }
       it.artifactId = if (plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
         // Multiplatform -> Keep artifactId untouched
         when {
