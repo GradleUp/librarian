@@ -41,6 +41,15 @@ fun Project.librarianRoot() {
     }
   }
 
+  /**
+   * This doesn't use `nmcpAggregation.publishAllProjectsProbablyBreakingProjectIsolation()`
+   * because the individual projects have the plugin applied already so we can do this in
+   * a less breaking way (TBC whether this is still breaking or not. I think not but nt 100% sure)
+   */
+  allprojects.forEach {
+    configurations.getByName("nmcpAggregation").dependencies.add(dependencies.create(it))
+  }
+
   val gcs = Gcs(properties)
   if (gcs.bucket != null) {
     Librarian.registerGcsTask(
@@ -52,9 +61,6 @@ fun Project.librarianRoot() {
     )
   }
 
-  subprojects.forEach {
-    configurations.getByName("nmcpAggregation").dependencies.add(dependencies.create(it))
-  }
 
   registerGenerateStaticContentTaskTask(
     taskName = "librarianStaticContent",
