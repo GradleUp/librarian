@@ -41,6 +41,9 @@ fun Project.librarianRoot() {
     }
   }
 
+  // Apply nmcp here as well for the kdocs
+  pluginManager.apply("com.gradleup.nmcp")
+  
   /**
    * This doesn't use `nmcpAggregation.publishAllProjectsProbablyBreakingProjectIsolation()`
    * because the individual projects have the plugin applied already so we can do this in
