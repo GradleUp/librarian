@@ -2,7 +2,6 @@ package com.gradleup.librarian.gradle
 
 import com.gradleup.librarian.gradle.internal.task.registerGenerateStaticContentTaskTask
 import nmcp.NmcpAggregationExtension
-import nmcp.internal.nmcpConsumerConfigurationName
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
 
@@ -54,7 +53,7 @@ fun Project.librarianRoot() {
   }
 
   subprojects.forEach {
-    configurations.getByName(nmcpConsumerConfigurationName).dependencies.add(dependencies.create(it))
+    configurations.getByName("nmcpAggregation").dependencies.add(dependencies.create(it))
   }
 
   registerGenerateStaticContentTaskTask(
