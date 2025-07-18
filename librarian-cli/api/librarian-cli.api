@@ -24,8 +24,25 @@ public final class com/gradleup/librarian/cli/command/CreateGitHubRepository : c
 	public fun run ()V
 }
 
+public final class com/gradleup/librarian/cli/command/FileContext {
+	public fun <init> ()V
+	public final fun replaceMavenCoordinates (Ljava/lang/String;)V
+	public final fun replacePluginId (Ljava/lang/String;)V
+}
+
 public final class com/gradleup/librarian/cli/command/GenerateKey : com/github/ajalt/clikt/core/CliktCommand {
 	public fun <init> ()V
+	public fun run ()V
+}
+
+public final class com/gradleup/librarian/cli/command/PrepareNextVersion : com/github/ajalt/clikt/core/CliktCommand {
+	public fun <init> (Lkotlin/jvm/functions/Function1;)V
+	public fun run ()V
+}
+
+public final class com/gradleup/librarian/cli/command/SetVersion : com/github/ajalt/clikt/core/CliktCommand {
+	public fun <init> ()V
+	public final fun getVersion ()Ljava/lang/String;
 	public fun run ()V
 }
 
@@ -33,6 +50,12 @@ public final class com/gradleup/librarian/cli/command/UploadKey : com/github/aja
 	public fun <init> ()V
 	public final fun getKeyFile ()Ljava/lang/String;
 	public fun run ()V
+}
+
+public final class com/gradleup/librarian/cli/command/VersionContext {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun file (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun getVersion ()Ljava/lang/String;
 }
 
 public final class com/gradleup/librarian/cli/command/init/GitHubSecretsKt {

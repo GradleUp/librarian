@@ -10,7 +10,7 @@ Librarian.module(project)
 
 dependencies {
   implementation(project(":librarian-core"))
-  implementation(libs.clikt)
+  api(libs.clikt)
   implementation(libs.inquirer)
   implementation(libs.mordant)
 
