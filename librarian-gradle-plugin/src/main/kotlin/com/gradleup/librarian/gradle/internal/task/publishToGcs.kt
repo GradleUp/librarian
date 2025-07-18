@@ -4,12 +4,11 @@ import com.google.auth.oauth2.GoogleCredentials
 import gratatouille.tasks.GInputFiles
 import gratatouille.tasks.GLogger
 import gratatouille.tasks.GTask
-import nmcp.internal.task.nmcpClient
 import nmcp.transport.Content
 import nmcp.transport.Transport
+import nmcp.transport.nmcpClient
 import nmcp.transport.publishFileByFile
 import nmcp.transport.toRequestBody
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
