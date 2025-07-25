@@ -11,6 +11,10 @@ public final class com/gradleup/librarian/cli/MultilineSecretComponent : com/git
 	public fun value ()Ljava/lang/String;
 }
 
+public final class com/gradleup/librarian/cli/Update_repoKt {
+	public static final fun updateRepo ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
 public final class com/gradleup/librarian/cli/UtilsKt {
 	public static final fun requireInteraction ()V
 }
@@ -32,17 +36,6 @@ public final class com/gradleup/librarian/cli/command/FileContext {
 
 public final class com/gradleup/librarian/cli/command/GenerateKey : com/github/ajalt/clikt/core/CliktCommand {
 	public fun <init> ()V
-	public fun run ()V
-}
-
-public final class com/gradleup/librarian/cli/command/PrepareNextVersion : com/github/ajalt/clikt/core/CliktCommand {
-	public fun <init> (Lkotlin/jvm/functions/Function1;)V
-	public fun run ()V
-}
-
-public final class com/gradleup/librarian/cli/command/SetVersion : com/github/ajalt/clikt/core/CliktCommand {
-	public fun <init> ()V
-	public final fun getVersion ()Ljava/lang/String;
 	public fun run ()V
 }
 
