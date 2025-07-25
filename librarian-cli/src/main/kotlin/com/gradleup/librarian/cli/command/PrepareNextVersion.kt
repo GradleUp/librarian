@@ -28,12 +28,27 @@ class VersionContext(val version: String) {
     var newText = f.readText()
 
     val fileContext = FileContext().also(block)
+    newText = fileContext.groups.fold(newText) { acc, group ->
+      acc.replace(Regex("\"${Pattern.quote(group)}:([^:]):.*\"")) {"\"$group:${it.groupValues.get(1)}:$version\"" }
+    }
     newText = fileContext.gas.fold(newText) { acc, ga ->
       acc.replace(Regex("\"${Pattern.quote(ga)}:.*\""), "\"$ga:$version\"")
     }
     newText = fileContext.pluginIds.fold(newText) { acc, pluginId ->
-      acc.replace(Regex("id\\(\"${Pattern.quote(pluginId)}\"\\).version\\([^)]*\\)"), "id(\"$pluginId\").version($version)")
-        .replace(Regex("id\\(\"${Pattern.quote(pluginId)}\"\\) version\\([^)]*\\)"), "id(\"$pluginId\") version($version)")
+      acc.replace(
+        Regex("id\\(\"${Pattern.quote(pluginId)}\"\\).version\\([^)]*\\)"),
+        "id(\"$pluginId\").version($version)"
+      )
+        .replace(
+          Regex("id\\(\"${Pattern.quote(pluginId)}\"\\) version\\([^)]*\\)"),
+          "id(\"$pluginId\") version($version)"
+        )
+    }
+    newText = fileContext.regexContexts.fold(newText) { acc, regexContext ->
+      acc.replace(
+        regexContext.regex,
+        regexContext.replacement
+      )
     }
 
     f.writeText(newText)
@@ -41,18 +56,33 @@ class VersionContext(val version: String) {
 }
 
 class FileContext {
+  internal val groups = mutableListOf<String>()
   internal val gas = mutableListOf<String>()
   internal val pluginIds = mutableListOf<String>()
 
+  internal class RegexContext(val regex: Regex, val replacement: (MatchResult) -> String)
+  internal val regexContexts = mutableListOf<RegexContext>()
+
   /**
-   * Replaces every instance version with the new version in all instances of:
+   * Replaces every version with the new version in all instances of:
    *
    * - `"$ga:version"`
    *
    * @param ga a group and artifact ids in the form `group:artifact`
    */
-  fun replaceMavenCoordinates(ga: String) {
+  fun replaceArtifact(ga: String) {
     gas.add(ga)
+  }
+
+  /**
+   * Replaces every version with the new version in all instances of:
+   *
+   * - `"$group:[^:]:version"`
+   *
+   * @param group a group
+   */
+  fun replaceAllArtifacts(group: String) {
+    groups.add(group)
   }
 
   /**
@@ -63,5 +93,16 @@ class FileContext {
    */
   fun replacePluginId(pluginId: String) {
     pluginIds.add(pluginId)
+  }
+
+
+  /**
+   * Replaces every instance version with the new version in all instances of:
+   *
+   * - `id("$pluginId").version(version)`
+   * - `id("$pluginId") version(version)`
+   */
+  fun replaceRegex(regex: Regex, replacement: (MatchResult) -> String) {
+    regexContexts.add(RegexContext(regex, replacement))
   }
 }

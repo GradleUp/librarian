@@ -30,8 +30,10 @@ public final class com/gradleup/librarian/cli/command/CreateGitHubRepository : c
 
 public final class com/gradleup/librarian/cli/command/FileContext {
 	public fun <init> ()V
-	public final fun replaceMavenCoordinates (Ljava/lang/String;)V
+	public final fun replaceAllArtifacts (Ljava/lang/String;)V
+	public final fun replaceArtifact (Ljava/lang/String;)V
 	public final fun replacePluginId (Ljava/lang/String;)V
+	public final fun replaceRegex (Lkotlin/text/Regex;Lkotlin/jvm/functions/Function1;)V
 }
 
 public final class com/gradleup/librarian/cli/command/GenerateKey : com/github/ajalt/clikt/core/CliktCommand {
