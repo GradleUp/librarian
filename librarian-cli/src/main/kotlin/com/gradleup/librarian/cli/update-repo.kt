@@ -12,6 +12,6 @@ private class MainCommand : CliktCommand() {
     }
 }
 
-fun updateRepo(args: Array<String>, setVersionInDocs: (VersionContext) -> Unit) {
+fun updateRepo(args: Array<String>, setVersionInDocs: VersionContext.() -> Unit) {
     MainCommand().subcommands(SetVersion(), PrepareNextVersion(setVersionInDocs)).main(args)
 }
