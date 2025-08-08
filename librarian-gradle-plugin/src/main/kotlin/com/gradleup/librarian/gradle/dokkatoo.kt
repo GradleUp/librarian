@@ -14,7 +14,6 @@ import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
 import javax.inject.Inject
 
-internal val skipProjectIsolationIncompatibleParts = false
 class KdocAggregate(
     val currentVersion: String,
     val olderVersions: List<Coordinates>,
@@ -94,19 +93,10 @@ fun Project.configureDokkatoo() = configureDokkatooInternal {
   tasks.withType(DokkatooGenerateTask::class.java).configureEach {
     it.workerIsolation.set(ClassLoaderIsolation())
   }
-
-  // TODO project isolation
-  if (!skipProjectIsolationIncompatibleParts) {
-    rootProject.configurations.all {
-      if (it.name == "dokkatoo") {
-        it.dependencies.add(rootProject.dependencies.project(mapOf("path" to ":${this@configureDokkatoo.path}")))
-      }
-    }
-  }
 }
 
 fun Project.configureDokkatooAggregate(currentVersion: String, olderVersions: List<Coordinates>): TaskProvider<Jar> {
-  return configureDokkatooInternal {
+  val jar = configureDokkatooInternal {
     plugins.apply("dev.adamko.dokkatoo-html")
     dependencies.add(
         "dokkatooPluginHtml",
@@ -161,7 +151,7 @@ fun Project.configureDokkatooAggregate(currentVersion: String, olderVersions: Li
     /**
      * Strip the /older/ directory to save a bit of space
      */
-    tasks.register(kdocWithoutOlder, org.gradle.jvm.tasks.Jar::class.java) {
+    tasks.register(kdocWithoutOlder, Jar::class.java) {
       it.archiveClassifier.set("javadoc")
       it.from(
           tasks.named("dokkatooGeneratePublicationHtml")
@@ -169,6 +159,12 @@ fun Project.configureDokkatooAggregate(currentVersion: String, olderVersions: Li
       it.exclude("/older/**")
     }
   }
+
+  allprojects {
+    dependencies.add("dokkatoo", it)
+  }
+
+  return jar
 }
 
 private abstract class FileOperationsHolder @Inject constructor(val fileOperations: FileOperations)
