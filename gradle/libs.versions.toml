@@ -1,15 +1,14 @@
 [versions]
-kotlin = "2.1.21"
+kgp = "2.2.0"
 
 [libraries]
 coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
 maven-sympathy = "com.gradleup.maven-sympathy:maven-sympathy:0.0.2"
 dokkatoo = "dev.adamko.dokkatoo:dokkatoo-plugin:2.3.1"
-bcv = "org.jetbrains.kotlinx:binary-compatibility-validator:0.16.3"
 
 gradle-api = "dev.gradleplugins:gradle-api:8.8"
 agp = "com.android.tools.build:gradle:8.2.0"
-kgp = "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
+kgp-runtime-min = "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.0"
 clikt = "com.github.ajalt.clikt:clikt:3.5.0"
 mordant = "com.github.ajalt.mordant:mordant:2.7.1"
 inquirer = "com.github.kotlin-inquirer:kotlin-inquirer:0.1.0"
@@ -24,8 +23,8 @@ bouncycastle-pg = "org.bouncycastle:bcpg-jdk18on:1.78.1"
 google-auth = "com.google.auth:google-auth-library-oauth2-http:1.19.0"
 
 gratatouille-gradle-plugin = "com.gradleup.gratatouille:com.gradleup.gratatouille.gradle.plugin:0.0.10"
-ksp-gradle-plugin = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.1.21-2.0.2"
+ksp-gradle-plugin = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.2.0-2.0.2"
 librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.0.10-SNAPSHOT-214f46e836207a529c92e078540643ad6acc3054"
-kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kgp" }
 nmcp = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:1.0.1"
 

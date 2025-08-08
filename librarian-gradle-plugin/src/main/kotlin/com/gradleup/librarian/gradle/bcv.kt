@@ -1,14 +1,17 @@
 package com.gradleup.librarian.gradle
 
-import kotlinx.validation.ApiValidationExtension
-import kotlinx.validation.ExperimentalBCVApi
 import org.gradle.api.Project
+import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
-@OptIn(ExperimentalBCVApi::class)
-fun Project.configureBcv(block: ApiValidationExtension.() -> Unit = {}) {
-  pluginManager.apply("org.jetbrains.kotlinx.binary-compatibility-validator")
-  extensions.getByType(ApiValidationExtension::class.java).apply {
-    klib.enabled = true
-    block()
+@OptIn(ExperimentalAbiValidation::class)
+fun Project.configureBcv(block: AbiValidationExtension.() -> Unit = {}) {
+  extensions.getByType(KotlinProjectExtension::class.java).apply {
+      this.extensions.getByName("abiValidation").apply {
+          this as AbiValidationExtension
+          enabled.set(true)
+          block()
+      }
   }
 }

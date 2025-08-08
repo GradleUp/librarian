@@ -71,7 +71,8 @@ public final class com/gradleup/librarian/gradle/Librarian {
 }
 
 public final class com/gradleup/librarian/gradle/Librarian$Companion {
-	public final fun module (Lorg/gradle/api/Project;)V
+	public final fun module (Lorg/gradle/api/Project;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun module$default (Lcom/gradleup/librarian/gradle/Librarian$Companion;Lorg/gradle/api/Project;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public final fun registerGcsTask (Lorg/gradle/api/Project;Lorg/gradle/api/provider/Provider;Lorg/gradle/api/provider/Provider;Lorg/gradle/api/provider/Provider;Lorg/gradle/api/file/FileCollection;)V
 	public final fun root (Lorg/gradle/api/Project;)V
 	public final fun version (Ljava/lang/String;)Ljava/lang/String;
@@ -86,7 +87,8 @@ public final class com/gradleup/librarian/gradle/MavenKt {
 }
 
 public final class com/gradleup/librarian/gradle/ModuleKt {
-	public static final fun librarianModule (Lorg/gradle/api/Project;)V
+	public static final fun librarianModule (Lorg/gradle/api/Project;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun librarianModule$default (Lorg/gradle/api/Project;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public abstract class com/gradleup/librarian/gradle/Plugin : org/gradle/api/Plugin {

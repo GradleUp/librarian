@@ -4,6 +4,7 @@ import com.gradleup.librarian.core.tooling.init.modulePropertiesFilename
 import com.gradleup.librarian.core.tooling.init.rootPropertiesFilename
 import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
 import org.gradle.api.Project
+import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
 import java.util.Properties
 
 internal fun Properties.javaCompatibility(): Int? {
@@ -73,9 +74,11 @@ internal fun Project.moduleProperties(): Properties {
 }
 
 @Deprecated("use Librarian.module() instead.", ReplaceWith("Librarian.module(project)", "import com.gradleup.librarian.gradle.Librarian"))
-fun Project.librarianModule() {
+fun Project.librarianModule(block: AbiValidationExtension.() -> Unit = {}) {
   val rootProperties = rootProperties()
   val moduleProperties = moduleProperties()
+
+  configureBcv(block)
 
   rootProperties.javaCompatibility()?.let {
     configureJavaCompatibility(it)

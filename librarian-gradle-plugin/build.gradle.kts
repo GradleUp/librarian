@@ -9,7 +9,6 @@ plugins {
 Librarian.module(project)
 
 dependencies {
-  api(libs.bcv)
   api(libs.dokkatoo)
 
   implementation(project(":librarian-core"))
@@ -21,7 +20,7 @@ dependencies {
 
   compileOnly(libs.gradle.api)
   compileOnly(libs.agp)
-  compileOnly(libs.kgp)
+  implementation(libs.kgp.runtime.min)
 
   testImplementation(kotlin("test"))
   testImplementation(gradleTestKit())

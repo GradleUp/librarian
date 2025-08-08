@@ -8,7 +8,7 @@ import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import java.io.File
 
 internal const val LIBRARIAN_GENERATE_VERSION = "librarianGenerateVersion"
@@ -33,7 +33,7 @@ fun Project.configureGeneratedVersion(packageName: String, pomVersion: String) {
   val versionFileProvider = pluginVersionTaskProvider.flatMap { it.outputDir }
   sourceSet.kotlin.srcDir(versionFileProvider)
 
-  tasks.withType(KotlinCompile::class.java) {
+  tasks.withType(KotlinCompilationTask::class.java) {
     it.dependsOn(pluginVersionTaskProvider)
   }
 }

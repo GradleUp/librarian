@@ -4,6 +4,7 @@ import com.gradleup.librarian.gradle.internal.task.registerPublishToGcsTask
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Provider
+import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
 
 class Librarian {
   companion object {
@@ -13,8 +14,8 @@ class Librarian {
     }
 
     @Suppress("DEPRECATION")
-    fun module(project: Project) {
-      project.librarianModule()
+    fun module(project: Project, block: AbiValidationExtension.() -> Unit = {}) {
+      project.librarianModule(block)
     }
 
     fun registerGcsTask(
