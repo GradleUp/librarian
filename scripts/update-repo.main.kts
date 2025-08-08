@@ -3,21 +3,12 @@
 @file:Repository("https://repo.maven.apache.org/maven2/")
 @file:Repository("https://storage.googleapis.com/gradleup/m2")
 @file:Repository("https://jitpack.io")
-@file:DependsOn("com.gradleup.librarian:librarian-cli:0.0.11-SNAPSHOT-ba8b5ecfcbda070ecc3b5b95056ee359199552b4")
+@file:DependsOn("com.gradleup.librarian:librarian-cli:0.0.11-SNAPSHOT-e8ab4653f68118d36889519f430f1fcd118745e3")
 
-import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.core.subcommands
-import com.gradleup.librarian.cli.command.PrepareNextVersion
-import com.gradleup.librarian.cli.command.SetVersion
+import com.gradleup.librarian.cli.updateRepo
 
-
-class MainCommand : CliktCommand() {
-    override fun run() {
-    }
+updateRepo(args) {
+  file("README.md") {
+    replacePluginId("com.gradleup.librarian")
+  }
 }
-
-MainCommand().subcommands(SetVersion(), PrepareNextVersion {
-    file("README.md") {
-        replacePluginId("com.gradleup.librarian")
-    }
-}).main(args)
