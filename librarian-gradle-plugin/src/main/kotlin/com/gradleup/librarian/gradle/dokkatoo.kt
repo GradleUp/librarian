@@ -14,7 +14,7 @@ import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
 import javax.inject.Inject
 
-val skipProjectIsolationIncompatibleParts = false
+internal val skipProjectIsolationIncompatibleParts = false
 class KdocAggregate(
     val currentVersion: String,
     val olderVersions: List<Coordinates>,
