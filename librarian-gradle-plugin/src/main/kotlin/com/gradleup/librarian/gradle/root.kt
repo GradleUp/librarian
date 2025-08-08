@@ -5,14 +5,8 @@ import nmcp.NmcpAggregationExtension
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
 
-internal val skipProjectIsolationIncompatibleParts = false
-
 @Deprecated("use Librarian.root() instead", ReplaceWith("Librarian.root(project)", "import com.gradleup.librarian.gradle.Librarian"))
 fun Project.librarianRoot() {
-  if (!skipProjectIsolationIncompatibleParts) {
-    configureBcv()
-  }
-
   val properties = project.rootProperties()
   val pomMetadata = PomMetadata(properties.kdocArtifactId(), properties)
   val sonatype = Sonatype(project, properties)

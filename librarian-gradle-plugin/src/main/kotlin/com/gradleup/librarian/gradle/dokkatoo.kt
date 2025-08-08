@@ -12,9 +12,9 @@ import org.gradle.api.internal.file.FileOperations
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
-import java.io.File
 import javax.inject.Inject
 
+val skipProjectIsolationIncompatibleParts = false
 class KdocAggregate(
     val currentVersion: String,
     val olderVersions: List<Coordinates>,
