@@ -4,6 +4,7 @@ plugins {
   id("org.jetbrains.kotlin.jvm")
   id("com.google.devtools.ksp")
   id("com.gradleup.gratatouille")
+  id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 Librarian.module(project)
@@ -16,6 +17,11 @@ dependencies {
   implementation(libs.maven.sympathy)
   implementation(libs.okhttp)
   implementation(libs.google.auth)
+
+  implementation(libs.bouncycastle.pg)
+  implementation(libs.bouncycastle.prov)
+  implementation(libs.serialization.json)
+  implementation(libs.xmlutil)
 
   api(libs.compat.patrouille)
   api(libs.nmcp)

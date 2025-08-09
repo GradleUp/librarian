@@ -2,6 +2,8 @@ package com.gradleup.librarian.gradle
 
 import com.gradleup.librarian.gradle.internal.createAndroidPublication
 import com.gradleup.librarian.gradle.internal.hasAndroid
+import com.gradleup.librarian.gradle.internal.task.registerGenerateMarkerFilesTask
+import nmcp.NmcpExtension
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.plugins.JavaPluginExtension
@@ -91,7 +93,41 @@ fun Project.configurePublishing(
   configureSigning(signing)
 
   pluginManager.apply("com.gradleup.nmcp")
+
+  configureMarkers(pomMetadata, signing)
 }
+
+private fun Project.configureMarkers(pomMetadata: PomMetadata, signing: Signing) {
+  val jar = try {
+    tasks.named("jar", Jar::class.java)
+  } catch (_: Exception) {
+    return
+  }
+  val existingMarkers = extensions.getByType(PublishingExtension::class.java)
+    .publications
+    .filterIsInstance<MavenPublication>()
+    .filter {it.name.endsWith("PluginMarkerMaven")}
+    .map { it.groupId }
+
+  val task = registerGenerateMarkerFilesTask(
+    taskName = "librarianGenerateMarkerFiles",
+    jar = jar.flatMap { it.archiveFile },
+    mainGroupId = provider { pomMetadata.groupId },
+    mainArtifactId = provider { pomMetadata.artifactId },
+    mainVersion = provider { pomMetadata.version },
+    url = provider { pomMetadata.vcsUrl },
+    spdxLicenseId = provider { pomMetadata.license },
+    developer = provider { pomMetadata.developer },
+    pluginIdsToIgnore = provider { existingMarkers },
+    privateKey = provider { signing.privateKey },
+    privateKeyPassword = provider { signing.privateKeyPassword },
+  )
+
+  val nmcpExtension = extensions.findByType(NmcpExtension::class.java)
+  nmcpExtension!!.extraFiles(task.map { it.output })
+}
+
+
 
 private fun Project.emptyJavadoc(repositoryUrl: String?): TaskProvider<Jar> {
   return tasks.register("librarianEmptyJavadoc", Jar::class.java) {
@@ -113,7 +149,7 @@ private fun Project.emptyJavadoc(repositoryUrl: String?): TaskProvider<Jar> {
 }
 
 private fun Project.javaSources(): TaskProvider<Jar> {
-  return tasks.register("librarianSources", org.gradle.jvm.tasks.Jar::class.java) {
+  return tasks.register("librarianSources", Jar::class.java) {
     it.archiveClassifier.set("sources")
 
     val sourceSets = project.extensions.getByType(JavaPluginExtension::class.java).sourceSets
@@ -201,7 +237,7 @@ fun Project.configurePom(
   this@configurePom.group = pomMetadata.groupId
   this@configurePom.version = pomMetadata.version
 
-  afterEvaluate {
+  afterEvaluate { // XX: why do we need afterEvaluate {}?
     publications.configureEach {
       (it as MavenPublication)
       if (it.groupId.isNullOrEmpty()) {

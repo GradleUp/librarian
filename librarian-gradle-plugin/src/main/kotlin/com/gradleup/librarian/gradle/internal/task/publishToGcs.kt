@@ -6,13 +6,13 @@ import gratatouille.tasks.GLogger
 import gratatouille.tasks.GTask
 import nmcp.transport.Content
 import nmcp.transport.Transport
-import nmcp.transport.nmcpClient
 import nmcp.transport.publishFileByFile
 import nmcp.transport.toRequestBody
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.BufferedSource
+import java.time.Duration
 import kotlin.math.pow
 import kotlin.time.Duration.Companion.seconds
 
@@ -30,6 +30,11 @@ fun publishToGcs(
   publishFileByFile(transport, inputFiles)
 }
 
+private val nmcpClient = OkHttpClient.Builder()
+  .connectTimeout(Duration.ofSeconds(30))
+  .writeTimeout(Duration.ofSeconds(30))
+  .readTimeout(Duration.ofSeconds(60))
+  .build()
 
 internal class GcsTransport(
   private val logger: GLogger,
