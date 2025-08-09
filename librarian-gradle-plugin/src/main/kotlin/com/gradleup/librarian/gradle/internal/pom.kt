@@ -40,7 +40,7 @@ internal fun Project.serialize(): String = xml.encodeToString(this)
 
 private const val POM_XML_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
 
-object MavenPomPropertiesXmlSerializer : KSerializer<Properties> {
+internal object MavenPomPropertiesXmlSerializer : KSerializer<Properties> {
 
     private val fallbackSerializer = MapSerializer(String.serializer(), String.serializer().nullable)
 
@@ -110,7 +110,7 @@ object MavenPomPropertiesXmlSerializer : KSerializer<Properties> {
 
 @Serializable
 @XmlSerialName("project", POM_XML_NAMESPACE)
-data class Project(
+internal data class Project(
     @XmlElement(true)
     val modelVersion: String? = null,
     @XmlElement(true)
@@ -153,7 +153,7 @@ data class Project(
 
 @Serializable
 @XmlSerialName("parent", POM_XML_NAMESPACE)
-data class Parent(
+internal data class Parent(
     @XmlElement(true)
     val groupId: String,
     @XmlElement(true)
@@ -164,7 +164,7 @@ data class Parent(
 
 @Serializable
 @XmlSerialName("organization", POM_XML_NAMESPACE)
-data class Organization(
+internal data class Organization(
     @XmlElement(true)
     val name: String,
     @XmlElement(true)
@@ -173,14 +173,14 @@ data class Organization(
 
 @Serializable
 @XmlSerialName("licenses", POM_XML_NAMESPACE)
-data class Licenses(
+internal data class Licenses(
     @XmlElement(true)
     val licenses: List<License>
 )
 
 @Serializable
 @XmlSerialName("license", POM_XML_NAMESPACE)
-data class License(
+internal data class License(
     @XmlElement(true)
     val name: String,
     @XmlElement(true)
@@ -191,14 +191,14 @@ data class License(
 
 @Serializable
 @XmlSerialName("developers", POM_XML_NAMESPACE)
-data class Developers(
+internal data class Developers(
     @XmlElement(true)
     val developers: List<Developer>
 )
 
 @Serializable
 @XmlSerialName("developer", POM_XML_NAMESPACE)
-data class Developer(
+internal data class Developer(
     @XmlElement(true)
     val id: String? = null,
     @XmlElement(true)
@@ -217,14 +217,14 @@ data class Developer(
 
 @Serializable
 @XmlSerialName("contributors", POM_XML_NAMESPACE)
-data class Contributors(
+internal data class Contributors(
     @XmlElement(true)
     val contributors: List<Contributor>
 )
 
 @Serializable
 @XmlSerialName("contributor", POM_XML_NAMESPACE)
-data class Contributor(
+internal data class Contributor(
     @XmlElement(true)
     val name: String,
     @XmlElement(true)
@@ -241,25 +241,25 @@ data class Contributor(
 
 @Serializable
 @XmlSerialName("prerequisites", POM_XML_NAMESPACE)
-data class Prerequisites(
+internal data class Prerequisites(
     @XmlElement(true)
     val maven: String,
 )
 
 @Serializable
 @XmlSerialName("dependencyManagement", POM_XML_NAMESPACE)
-data class DependencyManagement(
+internal data class DependencyManagement(
     @XmlElement(true)
     val dependencies: Dependencies? = null,
 )
 
 @JvmName("plusNullable")
-operator fun DependencyManagement?.plus(other: DependencyManagement?): DependencyManagement? {
+internal operator fun DependencyManagement?.plus(other: DependencyManagement?): DependencyManagement? {
     if (this == null) return other
     return this + other
 }
 
-operator fun DependencyManagement.plus(other: DependencyManagement?): DependencyManagement {
+internal operator fun DependencyManagement.plus(other: DependencyManagement?): DependencyManagement {
     if (other == null) return this
     if (this.dependencies == null) return other
     return DependencyManagement(this.dependencies + other.dependencies)
@@ -267,29 +267,29 @@ operator fun DependencyManagement.plus(other: DependencyManagement?): Dependency
 
 @Serializable(with = MavenPomPropertiesXmlSerializer::class)
 @XmlSerialName("Properties", POM_XML_NAMESPACE)
-data class Properties(
+internal data class Properties(
     val properties: Map<String, String?> = mapOf(),
 )
 
-operator fun Properties?.plus(other: Properties?): Properties? {
+internal operator fun Properties?.plus(other: Properties?): Properties? {
     if (this == null) return other
     return Properties(this.properties + (other?.properties ?: mapOf()))
 }
 
 @Serializable
 @XmlSerialName("dependencies", POM_XML_NAMESPACE)
-data class Dependencies(
+internal data class Dependencies(
     @XmlElement(true)
     val dependencies: List<Dependency>
 )
 
 @JvmName("plusNullable")
-operator fun Dependencies?.plus(other: Dependencies?): Dependencies? {
+internal operator fun Dependencies?.plus(other: Dependencies?): Dependencies? {
     if (this == null) return other
     return this + other
 }
 
-operator fun Dependencies.plus(other: Dependencies?): Dependencies {
+internal operator fun Dependencies.plus(other: Dependencies?): Dependencies {
     val allDependencies = this.dependencies + (other?.dependencies ?: emptyList())
     return Dependencies(
             // Keep the only dependency constraint per artifact
@@ -300,7 +300,7 @@ operator fun Dependencies.plus(other: Dependencies?): Dependencies {
 
 @Serializable
 @XmlSerialName("scm", POM_XML_NAMESPACE)
-data class Scm(
+internal data class Scm(
     @XmlElement(true)
     val connection: String? = null,
     @XmlElement(true)
@@ -313,7 +313,7 @@ data class Scm(
 
 @Serializable
 @XmlSerialName("dependency", POM_XML_NAMESPACE)
-data class Dependency(
+internal data class Dependency(
     @XmlElement(true)
     val groupId: String,
     @XmlElement(true)
@@ -332,21 +332,21 @@ data class Dependency(
 
 @Serializable
 @XmlSerialName("exclusions", POM_XML_NAMESPACE)
-data class Exclusions(
+internal data class Exclusions(
     @XmlElement(true)
     val exclusions: List<Exclusion>,
 )
 
 @Serializable
 @XmlSerialName("exclusion", POM_XML_NAMESPACE)
-data class Exclusion(
+internal data class Exclusion(
     @XmlElement(true)
     val groupId: String,
     @XmlElement(true)
     val artifactId: String,
 )
 
-fun Dependency.expandTemplates(project: Project): Dependency = copy(
+internal fun Dependency.expandTemplates(project: Project): Dependency = copy(
     groupId = groupId.expandTemplate(project),
     artifactId = artifactId.expandTemplate(project),
     version = version?.expandTemplate(project),

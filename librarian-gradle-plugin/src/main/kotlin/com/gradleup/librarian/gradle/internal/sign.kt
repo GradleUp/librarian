@@ -19,7 +19,7 @@ import java.io.OutputStream
  *
  * Heavily inspired by https://github.com/gradle/gradle/blob/124712713a77a6813e112ae1b68f248deca6a816/subprojects/security/src/main/java/org/gradle/plugins/signing/signatory/pgp/PgpSignatory.java
  */
-fun InputStream.sign(key: String, keyPassword: String): String {
+internal fun InputStream.sign(key: String, keyPassword: String): String {
   val inputStream = PGPUtil.getDecoderStream(key.byteInputStream())
   val secretKey: PGPSecretKey = JcaPGPSecretKeyRing(inputStream).secretKey
   val decryptor = BcPBESecretKeyDecryptorBuilder(BcPGPDigestCalculatorProvider()).build(keyPassword.toCharArray())
@@ -44,7 +44,7 @@ fun InputStream.sign(key: String, keyPassword: String): String {
   }
 }
 
-fun armor(block: (OutputStream) -> Unit): String {
+internal fun armor(block: (OutputStream) -> Unit): String {
   val os = ByteArrayOutputStream()
   val bufferedOutput = BCPGOutputStream(ArmoredOutputStream(os))
 
