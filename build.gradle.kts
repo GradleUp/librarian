@@ -15,15 +15,15 @@ buildscript {
 
 Librarian.root(project)
 
-tasks.register("librarianInstallNpm", Exec::class.java) {
+tasks.register("docsNpmInstall", Exec::class.java) {
   enabled = file("docs").exists()
 
   commandLine("npm", "ci")
   workingDir("docs")
 }
 
-tasks.register("librarianBuildDocs", Exec::class.java) {
-  dependsOn("librarianInstallNpm")
+tasks.register("docsNpmBuild", Exec::class.java) {
+  dependsOn("docsNpmInstall")
 
   enabled = file("docs").exists()
 
@@ -32,7 +32,7 @@ tasks.register("librarianBuildDocs", Exec::class.java) {
 }
 
 tasks.named("librarianStaticContent").configure {
-  dependsOn("librarianBuildDocs")
+  dependsOn("docsNpmBuild")
 
   val from = file("docs/dist")
   doLast {
