@@ -5,17 +5,18 @@ pluginManagement {
       google()
 
       exclusiveContent {
-        forRepository { maven("https://storage.googleapis.com/gradleup/m2") }
-        filter {
-          includeGroup("com.gradleup.librarian")
-        }
-      }
-
-      exclusiveContent {
         forRepository { maven("https://jitpack.io") }
         filter {
           includeGroup("com.github.kotlin-inquirer")
         }
+      }
+    }
+  }
+  repositories {
+    maven("https://storage.googleapis.com/gradleup/m2") {
+      content {
+        includeGroup("com.gradleup.librarian")
+        includeGroup("com.gradleup.compat.patrouille")
       }
     }
   }

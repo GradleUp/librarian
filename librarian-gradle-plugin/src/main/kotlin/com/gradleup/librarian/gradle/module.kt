@@ -3,6 +3,8 @@ package com.gradleup.librarian.gradle
 import com.gradleup.librarian.core.tooling.init.modulePropertiesFilename
 import com.gradleup.librarian.core.tooling.init.rootPropertiesFilename
 import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
+import compat.patrouille.configureJavaCompatibility
+import compat.patrouille.configureKotlinCompatibility
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
 import java.util.Properties
