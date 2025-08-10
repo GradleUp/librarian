@@ -14,4 +14,7 @@ fun Project.configureBcv(block: AbiValidationExtension.() -> Unit = {}) {
           block()
       }
   }
+  tasks.named("build") {
+    it.dependsOn("checkLegacyAbi")
+  }
 }
