@@ -12,6 +12,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.BufferedSource
+import java.net.URLEncoder
 import java.time.Duration
 import kotlin.math.pow
 import kotlin.time.Duration.Companion.seconds
@@ -57,9 +58,14 @@ internal class GcsTransport(
 
     val name = "${prefix}${path}"
     logger.info("Librarian: gcs-get $name")
+
     val url = getBaseUrl
       .newBuilder()
-      .addPathSegments(name)
+      /**
+       * Send the object name as a single segment as this is required by GCP:
+       * https://cloud.google.com/storage/docs/request-endpoints#encoding
+       */
+      .addPathSegment(name)
       .addQueryParameter("alt", "media")
       .build()
     val request = Request.Builder()
