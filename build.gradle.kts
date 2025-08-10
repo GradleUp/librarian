@@ -11,6 +11,7 @@ buildscript {
     classpath(libs.gratatouille.gradle.plugin)
     classpath(libs.ksp.gradle.plugin)
     classpath(libs.compat.patrouille.at.build.time)
+    classpath(libs.serialization.gradle.plugin)
   }
 }
 
