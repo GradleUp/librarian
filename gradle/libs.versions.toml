@@ -28,5 +28,5 @@ ksp-gradle-plugin = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plug
 librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.0.11-SNAPSHOT-0b7ec36d29d52e08df13ddcf4a4785326c128579"
 compat-patrouille-at-build-time = "com.gradleup.compat.patrouille:compat-patrouille-gradle-plugin:0.0.1-SNAPSHOT-1d4e71a5a5f58144cf1059213f12e95c55aeab81"
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kgp" }
-nmcp = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:1.0.3"
+nmcp = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:1.0.1"
 
