@@ -16,6 +16,8 @@ dependencies {
   implementation(libs.maven.sympathy)
   implementation(libs.okhttp)
   implementation(libs.google.auth)
+
+  api(libs.compat.patrouille)
   api(libs.nmcp)
 
   compileOnly(libs.gradle.api)

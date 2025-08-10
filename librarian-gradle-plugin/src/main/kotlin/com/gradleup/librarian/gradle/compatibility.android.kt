@@ -6,13 +6,6 @@ import org.gradle.api.Incubating
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 
-internal fun Project.androidJavaVersion(javaVersion: JavaVersion) {
-    androidExtension.compileOptions.apply {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
-    }
-}
-
 @Incubating
 internal fun Project.configureAndroidVersionInternal(minSdk: Int, compileSdk: Int, testTargetSdk: Int) {
     configureAndroidVersionInternal(minSdk, compileSdk)

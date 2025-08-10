@@ -21,6 +21,7 @@ mockserver = "com.apollographql.mockserver:apollo-mockserver:0.0.3"
 bouncycastle-prov = "org.bouncycastle:bcprov-jdk18on:1.78.1"
 bouncycastle-pg = "org.bouncycastle:bcpg-jdk18on:1.78.1"
 google-auth = "com.google.auth:google-auth-library-oauth2-http:1.19.0"
+compat-patrouille = "com.gradleup.compat.patrouille:compat-patrouille-gradle-plugin:0.0.0"
 
 gratatouille-gradle-plugin = "com.gradleup.gratatouille:com.gradleup.gratatouille.gradle.plugin:0.0.10"
 ksp-gradle-plugin = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.2.0-2.0.2"
