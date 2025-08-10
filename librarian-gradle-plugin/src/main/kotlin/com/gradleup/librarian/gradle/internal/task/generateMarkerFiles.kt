@@ -16,6 +16,7 @@ import gratatouille.tasks.GLogger
 import gratatouille.tasks.GOutputDirectory
 import gratatouille.tasks.GTask
 import java.io.File
+import java.time.Instant
 import java.util.zip.ZipInputStream
 
 
@@ -100,7 +101,13 @@ fun generateMarkerFiles(
             )
           )
 
-          val file = resolve("$artifactId-$mainVersion.pom")
+          val v = if (mainVersion.endsWith("-SNAPSHOT")) {
+            // Do like Gradle and replace -SNAPSHOT by a timestamp and a buildNumber of 1
+            "${mainVersion.substringBefore("-SNAPSHOT")}-${timestampNow()}-1"
+          } else {
+            mainVersion
+          }
+          val file = resolve("$artifactId-$v.pom")
           file.writeText(project.serialize())
           file.writeChecksums()
           if (privateKey != null) {
@@ -136,3 +143,8 @@ private fun File.writeChecksums() {
   }
 }
 
+internal fun timestampNow(): String {
+  val now = Instant.now().atZone(java.time.ZoneOffset.UTC)
+
+  return String.format("%04d%02d%02d.%02d%02d%02d", now.year, now.monthValue, now.dayOfMonth, now.hour, now.minute, now.second)
+}
