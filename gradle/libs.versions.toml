@@ -28,7 +28,7 @@ compat-patrouille = "com.gradleup.compat.patrouille:compat-patrouille-gradle-plu
 gratatouille-gradle-plugin = "com.gradleup.gratatouille:com.gradleup.gratatouille.gradle.plugin:0.0.10"
 ksp-gradle-plugin = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.2.0-2.0.2"
 librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.0.11-SNAPSHOT-0b7ec36d29d52e08df13ddcf4a4785326c128579"
-compat-patrouille-at-build-time = "com.gradleup.compat.patrouille:compat-patrouille-gradle-plugin:0.0.1-SNAPSHOT-1d4e71a5a5f58144cf1059213f12e95c55aeab81"
+compat-patrouille-at-build-time = "com.gradleup.compat.patrouille:compat-patrouille-gradle-plugin:0.0.1-SNAPSHOT-1915e48aadee473b40b4873db7f8df82057b7c59"
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kgp" }
 nmcp = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:1.0.3"
 
