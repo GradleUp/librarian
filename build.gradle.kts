@@ -10,6 +10,7 @@ buildscript {
     classpath(libs.librarian.gradle.plugin)
     classpath(libs.gratatouille.gradle.plugin)
     classpath(libs.ksp.gradle.plugin)
+    classpath(libs.compat.patrouille.at.build.time)
   }
 }
 
