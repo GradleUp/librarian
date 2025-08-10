@@ -37,11 +37,11 @@ class VersionContext(val version: String) {
     newText = fileContext.pluginIds.fold(newText) { acc, pluginId ->
       acc.replace(
         Regex("id\\(\"${Pattern.quote(pluginId)}\"\\).version\\([^)]*\\)"),
-        "id(\"$pluginId\").version($version)"
+        "id(\"$pluginId\").version(\"$version\")"
       )
         .replace(
           Regex("id\\(\"${Pattern.quote(pluginId)}\"\\) version\\([^)]*\\)"),
-          "id(\"$pluginId\") version($version)"
+          "id(\"$pluginId\") version(\"$version\")"
         )
     }
     newText = fileContext.regexContexts.fold(newText) { acc, regexContext ->
@@ -70,7 +70,7 @@ class FileContext {
    *
    * @param ga a group and artifact ids in the form `group:artifact`
    */
-  fun replaceArtifact(ga: String) {
+  fun replaceArtifactVersion(ga: String) {
     gas.add(ga)
   }
 
@@ -81,7 +81,7 @@ class FileContext {
    *
    * @param group a group
    */
-  fun replaceAllArtifacts(group: String) {
+  fun replaceAllArtifactVersions(group: String) {
     groups.add(group)
   }
 
@@ -91,7 +91,7 @@ class FileContext {
    * - `id("$pluginId").version(version)`
    * - `id("$pluginId") version(version)`
    */
-  fun replacePluginId(pluginId: String) {
+  fun replacePluginVersion(pluginId: String) {
     pluginIds.add(pluginId)
   }
 
