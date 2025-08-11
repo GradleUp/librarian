@@ -126,7 +126,7 @@ fun generateMarkerFiles(
 private fun String.asPath() = replace('.', '/')
 
 private fun File.writeSignature(privateKey: String, privateKeyPassword: String): File {
-  val ascFile = parentFile.resolve(name.substringBeforeLast('.') + ".asc")
+  val ascFile = parentFile.resolve("$name.asc")
   inputStream().use { inputStream ->
     ascFile.writeText(inputStream.sign(privateKey, privateKeyPassword))
   }
