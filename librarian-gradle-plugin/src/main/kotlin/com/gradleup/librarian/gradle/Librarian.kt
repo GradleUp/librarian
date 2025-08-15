@@ -14,8 +14,8 @@ class Librarian {
     }
 
     @Suppress("DEPRECATION")
-    fun module(project: Project, block: AbiValidationExtension.() -> Unit = {}) {
-      project.librarianModule(block)
+    fun module(project: Project) {
+      project.librarianModule()
     }
 
     fun registerGcsTask(
