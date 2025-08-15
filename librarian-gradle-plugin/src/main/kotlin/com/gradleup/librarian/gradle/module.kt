@@ -80,7 +80,7 @@ fun Project.librarianModule(block: AbiValidationExtension.() -> Unit = {}) {
   val rootProperties = rootProperties()
   val moduleProperties = moduleProperties()
 
-  configureBcv(block)
+  configureBcv(rootProperties, block)
 
   rootProperties.javaCompatibility()?.let {
     configureJavaCompatibility(it)
