@@ -17,6 +17,7 @@ dependencies {
   implementation(libs.maven.sympathy)
   implementation(libs.okhttp)
   implementation(libs.google.auth)
+  implementation(libs.bcv)
 
   implementation(libs.bouncycastle.pg)
   implementation(libs.bouncycastle.prov)
@@ -28,7 +29,7 @@ dependencies {
 
   compileOnly(libs.gradle.api)
   compileOnly(libs.agp)
-  implementation(libs.kgp.runtime.min)
+  compileOnly(libs.kgp.compile.only)
 
   testImplementation(kotlin("test"))
   testImplementation(gradleTestKit())
