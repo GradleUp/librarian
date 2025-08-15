@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import java.util.Properties
 
 @OptIn(ExperimentalAbiValidation::class)
-fun Project.configureBcv(properties: Properties?, block: AbiValidationExtension.() -> Unit = {}) {
+internal fun Project.configureBcv(properties: Properties?, block: AbiValidationExtension.() -> Unit = {}) {
   extensions.getByType(KotlinProjectExtension::class.java).apply {
     val abiValidation = this.extensions.findByName("abiValidation")
 
@@ -28,6 +28,6 @@ fun Project.configureBcv(properties: Properties?, block: AbiValidationExtension.
   }
 }
 
-internal fun Project.configureBcv(block: AbiValidationExtension.() -> Unit = {}) {
+fun Project.configureBcv(block: AbiValidationExtension.() -> Unit = {}) {
   configureBcv(null, block)
 }
