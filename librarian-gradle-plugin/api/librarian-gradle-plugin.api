@@ -1,6 +1,5 @@
 public final class com/gradleup/librarian/gradle/BcvKt {
-	public static final fun configureBcv (Lorg/gradle/api/Project;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun configureBcv$default (Lorg/gradle/api/Project;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun configureBcv (Lorg/gradle/api/Project;)V
 }
 
 public final class com/gradleup/librarian/gradle/CompatibilityKt {
