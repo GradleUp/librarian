@@ -8,14 +8,13 @@ import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import java.util.Properties
 
 @OptIn(ExperimentalAbiValidation::class)
-internal fun Project.configureBcv(properties: Properties?, block: AbiValidationExtension.() -> Unit = {}) {
+internal fun Project.configureBcv(properties: Properties?) {
   extensions.getByType(KotlinProjectExtension::class.java).apply {
     val abiValidation = this.extensions.findByName("abiValidation")
 
     if (abiValidation != null) {
       abiValidation as AbiValidationExtension
       abiValidation.enabled.set(true)
-      abiValidation.block()
 
       tasks.named("build") {
         it.dependsOn("checkLegacyAbi")
@@ -28,6 +27,6 @@ internal fun Project.configureBcv(properties: Properties?, block: AbiValidationE
   }
 }
 
-fun Project.configureBcv(block: AbiValidationExtension.() -> Unit = {}) {
-  configureBcv(null, block)
+fun Project.configureBcv() {
+  configureBcv(null)
 }

@@ -4,7 +4,6 @@ import com.gradleup.librarian.gradle.internal.task.registerPublishToGcsTask
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Provider
-import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
 
 class Librarian {
   companion object {
