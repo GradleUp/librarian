@@ -76,11 +76,11 @@ internal fun Project.moduleProperties(): Properties {
 }
 
 @Deprecated("use Librarian.module() instead.", ReplaceWith("Librarian.module(project)", "import com.gradleup.librarian.gradle.Librarian"))
-fun Project.librarianModule(block: AbiValidationExtension.() -> Unit = {}) {
+fun Project.librarianModule() {
   val rootProperties = rootProperties()
   val moduleProperties = moduleProperties()
 
-  configureBcv(rootProperties, block)
+  configureBcv(rootProperties)
 
   rootProperties.javaCompatibility()?.let {
     configureJavaCompatibility(it)
