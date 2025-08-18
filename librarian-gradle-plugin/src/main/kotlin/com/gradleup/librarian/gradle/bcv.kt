@@ -4,6 +4,7 @@ import com.gradleup.librarian.core.tooling.init.kotlinPluginVersion
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
+import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import java.util.Properties
 
@@ -13,8 +14,11 @@ internal fun Project.configureBcv(properties: Properties?) {
     val abiValidation = this.extensions.findByName("abiValidation")
 
     if (abiValidation != null) {
-      abiValidation as AbiValidationExtension
-      abiValidation.enabled.set(true)
+      when (abiValidation) {
+        is AbiValidationExtension -> abiValidation.enabled.set(true)
+        is AbiValidationMultiplatformExtension -> abiValidation.enabled.set(true)
+         else -> error("Librarian: unknown abiValidation extension type: '${abiValidation.javaClass.name}'")
+      }
 
       tasks.named("build") {
         it.dependsOn("checkLegacyAbi")
