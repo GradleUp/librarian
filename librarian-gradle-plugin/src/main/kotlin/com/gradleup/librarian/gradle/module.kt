@@ -80,7 +80,9 @@ fun Project.librarianModule() {
   val rootProperties = rootProperties()
   val moduleProperties = moduleProperties()
 
-  configureBcv(rootProperties)
+  if (moduleProperties.getProperty("bcv") != "false") {
+    configureBcv(rootProperties)
+  }
 
   rootProperties.javaCompatibility()?.let {
     configureJavaCompatibility(it)
