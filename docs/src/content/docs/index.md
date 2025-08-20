@@ -40,6 +40,8 @@ Just want the publishing without the GitHub workflows, use `librarian-publishing
 
 ## Get started
 
+### 1/4 Add it to your project
+
 Add the Gradle plugin to your root `build.gradle.kts`:
 
 ```kotlin
@@ -49,6 +51,8 @@ plugins {
 
 Librarian.root(project)
 ```
+
+### 2/4 Project-specific configuration
 
 Add a librarian.root.properties:
 
@@ -77,6 +81,8 @@ kotlin.compatibility=2.0.0
 kdoc.olderVersions=1.0.0,2.0.0
 ```
 
+### 3/4 Enable it on each library module
+
 Configure librarian in each module:
 
 ```kotlin
@@ -90,6 +96,8 @@ plugins {
 Librarian.module(project)
 ```
 
+### 4/4 Add the signing and publishing secrets
+
 Add secrets to your environment:
 
 ```
@@ -99,6 +107,8 @@ export LIBRARIAN_SIGNING_PRIVATE_KEY=...
 export LIBRARIAN_SIGNING_PRIVATE_KEY_PASSWORD=...
 export LIBRARIAN_GOOGLE_SERVICES_JSON=...
 ```
+
+### You can now publish the library!
 
 Publish your library:
 
