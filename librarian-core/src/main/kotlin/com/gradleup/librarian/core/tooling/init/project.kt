@@ -11,7 +11,7 @@ import kotlin.io.path.createDirectory
 import kotlin.io.path.writeBytes
 import kotlin.io.path.writeText
 
-val kotlinPluginVersion = "2.0.21"
+val librarianKotlinPluginVersion = "2.0.21"
 
 fun Path.initProject(
     multiplatform: Boolean,
@@ -30,7 +30,7 @@ fun Path.initProject(
     [libraries]
 
     [plugins]
-    kgp = { id = "org.jetbrains.kotlin.jvm", version = "$kotlinPluginVersion" }
+    kgp = { id = "org.jetbrains.kotlin.jvm", version = "$librarianKotlinPluginVersion" }
     librarian = { id = "com.gradleup.librarian", version = "$VERSION" }    
   """.trimIndent())
 

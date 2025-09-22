@@ -24,7 +24,7 @@ import com.gradleup.librarian.core.tooling.init.initChangelog
 import com.gradleup.librarian.core.tooling.init.initLibrarian
 import com.gradleup.librarian.core.tooling.init.initLicense
 import com.gradleup.librarian.core.tooling.init.initWriterside
-import com.gradleup.librarian.core.tooling.init.kotlinPluginVersion
+import com.gradleup.librarian.core.tooling.init.librarianKotlinPluginVersion
 import com.gradleup.librarian.core.tooling.init.toSupportedLicense
 import com.gradleup.librarian.core.tooling.gitHubRepositoryOrNull
 import java.nio.file.Files
@@ -97,7 +97,7 @@ internal class Init : CliktCommand(invokeWithoutSubcommand = true) {
         val pomDeveloper = KInquirer.promptInput("Maven pom developer", defaultDevelopers)
         val projectUrl = gitHubRepository?.url() ?: KInquirer.promptInput("Maven pom project url")
         val javaCompatibility = KInquirer.promptInput("Java compatibility", "8")
-        val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", kotlinPluginVersion)
+        val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", librarianKotlinPluginVersion)
 
         initLibrarian(
             javaCompatibility = javaCompatibility,

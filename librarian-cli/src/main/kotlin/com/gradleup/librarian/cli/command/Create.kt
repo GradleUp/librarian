@@ -19,7 +19,7 @@ import com.gradleup.librarian.core.tooling.init.initLibrarian
 import com.gradleup.librarian.core.tooling.init.initLicense
 import com.gradleup.librarian.core.tooling.init.initProject
 import com.gradleup.librarian.core.tooling.init.initWriterside
-import com.gradleup.librarian.core.tooling.init.kotlinPluginVersion
+import com.gradleup.librarian.core.tooling.init.librarianKotlinPluginVersion
 import com.gradleup.librarian.core.tooling.init.snapshotsBrowseUrl
 import com.gradleup.librarian.core.tooling.init.toSupportedLicense
 import com.gradleup.librarian.core.tooling.runCommand
@@ -68,7 +68,7 @@ internal class Create : CliktCommand() {
       val pomDeveloper = KInquirer.promptInput("Maven pom developer", copyrightHolder)
       val multiplatform = KInquirer.promptConfirm("Kotlin multiplatform project")
       val javaCompatibility = KInquirer.promptInput("Java compatibility", "8")
-      val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", kotlinPluginVersion)
+      val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", librarianKotlinPluginVersion)
       val indent = KInquirer.promptInput("Indent size", "4")
 
       val repository = GitHubRepository(gitHubProjectOwner, gitHubProjectName)

@@ -1,6 +1,6 @@
 package com.gradleup.librarian.gradle
 
-import com.gradleup.librarian.core.tooling.init.kotlinPluginVersion
+import com.gradleup.librarian.core.tooling.init.librarianKotlinPluginVersion
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
@@ -25,7 +25,7 @@ internal fun Project.configureBcv(properties: Properties?) {
       }
     } else {
       if (properties != null && properties.get("bcv.warn") != "false") {
-        println("Librarian: BCV is only configured by default if using KGP 2.2+ (currently detected is '$kotlinPluginVersion'). Set bcv.warn=false in your librarian.root.properties file to remove this warning.")
+        println("Librarian: BCV is only configured by default if using KGP 2.2+ (currently detected is '$librarianKotlinPluginVersion'). Set bcv.warn=false in your librarian.root.properties file to remove this warning.")
       }
     }
   }
