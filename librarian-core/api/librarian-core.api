@@ -163,7 +163,7 @@ public final class com/gradleup/librarian/core/tooling/init/MetadataKt {
 }
 
 public final class com/gradleup/librarian/core/tooling/init/ProjectKt {
-	public static final fun getKotlinPluginVersion ()Ljava/lang/String;
+	public static final fun getLibrarianKotlinPluginVersion ()Ljava/lang/String;
 	public static final fun initProject (Ljava/nio/file/Path;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/core/tooling/GitHubRepository;Z)V
 	public static final fun writeBinaryTo ([BLjava/nio/file/Path;)V
 }
