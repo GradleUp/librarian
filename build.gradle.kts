@@ -8,6 +8,7 @@ buildscript {
   dependencies {
     classpath(libs.kotlin.gradle.plugin)
     classpath(libs.librarian.gradle.plugin)
+    classpath(libs.nmcp.build.time)
     classpath(libs.gratatouille.gradle.plugin)
     classpath(libs.ksp.gradle.plugin)
     classpath(libs.compat.patrouille.at.build.time)

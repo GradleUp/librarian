@@ -17,6 +17,7 @@ pluginManagement {
       content {
         includeGroup("com.gradleup.librarian")
         includeGroup("com.gradleup.compat.patrouille")
+        includeGroup("com.gradleup.nmcp")
       }
     }
   }
