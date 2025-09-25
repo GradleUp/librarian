@@ -1,5 +1,16 @@
 # Next version (unreleased)
 
+# Version 0.2.0
+_2025-09-25_
+
+## What's Changed
+* Fix encoding GCS objects by @martinbonnin in https://github.com/GradleUp/librarian/pull/90
+* Markers: fix name of signature files by @martinbonnin in https://github.com/GradleUp/librarian/pull/91
+* Revert to KGP 2.0.0 as a minimum requirement by @martinbonnin in https://github.com/GradleUp/librarian/pull/92
+* Do not expose Kotlin 2.2 symbols in public API by @martinbonnin in https://github.com/GradleUp/librarian/pull/93
+* Rename symbol to disambiguate by @martinbonnin in https://github.com/GradleUp/librarian/pull/96
+* Update to Dokka 2.1.0-Beta by @martinbonnin in https://github.com/GradleUp/librarian/pull/97
+
 # version 0.1.0
 _2025-08-10_
 
