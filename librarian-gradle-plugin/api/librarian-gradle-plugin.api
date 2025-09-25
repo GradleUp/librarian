@@ -14,10 +14,10 @@ public final class com/gradleup/librarian/gradle/Coordinates {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/gradleup/librarian/gradle/DokkatooKt {
+public final class com/gradleup/librarian/gradle/DokkaKt {
 	public static final fun Coordinates (Ljava/lang/String;)Lcom/gradleup/librarian/gradle/Coordinates;
-	public static final fun configureDokkatoo (Lorg/gradle/api/Project;)V
-	public static final fun configureDokkatooAggregate (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/util/List;)Lorg/gradle/api/tasks/TaskProvider;
+	public static final fun configureDokka (Lorg/gradle/api/Project;)V
+	public static final fun configureDokkaAggregate (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/util/List;)Lorg/gradle/api/tasks/TaskProvider;
 }
 
 public final class com/gradleup/librarian/gradle/Gcp {

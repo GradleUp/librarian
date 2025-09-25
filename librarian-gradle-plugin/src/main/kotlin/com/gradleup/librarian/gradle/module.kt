@@ -6,7 +6,6 @@ import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
 import compat.patrouille.configureJavaCompatibility
 import compat.patrouille.configureKotlinCompatibility
 import org.gradle.api.Project
-import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
 import java.util.Properties
 
 internal fun Properties.javaCompatibility(): Int? {
@@ -99,7 +98,7 @@ fun Project.librarianModule() {
   }
   val publish = moduleProperties.publish() ?: true
   if (publish) {
-    configureDokkatoo()
+    configureDokka()
 
     configurePublishing(
       createMissingPublications = moduleProperties.createMissingPublications() ?: true,

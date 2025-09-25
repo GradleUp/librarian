@@ -10,7 +10,7 @@ plugins {
 Librarian.module(project)
 
 dependencies {
-  api(libs.dokkatoo)
+  api(libs.dokka)
 
   implementation(project(":librarian-core"))
   implementation(libs.coroutines)
