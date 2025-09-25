@@ -12,7 +12,7 @@ fun Project.librarianRoot() {
   val sonatype = Sonatype(project, properties)
   val signing = Signing(project, properties)
 
-  val kdocWithoutOlder = configureDokkatooAggregate(
+  val kdocWithoutOlder = configureDokkaAggregate(
     currentVersion = pomMetadata.version,
     olderVersions = properties.olderVersions()
   )
@@ -65,7 +65,7 @@ fun Project.librarianRoot() {
     kdocFiles = fileTree("build/dokka/html"),
     outputDirectory = layout.buildDirectory.dir("static")
   ).configure {
-    it.dependsOn("dokkatooGeneratePublicationHtml")
+    it.dependsOn("dokkaGeneratePublicationHtml")
   }
 
   tasks.register("librarianPublishToSnapshots") {
