@@ -12,20 +12,16 @@ If you have questions, please ask in the `#gradleup` channel in the [Gradle comm
 
 Librarian:
 
+* creates default publications based on applied plugins  
 * publishes your KMP/Android/JVM libraries to:
     * Maven Central releases
     * Maven Central snapshots 
     * [Google Cloud Storage](https://cloud.google.com/storage?hl=en)
-* generates versioned KDoc using [Dokka](https://github.com/Kotlin/dokka)
-* automates your workflows using GitHub actions:
-    * pull requests
-    * documentation
-    * SNAPSHOTs
-    * releases
+* publishes versioned KDoc using [Dokka](https://github.com/Kotlin/dokka)
 * generates a Kotlin property holding your library version
-* monitors your binary compatibility using Kotlin Binary Compatibility validator
+* configures Binary Compatibility validator
 * configures Java and Kotlin compatibility
-* ensure your libs can be consumed with maven
+* configures maven compatibility for your lib
 * and more!
 
 
