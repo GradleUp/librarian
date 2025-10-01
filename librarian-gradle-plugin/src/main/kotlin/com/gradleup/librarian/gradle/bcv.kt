@@ -23,6 +23,15 @@ internal fun Project.configureBcv(properties: Properties?) {
       tasks.named("build") {
         it.dependsOn("checkLegacyAbi")
       }
+      /**
+       * Compatibility tasks to not break the brain muscle
+       */
+      tasks.register("apiDump") {
+        it.dependsOn("updateLegacyAbi")
+      }
+      tasks.register("apiCheck") {
+        it.dependsOn("updateLegacyAbi")
+      }
     } else {
       if (properties != null && properties.get("bcv.warn") != "false") {
         println("Librarian: BCV is only configured by default if using KGP 2.2+ (currently detected is '$librarianKotlinPluginVersion'). Set bcv.warn=false in your librarian.root.properties file to remove this warning.")
