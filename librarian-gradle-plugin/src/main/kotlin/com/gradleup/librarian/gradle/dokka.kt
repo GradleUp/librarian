@@ -1,72 +1,16 @@
 package com.gradleup.librarian.gradle
 
-import com.gradleup.librarian.gradle.internal.findGradleProperty
 import org.gradle.api.Project
-import org.gradle.api.UnknownTaskException
-import org.gradle.api.attributes.Usage
 import org.gradle.api.internal.file.FileOperations
+import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.dokka.gradle.DokkaExtension
-import org.jetbrains.dokka.gradle.engine.plugins.DokkaHtmlPluginParameters
 import org.jetbrains.dokka.gradle.engine.plugins.DokkaVersioningPluginParameters
 import org.jetbrains.dokka.gradle.tasks.DokkaGenerateTask
 import javax.inject.Inject
 
-class KdocAggregate(
-  val currentVersion: String,
-  val olderVersions: List<Coordinates>,
-) {
-  class Builder internal constructor(internal val project: Project) {
-    var olderVersions: List<Coordinates>? = null
-    var currentVersion: String? = null
-
-    fun fromGradleProperties() {
-      currentVersion = project.findGradleProperty("librarian.pom.version")
-      olderVersions = project.findGradleProperty("librarian.kdoc.olderVersions")
-        ?.split(",")
-        .orEmpty()
-        .filter {
-          it.isNotEmpty()
-        }
-        .map {
-          Coordinates(it)
-        }
-    }
-
-    fun build(): KdocAggregate {
-      return KdocAggregate(
-        currentVersion = currentVersion ?: error("Librarian: 'currentVersion' is required."),
-        olderVersions = olderVersions.orEmpty()
-      )
-    }
-  }
-}
-
-internal fun Project.configureDokkaHtml(block: DokkaHtmlPluginParameters.() -> Unit = {}) {
-  extensions.getByType(DokkaExtension::class.java).apply {
-    tasks.withType(DokkaGenerateTask::class.java).configureEach {
-      it.workerIsolation.set(ClassLoaderIsolation())
-    }
-
-    dokkaSourceSets.configureEach {
-      it.includes.from("README.md")
-    }
-    pluginsConfiguration.getByName("html") {
-      (it as DokkaHtmlPluginParameters).block()
-    }
-
-    // Workaround for https://github.com/adamko-dev/dokkatoo/issues/165
-    configurations.configureEach {
-      if (it.name.lowercase().contains("dokkaHtmlPublicationPluginClasspathApiOnlyConsumable".lowercase())) {
-        it.attributes {
-          it.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage::class.java, "poison"))
-        }
-      }
-    }
-  }
-}
 
 class Coordinates(val groupId: String, val artifactId: String, val version: String) {
   override fun toString(): String {
@@ -94,15 +38,20 @@ fun Project.configureDokka() = configureDokkaInternal {
   }
 }
 
-fun Project.configureDokkaAggregate(currentVersion: String, olderVersions: List<Coordinates>): TaskProvider<Jar> {
+fun Project.configureDokkaAggregate(
+  currentVersion: String,
+  olderVersions: List<Coordinates>,
+  aggregateConfiguration: String,
+  includeSelf: Boolean,
+): TaskProvider<Jar> {
   val jar = configureDokkaInternal {
     dependencies.add(
-      "dokkaPluginHtml",
-      "org.jetbrains.dokka:versioning-plugin:${this.dokkaEngineVersion}"
+      "dokkaHtmlPlugin",
+      "org.jetbrains.dokka:versioning-plugin:${this.dokkaEngineVersion.get()}"
     )
     dependencies.add(
-      "dokkaPluginHtml",
-      "org.jetbrains.dokka:all-modules-page-plugin:${this.dokkaEngineVersion}"
+      "dokkaHtmlPlugin",
+      "org.jetbrains.dokka:all-modules-page-plugin:${this.dokkaEngineVersion.get()}"
     )
 
     val kdocVersionTasks = olderVersions.map { version ->
@@ -156,7 +105,20 @@ fun Project.configureDokkaAggregate(currentVersion: String, olderVersions: List<
   }
 
   allprojects {
+    if (it == this && !includeSelf) {
+      return@allprojects
+    }
     dependencies.add("dokka", it)
+  }
+
+  configurePublishingInternal {
+    publications.create("kdoc", MavenPublication::class.java) {
+      it.artifact(jar)
+    }
+  }
+
+  allprojects.forEach {
+    configurations.getByName(aggregateConfiguration).dependencies.add(dependencies.create(it))
   }
 
   return jar
@@ -165,12 +127,3 @@ fun Project.configureDokkaAggregate(currentVersion: String, olderVersions: List<
 private abstract class FileOperationsHolder @Inject constructor(val fileOperations: FileOperations)
 
 private val kdocWithoutOlder = "kdocWithoutOlder"
-
-internal fun Project.containsTask(name: String): Boolean {
-  return try {
-    tasks.named(name)
-    true
-  } catch (e: UnknownTaskException) {
-    false
-  }
-}

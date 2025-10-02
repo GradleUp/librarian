@@ -3,28 +3,53 @@ package com.gradleup.librarian.gradle
 import com.gradleup.librarian.gradle.internal.task.registerGenerateStaticContentTaskTask
 import nmcp.NmcpAggregationExtension
 import org.gradle.api.Project
-import org.gradle.api.publish.maven.MavenPublication
 
 @Deprecated("use Librarian.root() instead", ReplaceWith("Librarian.root(project)", "import com.gradleup.librarian.gradle.Librarian"))
 fun Project.librarianRoot() {
-  val properties = project.rootProperties()
-  val pomMetadata = PomMetadata(properties.kdocArtifactId(), properties)
-  val sonatype = Sonatype(project, properties)
-  val signing = Signing(project, properties)
+  val rootProperties = project.rootProperties()
+  val pomMetadata = PomMetadata(rootProperties.kdocArtifactId(), rootProperties)
+  val sonatype = Sonatype(project, rootProperties)
+  val signing = Signing(project)
+  val gcs = Gcs(rootProperties)
+  val kdoc = Kdoc(rootProperties)
 
-  val kdocWithoutOlder = configureDokkaAggregate(
-    currentVersion = pomMetadata.version,
-    olderVersions = properties.olderVersions()
+  librarianRoot(
+    group = rootProperties.getRequiredProperty("pom.version"),
+    version = updateVersionAccordingToEnvironment(rootProperties.getRequiredProperty("pom.version")),
+    publishing = Publishing(
+      pomMetadata = pomMetadata,
+      createMissingPublications = false,
+      publishPlatformArtifactsInRootModule = false,
+      emptyJarLink = null
+    ),
+    sonatype = sonatype,
+    signing = signing,
+    gcs = gcs,
+    kdoc = kdoc
   )
-  configurePublishingInternal {
-    publications.create("kdoc", MavenPublication::class.java) {
-      it.artifact(kdocWithoutOlder)
-    }
-  }
-  configurePom(pomMetadata)
-  configureSigning(signing)
+}
+
+
+fun Project.librarianRoot(
+  group: String,
+  version: String,
+  publishing: Publishing,
+  signing: Signing,
+  sonatype: Sonatype,
+  gcs: Gcs?,
+  kdoc: Kdoc,
+) {
+  librarianModule(group, version, null, null, null, null, publishing, signing)
 
   pluginManager.apply("com.gradleup.nmcp.aggregation")
+  pluginManager.apply("com.gradleup.nmcp")
+
+  configureDokkaAggregate(
+    currentVersion = version,
+    olderVersions = kdoc.olderVersions,
+    aggregateConfiguration = "nmcpAggregation",
+    includeSelf = kdoc.includeSelf,
+  )
 
   val nmcpAggregation = extensions.getByType(NmcpAggregationExtension::class.java)
   nmcpAggregation.apply {
@@ -32,35 +57,24 @@ fun Project.librarianRoot() {
       it.username.set(sonatype.username)
       it.password.set(sonatype.password)
       it.publishingType.set(sonatype.publishingType)
+      it.validationTimeout.set(sonatype.validationTimeout)
+      it.publishingTimeout.set(sonatype.publishingTimeout)
     }
   }
 
-  // Apply nmcp here as well for the kdocs
-  pluginManager.apply("com.gradleup.nmcp")
-  
-  /**
-   * This doesn't use `nmcpAggregation.publishAllProjectsProbablyBreakingProjectIsolation()`
-   * because the individual projects have the plugin applied already so we can do this in
-   * a less breaking way (TBC whether this is still breaking or not. I think not but nt 100% sure)
-   */
-  allprojects.forEach {
-    configurations.getByName("nmcpAggregation").dependencies.add(dependencies.create(it))
-  }
-
-  val gcs = Gcs(properties)
-  if (gcs.bucket != null) {
+  if (gcs != null) {
     Librarian.registerGcsTask(
       this,
       provider { gcs.bucket },
-      provider { gcs.prefix },
-      provider { System.getenv("LIBRARIAN_GOOGLE_SERVICES_JSON") },
+      provider { gcs.prefix.trimEnd('/') + '/' },
+      provider { gcs.serviceAccountJson },
       nmcpAggregation.allFiles
     )
   }
 
-
   registerGenerateStaticContentTaskTask(
     taskName = "librarianStaticContent",
+    taskDescription = "Generates `static/m2` and `static/kdoc` folders containing a SNAPSHOT and the KDoc respectively.",
     repositoryFiles = nmcpAggregation.allFiles,
     kdocFiles = fileTree("build/dokka/html"),
     outputDirectory = layout.buildDirectory.dir("static")

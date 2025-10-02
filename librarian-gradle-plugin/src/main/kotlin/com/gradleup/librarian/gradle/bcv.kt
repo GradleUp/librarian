@@ -6,17 +6,26 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
-import java.util.Properties
 
 @OptIn(ExperimentalAbiValidation::class)
-internal fun Project.configureBcv(properties: Properties?) {
+fun Project.configureBcv(warnIfMissing: Boolean = true, block: (variantSpec: Any) -> Unit = {}) {
   extensions.getByType(KotlinProjectExtension::class.java).apply {
     val abiValidation = this.extensions.findByName("abiValidation")
 
     if (abiValidation != null) {
       when (abiValidation) {
-        is AbiValidationExtension -> abiValidation.enabled.set(true)
-        is AbiValidationMultiplatformExtension -> abiValidation.enabled.set(true)
+        is AbiValidationExtension -> {
+          abiValidation.enabled.set(true)
+          abiValidation.variants.configureEach {
+            block(it)
+          }
+        }
+        is AbiValidationMultiplatformExtension -> {
+          abiValidation.enabled.set(true)
+          abiValidation.variants.configureEach {
+            block(it)
+          }
+        }
          else -> error("Librarian: unknown abiValidation extension type: '${abiValidation.javaClass.name}'")
       }
 
@@ -33,13 +42,9 @@ internal fun Project.configureBcv(properties: Properties?) {
         it.dependsOn("updateLegacyAbi")
       }
     } else {
-      if (properties != null && properties.get("bcv.warn") != "false") {
+      if (warnIfMissing) {
         println("Librarian: BCV is only configured by default if using KGP 2.2+ (currently detected is '$librarianKotlinPluginVersion'). Set bcv.warn=false in your librarian.root.properties file to remove this warning.")
       }
     }
   }
-}
-
-fun Project.configureBcv() {
-  configureBcv(null)
 }
