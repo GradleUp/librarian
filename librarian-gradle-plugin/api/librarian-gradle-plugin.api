@@ -1,5 +1,12 @@
+public final class com/gradleup/librarian/gradle/Bcv {
+	public fun <init> (ZLkotlin/jvm/functions/Function1;)V
+	public final fun getVariantSpec ()Lkotlin/jvm/functions/Function1;
+	public final fun getWarnIfMissing ()Z
+}
+
 public final class com/gradleup/librarian/gradle/BcvKt {
-	public static final fun configureBcv (Lorg/gradle/api/Project;)V
+	public static final fun configureBcv (Lorg/gradle/api/Project;ZLkotlin/jvm/functions/Function1;)V
+	public static synthetic fun configureBcv$default (Lorg/gradle/api/Project;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class com/gradleup/librarian/gradle/CompatibilityKt {
@@ -17,13 +24,14 @@ public final class com/gradleup/librarian/gradle/Coordinates {
 public final class com/gradleup/librarian/gradle/DokkaKt {
 	public static final fun Coordinates (Ljava/lang/String;)Lcom/gradleup/librarian/gradle/Coordinates;
 	public static final fun configureDokka (Lorg/gradle/api/Project;)V
-	public static final fun configureDokkaAggregate (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/util/List;)Lorg/gradle/api/tasks/TaskProvider;
+	public static final fun configureDokkaAggregate (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Z)Lorg/gradle/api/tasks/TaskProvider;
 }
 
-public final class com/gradleup/librarian/gradle/Gcp {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+public final class com/gradleup/librarian/gradle/Gcs {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun getBucket ()Ljava/lang/String;
 	public final fun getPrefix ()Ljava/lang/String;
+	public final fun getServiceAccountJson ()Ljava/lang/String;
 }
 
 public abstract class com/gradleup/librarian/gradle/GeneratePluginVersion : org/gradle/api/DefaultTask {
@@ -38,19 +46,10 @@ public final class com/gradleup/librarian/gradle/GeneratedVersionKt {
 	public static final fun configureGeneratedVersion (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;)V
 }
 
-public final class com/gradleup/librarian/gradle/KdocAggregate {
-	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
-	public final fun getCurrentVersion ()Ljava/lang/String;
+public final class com/gradleup/librarian/gradle/Kdoc {
+	public fun <init> (ZLjava/util/List;)V
+	public final fun getIncludeSelf ()Z
 	public final fun getOlderVersions ()Ljava/util/List;
-}
-
-public final class com/gradleup/librarian/gradle/KdocAggregate$Builder {
-	public final fun build ()Lcom/gradleup/librarian/gradle/KdocAggregate;
-	public final fun fromGradleProperties ()V
-	public final fun getCurrentVersion ()Ljava/lang/String;
-	public final fun getOlderVersions ()Ljava/util/List;
-	public final fun setCurrentVersion (Ljava/lang/String;)V
-	public final fun setOlderVersions (Ljava/util/List;)V
 }
 
 public final class com/gradleup/librarian/gradle/KmpKt {
@@ -79,6 +78,7 @@ public final class com/gradleup/librarian/gradle/MavenKt {
 
 public final class com/gradleup/librarian/gradle/ModuleKt {
 	public static final fun librarianModule (Lorg/gradle/api/Project;)V
+	public static final fun librarianModule (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Lcom/gradleup/librarian/gradle/Bcv;Ljava/lang/String;Lcom/gradleup/librarian/gradle/Publishing;Lcom/gradleup/librarian/gradle/Signing;)V
 }
 
 public abstract class com/gradleup/librarian/gradle/Plugin : org/gradle/api/Plugin {
@@ -88,31 +88,39 @@ public abstract class com/gradleup/librarian/gradle/Plugin : org/gradle/api/Plug
 }
 
 public final class com/gradleup/librarian/gradle/PomMetadata {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun getArtifactId ()Ljava/lang/String;
 	public final fun getDescription ()Ljava/lang/String;
 	public final fun getDeveloper ()Ljava/lang/String;
-	public final fun getGroupId ()Ljava/lang/String;
 	public final fun getLicense ()Ljava/lang/String;
 	public final fun getVcsUrl ()Ljava/lang/String;
-	public final fun getVersion ()Ljava/lang/String;
 }
 
 public final class com/gradleup/librarian/gradle/Project_kotlinKt {
 	public static final fun getKotlinExtension (Lorg/gradle/api/Project;)Lorg/jetbrains/kotlin/gradle/dsl/KotlinProjectExtension;
 }
 
+public final class com/gradleup/librarian/gradle/Publishing {
+	public fun <init> (ZZLcom/gradleup/librarian/gradle/PomMetadata;Ljava/lang/String;)V
+	public final fun getCreateMissingPublications ()Z
+	public final fun getEmptyJarLink ()Ljava/lang/String;
+	public final fun getPomMetadata ()Lcom/gradleup/librarian/gradle/PomMetadata;
+	public final fun getPublishPlatformArtifactsInRootModule ()Z
+}
+
 public final class com/gradleup/librarian/gradle/PublishingKt {
-	public static final fun Gcs (Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/Gcp;
+	public static final fun Gcs (Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/Gcs;
+	public static final fun Kdoc (Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/Kdoc;
 	public static final fun PomMetadata (Ljava/lang/String;Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/PomMetadata;
 	public static final fun configurePom (Lorg/gradle/api/Project;Lcom/gradleup/librarian/gradle/PomMetadata;)V
-	public static final fun configurePublishing (Lorg/gradle/api/Project;ZZLcom/gradleup/librarian/gradle/PomMetadata;Lcom/gradleup/librarian/gradle/Signing;)V
+	public static final fun configurePublishing (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;ZZLcom/gradleup/librarian/gradle/PomMetadata;Lcom/gradleup/librarian/gradle/Signing;Ljava/lang/String;)V
 	public static final fun createMissingPublications (Lorg/gradle/api/Project;Ljava/lang/String;)V
 	public static synthetic fun createMissingPublications$default (Lorg/gradle/api/Project;Ljava/lang/String;ILjava/lang/Object;)V
 }
 
 public final class com/gradleup/librarian/gradle/RootKt {
 	public static final fun librarianRoot (Lorg/gradle/api/Project;)V
+	public static final fun librarianRoot (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;Lcom/gradleup/librarian/gradle/Publishing;Lcom/gradleup/librarian/gradle/Signing;Lcom/gradleup/librarian/gradle/Sonatype;Lcom/gradleup/librarian/gradle/Gcs;Lcom/gradleup/librarian/gradle/Kdoc;)V
 }
 
 public final class com/gradleup/librarian/gradle/Signing {
@@ -126,11 +134,12 @@ public final class com/gradleup/librarian/gradle/SigningKt {
 }
 
 public final class com/gradleup/librarian/gradle/Sonatype {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public final fun getBaseUrl ()Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/Duration;Ljava/time/Duration;)V
 	public final fun getPassword ()Ljava/lang/String;
+	public final fun getPublishingTimeout ()Ljava/time/Duration;
 	public final fun getPublishingType ()Ljava/lang/String;
 	public final fun getUsername ()Ljava/lang/String;
+	public final fun getValidationTimeout ()Ljava/time/Duration;
 }
 
 public final class com/gradleup/librarian/gradle/internal/Project_androidKt {
