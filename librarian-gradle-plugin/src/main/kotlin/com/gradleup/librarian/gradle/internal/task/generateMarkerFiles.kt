@@ -112,7 +112,7 @@ fun generateMarkerFiles(
           file.writeChecksums()
           if (privateKey != null) {
             check(privateKeyPassword != null) {
-              "Librarian: a signing private key was set with its corresponding password."
+              "Librarian: a signing private key was set but not its password."
             }
             val ascFile = file.writeSignature(privateKey, privateKeyPassword)
             ascFile.writeChecksums()

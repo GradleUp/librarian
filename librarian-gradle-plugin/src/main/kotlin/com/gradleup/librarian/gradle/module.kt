@@ -6,14 +6,15 @@ import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
 import compat.patrouille.configureJavaCompatibility
 import compat.patrouille.configureKotlinCompatibility
 import org.gradle.api.Project
+import java.time.Duration
 import java.util.Properties
 
-internal fun Properties.javaCompatibility(): Int? {
-  return getProperty("java.compatibility")?.toInt()
+internal fun Properties.javaCompatibility(): Int {
+  return getRequiredProperty("java.compatibility").toInt()
 }
 
-internal fun Properties.kotlinCompatibility(): String? {
-  return getProperty("kotlin.compatibility")
+internal fun Properties.kotlinCompatibility(): String {
+  return getRequiredProperty("kotlin.compatibility")
 }
 
 internal fun Properties.versionPackageName(): String? {
@@ -28,7 +29,6 @@ internal fun Properties.createMissingPublications(): Boolean? {
   return getProperty("createMissingPublications")?.toBoolean()
 }
 
-
 internal fun Properties.kdocArtifactId(): String {
   return getProperty("kdoc.artifactId") ?: "kdoc"
 }
@@ -42,10 +42,6 @@ internal fun Properties.olderVersions(): List<Coordinates> {
     .map {
       Coordinates(it)
     }
-}
-
-internal fun Project.configureMavenFriendlyDependencies() {
-  pluginManager.apply("com.gradleup.maven-sympathy")
 }
 
 internal fun Project.rootProperties(): Properties {
@@ -74,69 +70,128 @@ internal fun Project.moduleProperties(): Properties {
   }
 }
 
-@Deprecated("use Librarian.module() instead.", ReplaceWith("Librarian.module(project)", "import com.gradleup.librarian.gradle.Librarian"))
+@Deprecated(
+  "use Librarian.module() instead.",
+  ReplaceWith("Librarian.module(project)", "import com.gradleup.librarian.gradle.Librarian")
+)
 fun Project.librarianModule() {
   val rootProperties = rootProperties()
   val moduleProperties = moduleProperties()
 
-  if (moduleProperties.getProperty("bcv") != "false") {
-    configureBcv(rootProperties)
+  val bcv = if (moduleProperties.getProperty("bcv") != "false") {
+    Bcv(rootProperties.get("bcv.warn") != "false") {}
+  } else {
+    null
   }
 
-  rootProperties.javaCompatibility()?.let {
-    configureJavaCompatibility(it)
-  }
-
-  rootProperties.kotlinCompatibility()?.let {
-    configureKotlinCompatibility(it)
-  }
-
-  val pomMetadata = PomMetadata(project.name, rootProperties)
-
-  moduleProperties.versionPackageName()?.let {
-    configureGeneratedVersion(it, pomMetadata.version)
-  }
   val publish = moduleProperties.publish() ?: true
-  if (publish) {
-    configureDokka()
 
-    configurePublishing(
+  librarianModule(
+    group = rootProperties.getRequiredProperty("pom.groupId"),
+    version = updateVersionAccordingToEnvironment(rootProperties.getRequiredProperty("pom.version")),
+    jvmTarget = rootProperties.javaCompatibility(),
+    kotlinTarget = rootProperties.kotlinCompatibility(),
+    bcv = bcv,
+    versionPackageName = moduleProperties.versionPackageName(),
+    publishing = Publishing(
       createMissingPublications = moduleProperties.createMissingPublications() ?: true,
       publishPlatformArtifactsInRootModule = true,
-      pomMetadata = pomMetadata,
-      signing = Signing(project, rootProperties),
+      pomMetadata = PomMetadata(project.name, rootProperties),
+      emptyJarLink = "https://www.apollographql.com/docs/kotlin/kdoc/index.html"
+    ).takeIf{publish},
+    signing = Signing(project),
+  )
+}
+
+class Bcv(
+  val warnIfMissing: Boolean,
+  val variantSpec: (variantSpec: Any) -> Unit
+)
+
+class Publishing(
+  val createMissingPublications: Boolean,
+  val publishPlatformArtifactsInRootModule: Boolean,
+  val pomMetadata: PomMetadata,
+  val emptyJarLink: String?
+)
+
+fun Project.librarianModule(
+  group: String,
+  version: String,
+  jvmTarget: Int?,
+  kotlinTarget: String?,
+  bcv: Bcv?,
+  versionPackageName: String?,
+  publishing: Publishing?,
+  signing: Signing?,
+) {
+  /**
+   * Set `project.group` and version. This is needed when including builds
+   */
+  this.group = group
+  this.version = version
+
+  jvmTarget?.let(::configureJavaCompatibility)
+  kotlinTarget?.let(::configureKotlinCompatibility)
+
+  if (versionPackageName != null) {
+    configureGeneratedVersion(versionPackageName, version)
+  }
+
+  if (publishing != null) {
+    configurePublishing(
+      group = group,
+      version = version,
+      createMissingPublications = publishing.createMissingPublications,
+      publishPlatformArtifactsInRootModule = publishing.publishPlatformArtifactsInRootModule,
+      pomMetadata = publishing.pomMetadata,
+      signing = signing,
+      emptyJarLink = publishing.emptyJarLink
     )
+    /**
+     * Only configure BCV for projects that are published.
+     * This is because we don't need to track projects that do not get published.
+     */
+    if (bcv != null) {
+      configureBcv(bcv.warnIfMissing, bcv.variantSpec)
+    }
+    /**
+     * Only configure signing for projects that are published.
+     * This is because signing needs the 'publishing' plugin applied.
+     */
+    if (signing != null) {
+      configureSigning(signing)
+    }
+    /**
+     * Only configure Dokka for projects that are published.
+     * This is because we don't want those in the aggregate KDoc output.
+     */
+    configureDokka()
   }
 }
 
 internal fun Sonatype(project: Project, properties: Properties): Sonatype {
-  val usernameVariable =
-    properties.getProperty("sonatype.username.environmentVariable") ?: "LIBRARIAN_SONATYPE_USERNAME"
-  val passwordVariable =
-    properties.getProperty("sonatype.password.environmentVariable") ?: "LIBRARIAN_SONATYPE_PASSWORD"
-
   check(properties.getProperty("sonatype.release") == null) {
     "Librarian: sonatype.release is not used anymore, use sonatype.publishingType instead."
   }
   check(properties.getProperty("sonatype.backend") == null) {
     "Librarian: sonatype.backend is not used anymore, sonatype publishing is always done on the central portal."
   }
+  check(properties.getProperty("sonatype.baseUrl") == null) {
+    "Librarian: sonatype.baseUrl is not used anymore."
+  }
   return Sonatype(
-    username = project.findEnvironmentVariable(usernameVariable),
-    password = project.findEnvironmentVariable(passwordVariable),
+    username = project.findEnvironmentVariable("LIBRARIAN_SONATYPE_USERNAME"),
+    password = project.findEnvironmentVariable("LIBRARIAN_SONATYPE_PASSWORD"),
     publishingType = properties.getProperty("sonatype.publishingType"),
-    baseUrl = properties.getProperty("sonatype.baseUrl")?.takeIf { it.isNotBlank() }
+    validationTimeout = properties.getProperty("sonatype.validationTimeout")?.let(Duration::parse),
+    publishingTimeout = properties.getProperty("sonatype.publishingTimeout")?.let(Duration::parse),
   )
 }
 
-internal fun Signing(project: Project, properties: Properties): Signing {
-  val usernameVariable =
-    properties.getProperty("signing.privateKey.environmentVariable") ?: "LIBRARIAN_SIGNING_PRIVATE_KEY"
-  val passwordVariable =
-    properties.getProperty("signing.privateKeyPassword.environmentVariable") ?: "LIBRARIAN_SIGNING_PRIVATE_KEY_PASSWORD"
+internal fun Signing(project: Project): Signing {
   return Signing(
-    privateKey = project.findEnvironmentVariable(usernameVariable),
-    privateKeyPassword = project.findEnvironmentVariable(passwordVariable)
+    privateKey = project.findEnvironmentVariable("LIBRARIAN_SIGNING_PRIVATE_KEY"),
+    privateKeyPassword = project.findEnvironmentVariable("LIBRARIAN_SIGNING_PRIVATE_KEY_PASSWORD")
   )
 }
-

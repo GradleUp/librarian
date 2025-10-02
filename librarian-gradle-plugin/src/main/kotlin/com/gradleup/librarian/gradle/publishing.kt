@@ -11,6 +11,7 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
+import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -27,35 +28,48 @@ class Sonatype(
   val username: String?,
   val password: String?,
   val publishingType: String?,
-  val baseUrl: String?
+  val validationTimeout: Duration?,
+  val publishingTimeout: Duration?
 )
 
-class Gcp(
-  val bucket: String?,
-  val prefix: String // The prefix, always ending with '/'
+class Gcs(
+  val serviceAccountJson: String,
+  val bucket: String,
+  val prefix: String // The prefix. A trailing '/' will be added if not present
 )
 
-fun Gcs(properties: Properties): Gcp {
-  return Gcp(
-    properties.getProperty("gcs.bucket"),
-    properties.getProperty("gcs.prefix").orEmpty().trimEnd('/') + '/',
+fun Gcs(properties: Properties): Gcs? {
+  return System.getenv("LIBRARIAN_GOOGLE_SERVICES_JSON")?.let{
+    Gcs(
+      it,
+      properties.getProperty("gcs.bucket"),
+      properties.getProperty("gcs.prefix"),
+    )
+  }
+}
+
+class Kdoc(
+  val includeSelf: Boolean,
+  val olderVersions: List<Coordinates>,
+)
+
+fun Kdoc(properties: Properties): Kdoc {
+  return Kdoc(
+    false,
+    properties.olderVersions(),
   )
 }
 
-fun PomMetadata(artifactId: String, properties: Properties): PomMetadata {
-  val version = updateVersionAccordingToEnvironment(properties.getRequiredProperty("pom.version"))
-
+fun PomMetadata(artifactId: String?, properties: Properties): PomMetadata {
   check(properties.getProperty("pom.licenseUrl") == null) {
     "licenseUrl is not used anymore"
   }
   return PomMetadata(
-          groupId = properties.getRequiredProperty("pom.groupId"),
-          artifactId = artifactId,
-          version = version,
-          description = properties.getRequiredProperty("pom.description"),
-          vcsUrl = properties.getRequiredProperty("pom.vcsUrl"),
-          developer = properties.getRequiredProperty("pom.developer"),
-          license = properties.getRequiredProperty("pom.license"),
+    artifactId = artifactId,
+    description = properties.getRequiredProperty("pom.description"),
+    vcsUrl = properties.getRequiredProperty("pom.vcsUrl"),
+    developer = properties.getRequiredProperty("pom.developer"),
+    license = properties.getRequiredProperty("pom.license"),
   )
 }
 
@@ -68,36 +82,36 @@ internal fun Properties.getRequiredProperty(name: String): String {
  * This metadata is the same in all modules
  */
 class PomMetadata(
-    val groupId: String,
-    val artifactId: String,
-    val version: String,
-    val description: String,
-    val vcsUrl: String,
-    val developer: String,
-    val license: String,
+  val artifactId: String?,
+  val description: String,
+  val vcsUrl: String,
+  val developer: String,
+  val license: String,
 )
 
 fun Project.configurePublishing(
+  group: String,
+  version: String,
   createMissingPublications: Boolean,
   publishPlatformArtifactsInRootModule: Boolean,
   pomMetadata: PomMetadata,
-  signing: Signing,
+  signing: Signing?,
+  emptyJarLink: String?
 ) {
   if (createMissingPublications) {
-    createMissingPublications(pomMetadata.vcsUrl)
+    createMissingPublications(emptyJarLink)
   }
   configurePom(pomMetadata)
   if (publishPlatformArtifactsInRootModule) {
     publishPlatformArtifactsInRootModule()
   }
-  configureSigning(signing)
 
   pluginManager.apply("com.gradleup.nmcp")
 
-  configureMarkers(pomMetadata, signing)
+  configureMarkers(group, version, pomMetadata, signing)
 }
 
-private fun Project.configureMarkers(pomMetadata: PomMetadata, signing: Signing) {
+private fun Project.configureMarkers(group: String, version: String, pomMetadata: PomMetadata, signing: Signing?) {
   val jar = try {
     tasks.named("jar", Jar::class.java)
   } catch (_: Exception) {
@@ -106,21 +120,21 @@ private fun Project.configureMarkers(pomMetadata: PomMetadata, signing: Signing)
   val existingMarkers = extensions.getByType(PublishingExtension::class.java)
     .publications
     .filterIsInstance<MavenPublication>()
-    .filter {it.name.endsWith("PluginMarkerMaven")}
+    .filter { it.name.endsWith("PluginMarkerMaven") }
     .map { it.groupId }
 
   val task = registerGenerateMarkerFilesTask(
     taskName = "librarianGenerateMarkerFiles",
     jar = jar.flatMap { it.archiveFile },
-    mainGroupId = provider { pomMetadata.groupId },
-    mainArtifactId = provider { pomMetadata.artifactId },
-    mainVersion = provider { pomMetadata.version },
+    mainGroupId = provider { group },
+    mainArtifactId = provider { name }, // XXX: that's not 100% correct, the artifactId may not be the project name
+    mainVersion = provider { version },
     url = provider { pomMetadata.vcsUrl },
     spdxLicenseId = provider { pomMetadata.license },
     developer = provider { pomMetadata.developer },
     pluginIdsToIgnore = provider { existingMarkers },
-    privateKey = provider { signing.privateKey },
-    privateKeyPassword = provider { signing.privateKeyPassword },
+    privateKey = provider { signing?.privateKey },
+    privateKeyPassword = provider { signing?.privateKeyPassword },
   )
 
   val nmcpExtension = extensions.findByType(NmcpExtension::class.java)
@@ -128,20 +142,19 @@ private fun Project.configureMarkers(pomMetadata: PomMetadata, signing: Signing)
 }
 
 
-
 private fun Project.emptyJavadoc(repositoryUrl: String?): TaskProvider<Jar> {
   return tasks.register("librarianEmptyJavadoc", Jar::class.java) {
     it.archiveClassifier.set("javadoc")
     val extra = repositoryUrl?.let { " or $repositoryUrl" }
     it.from(
-        resources.text.fromString(
-            """
+      resources.text.fromString(
+        """
                 This Javadoc JAR is intentionally empty.
-                  
-                For documentation, see the sources jar$extra
-                  
+                
+                For documentation, see the sources JAR$extra
+                
                 """.trimIndent()
-        )
+      )
     ) {
       it.rename { "readme.txt" }
     }
@@ -169,7 +182,7 @@ private fun Project.javaSources(): TaskProvider<Jar> {
  * @param docUrl an optional link to write inside the empty javadoc jar for users looking for more information.
  */
 fun Project.createMissingPublications(
-    docUrl: String? = null,
+  docUrl: String? = null,
 ) = configurePublishingInternal {
   val emptyJavadoc = emptyJavadoc(docUrl)
 
@@ -229,39 +242,30 @@ fun Project.createMissingPublications(
  * @param pomMetadata options for coordinates and POM
  */
 fun Project.configurePom(
-    pomMetadata: PomMetadata,
+  pomMetadata: PomMetadata,
 ) = configurePublishingInternal {
-  /**
-   * Set `project.group`. This is needed when including builds
-   */
-  this@configurePom.group = pomMetadata.groupId
-  this@configurePom.version = pomMetadata.version
-
   afterEvaluate { // XX: why do we need afterEvaluate {}?
     publications.configureEach {
-      (it as MavenPublication)
+      it as MavenPublication
       if (it.groupId.isNullOrEmpty()) {
         /**
-         * Set the groupId if there is none yet.
-         * It might be the case that the publication has a groupId configured already.
-         * This is typically the case for Gradle plugins.
+         * Only set the groupId if there is none yet.
+         * Gradle plugins change the groupId to use the id of the plugin.
          */
-        it.groupId = pomMetadata.groupId
+        it.groupId = this@configurePom.group.toString()
       }
-      it.artifactId = if (plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
-        // Multiplatform -> Keep artifactId untouched
-        when {
-          it.artifactId == project.name -> project.name
-          it.artifactId.startsWith("${project.name}-") -> it.artifactId.replace(Regex("^${project.name}"), pomMetadata.artifactId)
-          else -> error("Cannot set artifactId for '${it.artifactId}'")
-        }
-      } else if (it.artifactId.endsWith("gradle.plugin")) {
-        // Gradle plugin marker -> Keep artifactId untouched
-        it.artifactId
-      } else {
-        pomMetadata.artifactId
+      if (it.artifactId.isNullOrEmpty()) {
+        /**
+         * Only set the artifactId if there is none yet.
+         * KMP changes the artifactId for KMP76.
+         */
+        it.artifactId = this@configurePom.name
       }
-      it.version = pomMetadata.version
+      if (pomMetadata.artifactId != null) {
+        it.artifactId = pomMetadata.artifactId
+      }
+
+      it.version = this@configurePom.version.toString()
 
       it.pom {
         it.name.set(name)
@@ -304,7 +308,7 @@ internal fun updateVersionAccordingToEnvironment(version: String): String {
     return "$version-${sha1}"
   }
 
-  if(System.getenv("LIBRARIAN_NIGHTLY") == "true") {
+  if (System.getenv("LIBRARIAN_NIGHTLY") == "true") {
     val utcNow = Instant.now().atZone(ZoneOffset.UTC)
     val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     return "${version.removeSuffix("-SNAPSHOT")}-${utcNow.format(formatter)}"
@@ -314,5 +318,5 @@ internal fun updateVersionAccordingToEnvironment(version: String): String {
 }
 
 internal fun DependencyHandler.project(path: String, configuration: String) = project(
-    mapOf("path" to path, "configuration" to configuration)
+  mapOf("path" to path, "configuration" to configuration)
 )
