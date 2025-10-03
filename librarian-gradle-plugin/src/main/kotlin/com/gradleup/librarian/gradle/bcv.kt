@@ -1,11 +1,11 @@
 package com.gradleup.librarian.gradle
 
-import com.gradleup.librarian.core.tooling.init.librarianKotlinPluginVersion
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
+import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 
 @OptIn(ExperimentalAbiValidation::class)
 fun Project.configureBcv(warnIfMissing: Boolean = true, block: (variantSpec: Any) -> Unit = {}) {
@@ -43,7 +43,7 @@ fun Project.configureBcv(warnIfMissing: Boolean = true, block: (variantSpec: Any
       }
     } else {
       if (warnIfMissing) {
-        println("Librarian: BCV is only configured by default if using KGP 2.2+ (currently detected is '$librarianKotlinPluginVersion'). Set bcv.warn=false in your librarian.root.properties file to remove this warning.")
+        println("Librarian: BCV is only configured by default if using KGP 2.2+ (currently detected is '${getKotlinPluginVersion()}'). Set bcv.warn=false in your librarian.root.properties file to remove this warning.")
       }
     }
   }
