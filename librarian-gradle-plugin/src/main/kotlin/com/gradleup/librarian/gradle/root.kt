@@ -14,7 +14,7 @@ fun Project.librarianRoot() {
   val kdoc = Kdoc(rootProperties)
 
   librarianRoot(
-    group = rootProperties.getRequiredProperty("pom.version"),
+    group = rootProperties.getRequiredProperty("pom.groupId"),
     version = updateVersionAccordingToEnvironment(rootProperties.getRequiredProperty("pom.version")),
     publishing = Publishing(
       pomMetadata = pomMetadata,
