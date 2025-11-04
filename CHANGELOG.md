@@ -1,5 +1,14 @@
 # Next version (unreleased)
 
+# Version 0.2.1
+_2025-11-04_
+
+## What's Changed
+* Version is now 0.2.1-SNAPSHOT by @martinbonnin in https://github.com/GradleUp/librarian/pull/99
+* Keep apiDump and apiCheck for backward compatibility by @martinbonnin in https://github.com/GradleUp/librarian/pull/100
+* Introduce programmatic API by @martinbonnin in https://github.com/GradleUp/librarian/pull/101
+* Fix the BCV warning by @martinbonnin in https://github.com/GradleUp/librarian/pull/102
+
 # Version 0.2.0
 _2025-09-25_
 
