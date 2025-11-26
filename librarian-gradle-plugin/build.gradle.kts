@@ -25,7 +25,7 @@ dependencies {
   implementation(libs.xmlutil)
 
   api(libs.compat.patrouille)
-  api(libs.nmcp)
+  api(libs.nmcp.tasks)
 
   compileOnly(libs.gradle.api)
   compileOnly(libs.agp)

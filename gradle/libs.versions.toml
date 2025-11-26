@@ -1,6 +1,6 @@
 [versions]
 kgp = "2.2.0"
-
+nmcp = "1.3.0"
 [libraries]
 agp = "com.android.tools.build:gradle:8.2.0"
 bcv = "org.jetbrains.kotlinx:binary-compatibility-validator:0.16.3"
@@ -25,7 +25,8 @@ librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.0.11
 maven-sympathy = "com.gradleup.maven-sympathy:maven-sympathy:0.0.2"
 mockserver = "com.apollographql.mockserver:apollo-mockserver:0.0.3"
 mordant = "com.github.ajalt.mordant:mordant:2.7.1"
-nmcp = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:1.1.0"
+nmcp = { module = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin", version.ref = "nmcp" }
+nmcp-tasks = { module = "com.gradleup.nmcp:nmcp-tasks", version.ref = "nmcp" }
 nmcp-build-time = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:1.2.0-SNAPSHOT-b2b859946a8e9938f7b7f22003e9dc029aac69af"
 okhttp = "com.squareup.okhttp3:okhttp:4.12.0"
 serialization-gradle-plugin = {module = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kgp"}

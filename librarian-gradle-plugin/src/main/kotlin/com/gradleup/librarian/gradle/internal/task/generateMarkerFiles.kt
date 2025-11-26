@@ -27,7 +27,9 @@ private val re = Regex("META-INF/gradle-plugins/(.+).properties")
  *
  * @param mainArtifactId the name of the project
  */
-@GTask
+@GTask(
+  pure = false // uses the current timestamp in file names
+)
 fun generateMarkerFiles(
   logger: GLogger,
   jar: GInputFile,
