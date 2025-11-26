@@ -26,6 +26,9 @@ dependencies {
 
   api(libs.compat.patrouille)
   api(libs.nmcp)
+  api(libs.nmcp.tasks) {
+    because("we use the publishFileByFile API")
+  }
 
   compileOnly(libs.gradle.api)
   compileOnly(libs.agp)
