@@ -3,8 +3,8 @@ package com.gradleup.librarian.gradle
 import com.gradleup.librarian.core.tooling.init.modulePropertiesFilename
 import com.gradleup.librarian.core.tooling.init.rootPropertiesFilename
 import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
-import compat.patrouille.configureJavaCompatibility
-import compat.patrouille.configureKotlinCompatibility
+import tapmoc.configureJavaCompatibility
+import tapmoc.configureKotlinCompatibility
 import org.gradle.api.Project
 import java.time.Duration
 import java.util.Properties

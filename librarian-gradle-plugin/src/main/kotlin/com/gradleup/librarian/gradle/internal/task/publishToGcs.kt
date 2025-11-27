@@ -12,7 +12,6 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.BufferedSource
-import java.net.URLEncoder
 import java.time.Duration
 import kotlin.math.pow
 import kotlin.time.Duration.Companion.seconds

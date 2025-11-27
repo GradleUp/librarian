@@ -16,7 +16,7 @@ pluginManagement {
     maven("https://storage.googleapis.com/gradleup/m2") {
       content {
         includeGroup("com.gradleup.librarian")
-        includeGroup("com.gradleup.compat.patrouille")
+        includeGroup("com.gradleup.tapmoc")
         includeGroup("com.gradleup.nmcp")
       }
     }
