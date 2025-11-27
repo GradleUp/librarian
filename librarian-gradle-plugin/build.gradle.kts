@@ -40,8 +40,6 @@ dependencies {
 }
 
 gratatouille {
-  pluginMarker("com.gradleup.librarian")
   codeGeneration {
-
   }
 }
