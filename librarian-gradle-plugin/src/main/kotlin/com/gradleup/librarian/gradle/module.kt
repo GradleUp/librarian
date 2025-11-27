@@ -97,7 +97,7 @@ fun Project.librarianModule() {
       createMissingPublications = moduleProperties.createMissingPublications() ?: true,
       publishPlatformArtifactsInRootModule = true,
       pomMetadata = PomMetadata(null, rootProperties),
-      emptyJarLink = "https://www.apollographql.com/docs/kotlin/kdoc/index.html"
+      emptyJarLink = null
     ).takeIf{publish},
     signing = Signing(project),
   )
