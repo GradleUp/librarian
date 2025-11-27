@@ -24,7 +24,7 @@ dependencies {
   implementation(libs.serialization.json)
   implementation(libs.xmlutil)
 
-  api(libs.compat.patrouille)
+  implementation(libs.tapmoc)
   api(libs.nmcp)
 
   compileOnly(libs.gradle.api)
