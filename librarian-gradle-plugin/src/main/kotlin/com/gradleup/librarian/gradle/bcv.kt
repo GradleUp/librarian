@@ -39,7 +39,7 @@ fun Project.configureBcv(warnIfMissing: Boolean = true, block: (variantSpec: Any
         it.dependsOn("updateLegacyAbi")
       }
       tasks.register("apiCheck") {
-        it.dependsOn("updateLegacyAbi")
+        it.dependsOn("checkLegacyAbi")
       }
     } else {
       if (warnIfMissing) {
