@@ -39,7 +39,17 @@ fun Project.librarianRoot(
   gcs: Gcs?,
   kdoc: Kdoc,
 ) {
-  librarianModule(group, version, null, null, null, null, publishing, signing)
+  librarianModule(
+    group = group,
+    version = version,
+    jvmTarget = null,
+    kotlinTarget = null,
+    checkDependencies = false,
+    bcv = null,
+    versionPackageName = null,
+    publishing = publishing,
+    signing = signing
+  )
 
   pluginManager.apply("com.gradleup.nmcp.aggregation")
   pluginManager.apply("com.gradleup.nmcp")
