@@ -78,7 +78,7 @@ public final class com/gradleup/librarian/gradle/MavenKt {
 
 public final class com/gradleup/librarian/gradle/ModuleKt {
 	public static final fun librarianModule (Lorg/gradle/api/Project;)V
-	public static final fun librarianModule (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Lcom/gradleup/librarian/gradle/Bcv;Ljava/lang/String;Lcom/gradleup/librarian/gradle/Publishing;Lcom/gradleup/librarian/gradle/Signing;)V
+	public static final fun librarianModule (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;ZLcom/gradleup/librarian/gradle/Bcv;Ljava/lang/String;Lcom/gradleup/librarian/gradle/Publishing;Lcom/gradleup/librarian/gradle/Signing;)V
 }
 
 public abstract class com/gradleup/librarian/gradle/Plugin : org/gradle/api/Plugin {

@@ -3,11 +3,10 @@ package com.gradleup.librarian.gradle
 import com.gradleup.librarian.core.tooling.init.modulePropertiesFilename
 import com.gradleup.librarian.core.tooling.init.rootPropertiesFilename
 import com.gradleup.librarian.gradle.internal.findEnvironmentVariable
-import tapmoc.configureJavaCompatibility
-import tapmoc.configureKotlinCompatibility
 import org.gradle.api.Project
+import tapmoc.TapmocExtension
 import java.time.Duration
-import java.util.Properties
+import java.util.*
 
 internal fun Properties.javaCompatibility(): Int {
   return getRequiredProperty("java.compatibility").toInt()
@@ -19,6 +18,10 @@ internal fun Properties.kotlinCompatibility(): String {
 
 internal fun Properties.versionPackageName(): String? {
   return getProperty("version.packageName")
+}
+
+internal fun Properties.checkDependencies(): Boolean {
+  return getProperty("checkDependenciesCompatibility")?.toBoolean() ?: true
 }
 
 internal fun Properties.publish(): Boolean? {
@@ -91,6 +94,7 @@ fun Project.librarianModule() {
     version = updateVersionAccordingToEnvironment(rootProperties.getRequiredProperty("pom.version")),
     jvmTarget = rootProperties.javaCompatibility(),
     kotlinTarget = rootProperties.kotlinCompatibility(),
+    checkDependencies = rootProperties.checkDependencies(),
     bcv = bcv,
     versionPackageName = moduleProperties.versionPackageName(),
     publishing = Publishing(
@@ -120,6 +124,7 @@ fun Project.librarianModule(
   version: String,
   jvmTarget: Int?,
   kotlinTarget: String?,
+  checkDependencies: Boolean,
   bcv: Bcv?,
   versionPackageName: String?,
   publishing: Publishing?,
@@ -131,8 +136,18 @@ fun Project.librarianModule(
   this.group = group
   this.version = version
 
-  jvmTarget?.let(::configureJavaCompatibility)
-  kotlinTarget?.let(::configureKotlinCompatibility)
+  pluginManager.apply("com.gradleup.tapmoc")
+  project.extensions.getByType(TapmocExtension::class.java).apply {
+    if (jvmTarget != null) {
+      java(jvmTarget)
+    }
+    if (kotlinTarget != null) {
+      kotlin(kotlinTarget)
+    }
+    if (checkDependencies) {
+      checkDependencies()
+    }
+  }
 
   if (versionPackageName != null) {
     configureGeneratedVersion(versionPackageName, version)
