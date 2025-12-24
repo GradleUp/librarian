@@ -38,8 +38,3 @@ dependencies {
   testImplementation(gradleTestKit())
   testImplementation(libs.mockserver)
 }
-
-gratatouille {
-  codeGeneration {
-  }
-}
