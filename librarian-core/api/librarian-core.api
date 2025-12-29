@@ -78,20 +78,35 @@ public final class com/gradleup/librarian/core/tooling/SecretKeyRing {
 	public final fun secretKey ()[B
 }
 
+public final class com/gradleup/librarian/core/tooling/SemVer {
+	public fun <init> (IIILcom/gradleup/librarian/core/tooling/PreRelease;Z)V
+	public final fun compareTo (Lcom/gradleup/librarian/core/tooling/SemVer;)I
+	public final fun getMajor ()I
+	public final fun getMinor ()I
+	public final fun getPatch ()I
+	public final fun getPreRelease ()Lcom/gradleup/librarian/core/tooling/PreRelease;
+	public final fun isSnapshot ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/gradleup/librarian/core/tooling/SemverKt {
+	public static final fun bump (Lcom/gradleup/librarian/core/tooling/SemVer;)Lcom/gradleup/librarian/core/tooling/SemVer;
 	public static final fun copy (Lcom/gradleup/librarian/core/tooling/PreRelease;Ljava/lang/String;I)Lcom/gradleup/librarian/core/tooling/PreRelease;
-	public static final fun copy (Lcom/gradleup/librarian/core/tooling/Version;IIILcom/gradleup/librarian/core/tooling/PreRelease;Z)Lcom/gradleup/librarian/core/tooling/Version;
+	public static final fun copy (Lcom/gradleup/librarian/core/tooling/SemVer;IIILcom/gradleup/librarian/core/tooling/PreRelease;Z)Lcom/gradleup/librarian/core/tooling/SemVer;
 	public static synthetic fun copy$default (Lcom/gradleup/librarian/core/tooling/PreRelease;Ljava/lang/String;IILjava/lang/Object;)Lcom/gradleup/librarian/core/tooling/PreRelease;
-	public static synthetic fun copy$default (Lcom/gradleup/librarian/core/tooling/Version;IIILcom/gradleup/librarian/core/tooling/PreRelease;ZILjava/lang/Object;)Lcom/gradleup/librarian/core/tooling/Version;
-	public static final fun next (Lcom/gradleup/librarian/core/tooling/Version;)Lcom/gradleup/librarian/core/tooling/Version;
-	public static final fun nextMinor (Lcom/gradleup/librarian/core/tooling/Version;)Lcom/gradleup/librarian/core/tooling/Version;
-	public static final fun nextPatch (Lcom/gradleup/librarian/core/tooling/Version;)Lcom/gradleup/librarian/core/tooling/Version;
-	public static final fun toVersionOrNull (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/Version;
+	public static synthetic fun copy$default (Lcom/gradleup/librarian/core/tooling/SemVer;IIILcom/gradleup/librarian/core/tooling/PreRelease;ZILjava/lang/Object;)Lcom/gradleup/librarian/core/tooling/SemVer;
+	public static final fun next (Lcom/gradleup/librarian/core/tooling/SemVer;)Lcom/gradleup/librarian/core/tooling/SemVer;
+	public static final fun nextMajor (Lcom/gradleup/librarian/core/tooling/SemVer;)Lcom/gradleup/librarian/core/tooling/SemVer;
+	public static final fun nextMinor (Lcom/gradleup/librarian/core/tooling/SemVer;)Lcom/gradleup/librarian/core/tooling/SemVer;
+	public static final fun nextPatch (Lcom/gradleup/librarian/core/tooling/SemVer;)Lcom/gradleup/librarian/core/tooling/SemVer;
+	public static final fun nextPrerelease (Lcom/gradleup/librarian/core/tooling/SemVer;)Lcom/gradleup/librarian/core/tooling/SemVer;
+	public static final fun semVerOrNull (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/SemVer;
 }
 
 public final class com/gradleup/librarian/core/tooling/Tag_and_bumpKt {
 	public static final fun getCurrentVersion ()Ljava/lang/String;
-	public static final fun tagAndBump (Lcom/gradleup/librarian/core/tooling/Version;)V
+	public static final fun runCommand ([Ljava/lang/String;)Ljava/lang/String;
+	public static final fun tagAndBump (Lcom/gradleup/librarian/core/tooling/SemVer;)V
 }
 
 public final class com/gradleup/librarian/core/tooling/UploadError : com/gradleup/librarian/core/tooling/UploadResult {
@@ -105,17 +120,6 @@ public abstract interface class com/gradleup/librarian/core/tooling/UploadResult
 public final class com/gradleup/librarian/core/tooling/UploadSuccess : com/gradleup/librarian/core/tooling/UploadResult {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun getUrl ()Ljava/lang/String;
-}
-
-public final class com/gradleup/librarian/core/tooling/Version {
-	public fun <init> (IIILcom/gradleup/librarian/core/tooling/PreRelease;Z)V
-	public final fun compareTo (Lcom/gradleup/librarian/core/tooling/Version;)I
-	public final fun getMajor ()I
-	public final fun getMinor ()I
-	public final fun getPatch ()I
-	public final fun getPreRelease ()Lcom/gradleup/librarian/core/tooling/PreRelease;
-	public final fun isSnapshot ()Z
-	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/gradleup/librarian/core/tooling/init/ActionsKt {
