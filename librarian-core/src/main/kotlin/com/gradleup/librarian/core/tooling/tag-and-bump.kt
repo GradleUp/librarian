@@ -3,7 +3,7 @@ package com.gradleup.librarian.core.tooling
 import com.gradleup.librarian.core.tooling.init.rootPropertiesFilename
 import java.io.File
 
-fun tagAndBump(versionToRelease: Version) {
+fun tagAndBump(versionToRelease: SemVer) {
   checkCwd()
 
   check(runCommand("git", "status", "--porcelain").isEmpty()) {
@@ -60,7 +60,7 @@ fun tagAndBump(versionToRelease: Version) {
   println("Everything is done.")
 }
 
-internal fun runCommand(vararg args: String): String {
+fun runCommand(vararg args: String): String {
   val builder = ProcessBuilder(*args)
       .redirectError(ProcessBuilder.Redirect.INHERIT)
 
