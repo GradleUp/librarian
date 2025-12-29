@@ -13,6 +13,7 @@ buildscript {
     classpath(libs.ksp.gradle.plugin)
     classpath(libs.tapmoc.at.build.time)
     classpath(libs.serialization.gradle.plugin)
+    classpath(libs.compose.compiler)
   }
 }
 

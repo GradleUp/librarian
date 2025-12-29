@@ -3,6 +3,7 @@ public final class com/gradleup/librarian/cli/MainKt {
 }
 
 public final class com/gradleup/librarian/cli/MultilineSecretComponent : com/github/kinquirer/core/Component {
+	public static final field $stable I
 	public fun <init> (Ljava/lang/String;)V
 	public fun isInteracting ()Z
 	public fun onEvent (Lcom/github/kinquirer/core/KInquirerEvent;)V
@@ -12,6 +13,7 @@ public final class com/gradleup/librarian/cli/MultilineSecretComponent : com/git
 }
 
 public final class com/gradleup/librarian/cli/Update_repoKt {
+	public static final fun main ([Ljava/lang/String;)V
 	public static final fun updateRepo ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 }
 
@@ -24,11 +26,13 @@ public final class com/gradleup/librarian/cli/VersionKt {
 }
 
 public final class com/gradleup/librarian/cli/command/CreateGitHubRepository : com/github/ajalt/clikt/core/CliktCommand {
+	public static final field $stable I
 	public fun <init> ()V
 	public fun run ()V
 }
 
 public final class com/gradleup/librarian/cli/command/FileContext {
+	public static final field $stable I
 	public fun <init> ()V
 	public final fun replaceAllArtifactVersions (Ljava/lang/String;)V
 	public final fun replaceArtifactVersion (Ljava/lang/String;)V
@@ -37,17 +41,20 @@ public final class com/gradleup/librarian/cli/command/FileContext {
 }
 
 public final class com/gradleup/librarian/cli/command/GenerateKey : com/github/ajalt/clikt/core/CliktCommand {
+	public static final field $stable I
 	public fun <init> ()V
 	public fun run ()V
 }
 
 public final class com/gradleup/librarian/cli/command/UploadKey : com/github/ajalt/clikt/core/CliktCommand {
+	public static final field $stable I
 	public fun <init> ()V
 	public final fun getKeyFile ()Ljava/lang/String;
 	public fun run ()V
 }
 
 public final class com/gradleup/librarian/cli/command/VersionContext {
+	public static final field $stable I
 	public fun <init> (Ljava/lang/String;)V
 	public final fun file (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public final fun getVersion ()Ljava/lang/String;
@@ -58,7 +65,40 @@ public final class com/gradleup/librarian/cli/command/init/GitHubSecretsKt {
 }
 
 public final class com/gradleup/librarian/cli/command/init/GradleWrapperCommand : com/github/ajalt/clikt/core/CliktCommand {
+	public static final field $stable I
 	public fun <init> ()V
 	public fun run ()V
+}
+
+public final class com/gradleup/librarian/cli/component/Choice {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/Object;)V
+	public final fun getData ()Ljava/lang/Object;
+	public final fun getText ()Ljava/lang/String;
+}
+
+public final class com/gradleup/librarian/cli/component/ListInputKt {
+	public static final fun ListInput (Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;I)V
+	public static final fun ListInput2 (Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class com/gradleup/librarian/cli/component/TextInputKt {
+	public static final fun TextInput-ObWx_Vo (Ljava/lang/String;Lcom/jakewharton/mosaic/modifier/Modifier;ILkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/gradleup/librarian/cli/screen/AskVersionKt {
+	public static final fun AskVersion (Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class com/gradleup/librarian/cli/screen/MainScreenKt {
+	public static final fun MainScreen (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class com/gradleup/librarian/cli/screen/PrepareNextVersionScreenKt {
+	public static final fun CommitChangesScreen (Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class com/gradleup/librarian/cli/screen/SetVersionScreenKt {
+	public static final fun SetVersionScreen (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)V
 }
 

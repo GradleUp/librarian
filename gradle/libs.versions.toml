@@ -1,11 +1,14 @@
 [versions]
-kgp = "2.3.0-RC"
+kgp = "2.3.0"
 nmcp = "1.3.0"
+mosaic = "0.18.0"
+
 [libraries]
 agp = "com.android.tools.build:gradle:8.2.0"
 bcv = "org.jetbrains.kotlinx:binary-compatibility-validator:0.16.3"
 bouncycastle-pg = "org.bouncycastle:bcpg-jdk18on:1.78.1"
 bouncycastle-prov = "org.bouncycastle:bcprov-jdk18on:1.78.1"
+compose-compiler = { module = "org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kgp" }
 clikt = "com.github.ajalt.clikt:clikt:3.5.0"
 tapmoc = "com.gradleup.tapmoc:tapmoc-gradle-plugin:0.3.2"
 tapmoc-at-build-time = "com.gradleup.tapmoc:tapmoc-gradle-plugin:0.2.1-SNAPSHOT-dda1362c1d0f8389f50b362a08967793e320cf29"
@@ -25,6 +28,7 @@ librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.2.2-
 maven-sympathy = "com.gradleup.maven-sympathy:maven-sympathy:0.0.2"
 mockserver = "com.apollographql.mockserver:apollo-mockserver:0.0.3"
 mordant = "com.github.ajalt.mordant:mordant:2.7.1"
+mosaic-runtime = { module = "com.jakewharton.mosaic:mosaic-runtime", version.ref = "mosaic" }
 nmcp = { module = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin", version.ref = "nmcp" }
 nmcp-tasks = { module = "com.gradleup.nmcp:nmcp-tasks", version.ref = "nmcp" }
 nmcp-build-time = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:1.2.0-SNAPSHOT-b2b859946a8e9938f7b7f22003e9dc029aac69af"
@@ -32,3 +36,4 @@ okhttp = "com.squareup.okhttp3:okhttp:4.12.0"
 serialization-gradle-plugin = {module = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kgp"}
 serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0"
 xmlutil = "io.github.pdvrieze.xmlutil:serialization:0.91.1"
+semver = "net.swiftzer.semver:semver:2.1.0"

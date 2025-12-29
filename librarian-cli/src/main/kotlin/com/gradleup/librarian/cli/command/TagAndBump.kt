@@ -5,14 +5,14 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.promptConfirm
-import com.gradleup.librarian.core.tooling.Version
+import com.gradleup.librarian.core.tooling.SemVer
 import com.gradleup.librarian.core.tooling.next
 import com.gradleup.librarian.core.tooling.getCurrentVersion
 import com.gradleup.librarian.core.tooling.nextMinor
 import com.gradleup.librarian.core.tooling.nextPatch
 import com.gradleup.librarian.core.tooling.runCommand
 import com.gradleup.librarian.core.tooling.tagAndBump
-import com.gradleup.librarian.core.tooling.toVersionOrNull
+import com.gradleup.librarian.core.tooling.semVerOrNull
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.io.path.Path
@@ -36,7 +36,7 @@ internal fun exit(message: String): Nothing {
 internal abstract class AbstractTagAndBump : CliktCommand() {
   val versionToRelease by argument().optional()
 
-  abstract fun run(versionToRelease: Version)
+  abstract fun run(versionToRelease: SemVer)
 
   private fun confirmOrExit(message: String) {
     if (!KInquirer.promptConfirm(message, true)) {
@@ -46,7 +46,7 @@ internal abstract class AbstractTagAndBump : CliktCommand() {
 
   override fun run() {
     val currentVersion = getCurrentVersion()
-    val currentVersionParsed = currentVersion.toVersionOrNull()
+    val currentVersionParsed = currentVersion.semVerOrNull()
     checkOrExit(currentVersionParsed != null) {
       "Cannot parse current version: '${currentVersion}'"
     }
@@ -67,7 +67,7 @@ internal abstract class AbstractTagAndBump : CliktCommand() {
       versionToRelease = currentVersionParsed.nextMinor().toString()
     }
 
-    val tagVersionParsed = versionToRelease.toVersionOrNull()
+    val tagVersionParsed = versionToRelease.semVerOrNull()
     checkOrExit(tagVersionParsed != null) {
       "Version '$versionToRelease' cannot be parsed (expected 'major.minor.patch[-prerelease.version][-SNAPSHOT]')"
     }
@@ -82,13 +82,13 @@ internal abstract class AbstractTagAndBump : CliktCommand() {
 }
 
 internal class TriggerTagAndBump : AbstractTagAndBump() {
-  override fun run(versionToRelease: Version) {
+  override fun run(versionToRelease: SemVer) {
     Path(".").runCommand("gh", "workflow", "run", "tag-and-bump.yaml", "-f", "versionToRelease=$versionToRelease")
   }
 }
 
 internal class TagAndBump : AbstractTagAndBump() {
-  override fun run(versionToRelease: Version) {
+  override fun run(versionToRelease: SemVer) {
     tagAndBump(versionToRelease)
   }
 }

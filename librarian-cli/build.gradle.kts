@@ -4,6 +4,7 @@ plugins {
   id("java")
   id("org.jetbrains.kotlin.jvm")
   id("distribution")
+  id("org.jetbrains.kotlin.plugin.compose")
 }
 
 Librarian.module(project)
@@ -13,6 +14,7 @@ dependencies {
   api(libs.clikt)
   implementation(libs.inquirer)
   implementation(libs.mordant)
+  implementation(libs.mosaic.runtime)
 
   implementation(libs.jansi)
   testImplementation(kotlin("test"))
