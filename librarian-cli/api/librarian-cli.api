@@ -14,7 +14,8 @@ public final class com/gradleup/librarian/cli/MultilineSecretComponent : com/git
 
 public final class com/gradleup/librarian/cli/Update_repoKt {
 	public static final fun main ([Ljava/lang/String;)V
-	public static final fun updateRepo ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static final fun updateRepo ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun updateRepo$default ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class com/gradleup/librarian/cli/UtilsKt {
