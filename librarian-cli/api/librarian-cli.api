@@ -100,6 +100,6 @@ public final class com/gradleup/librarian/cli/screen/PrepareNextVersionScreenKt 
 }
 
 public final class com/gradleup/librarian/cli/screen/SetVersionScreenKt {
-	public static final fun SetVersionScreen (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)V
+	public static final fun SetVersionScreen (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;I)V
 }
 

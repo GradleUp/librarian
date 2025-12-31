@@ -21,7 +21,7 @@ import com.jakewharton.mosaic.runMosaicBlocking
 import kotlinx.coroutines.CompletableDeferred
 
 
-private class MainCommand(val setVersionInDocs: VersionContext.() -> Unit) : CliktCommand(invokeWithoutSubcommand = true) {
+private class MainCommand(val setVersion: VersionContext.() -> Unit, val setVersionInDocs: VersionContext.() -> Unit) : CliktCommand(invokeWithoutSubcommand = true) {
   override fun run() {
     runMosaicBlocking {
       val exit = remember { CompletableDeferred<Unit>() }
@@ -38,6 +38,7 @@ private class MainCommand(val setVersionInDocs: VersionContext.() -> Unit) : Cli
         )
 
         State.SetVersion -> SetVersionScreen(
+          setVersion = setVersion,
           onVersionSet = { state.value = State.CommitChanges },
           onOtherVersion = { state.value = State.AskVersion }
         )
@@ -78,7 +79,7 @@ private enum class State {
  * @param setDocsVersion how to set the docs version. The docs version is lagging behind the repo version and is not a SNAPSHOT.
  */
 fun updateRepo(args: Array<String>, setVersion: VersionContext.() -> Unit = {}, setDocsVersion: VersionContext.() -> Unit) {
-  MainCommand(setDocsVersion).subcommands(SetVersion(setVersion), PrepareNextVersion(setDocsVersion)).main(args)
+  MainCommand(setVersion, setDocsVersion).subcommands(SetVersion(setVersion), PrepareNextVersion(setDocsVersion)).main(args)
 }
 
 fun main(args: Array<String>) {

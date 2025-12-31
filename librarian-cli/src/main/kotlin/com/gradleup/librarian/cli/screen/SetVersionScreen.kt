@@ -3,14 +3,11 @@ package com.gradleup.librarian.cli.screen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.gradleup.librarian.cli.command.dropSnapshot
+import com.gradleup.librarian.cli.command.VersionContext
 import com.gradleup.librarian.cli.command.getCurrentVersion
-import com.gradleup.librarian.cli.command.getNextSnapshot
 import com.gradleup.librarian.cli.command.setCurrentVersion
 import com.gradleup.librarian.cli.component.Choice
 import com.gradleup.librarian.cli.component.ListInput
-import com.gradleup.librarian.core.tooling.SemVer
-import com.gradleup.librarian.core.tooling.bump
 import com.gradleup.librarian.core.tooling.nextMajor
 import com.gradleup.librarian.core.tooling.nextMinor
 import com.gradleup.librarian.core.tooling.nextPatch
@@ -21,6 +18,7 @@ import com.gradleup.librarian.core.tooling.semVerOrNull
 fun SetVersionScreen(
   onVersionSet: () -> Unit,
   onOtherVersion: () -> Unit,
+  setVersion: VersionContext.() -> Unit,
 ) {
   val indexState = remember { mutableStateOf(0) }
 
@@ -53,6 +51,7 @@ fun SetVersionScreen(
         null -> onOtherVersion()
         else -> {
           setCurrentVersion(it.data.toString())
+          VersionContext(it.data.toString()).setVersion()
           onVersionSet()
         }
       }
