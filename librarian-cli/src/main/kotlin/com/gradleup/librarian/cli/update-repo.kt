@@ -73,9 +73,12 @@ private enum class State {
   CommitChanges
 }
 
-
-fun updateRepo(args: Array<String>, setVersionInDocs: VersionContext.() -> Unit) {
-  MainCommand(setVersionInDocs).subcommands(SetVersion(), PrepareNextVersion(setVersionInDocs)).main(args)
+/**
+ * @param setVersion how to set the version. The version is the version of the repo.
+ * @param setDocsVersion how to set the docs version. The docs version is lagging behind the repo version and is not a SNAPSHOT.
+ */
+fun updateRepo(args: Array<String>, setVersion: VersionContext.() -> Unit = {}, setDocsVersion: VersionContext.() -> Unit) {
+  MainCommand(setDocsVersion).subcommands(SetVersion(setVersion), PrepareNextVersion(setDocsVersion)).main(args)
 }
 
 fun main(args: Array<String>) {
