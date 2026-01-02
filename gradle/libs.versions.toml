@@ -1,6 +1,6 @@
 [versions]
 kgp = "2.3.0"
-nmcp = "1.3.0"
+nmcp = "1.4.2"
 mosaic = "0.18.0"
 
 [libraries]
@@ -35,5 +35,4 @@ nmcp-build-time = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:1.2.0-SNAPS
 okhttp = "com.squareup.okhttp3:okhttp:4.12.0"
 serialization-gradle-plugin = {module = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kgp"}
 serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0"
-xmlutil = "io.github.pdvrieze.xmlutil:serialization:0.91.1"
-semver = "net.swiftzer.semver:semver:2.1.0"
+xmlutil = "io.github.pdvrieze.xmlutil:serialization:1.0.0-rc1"
