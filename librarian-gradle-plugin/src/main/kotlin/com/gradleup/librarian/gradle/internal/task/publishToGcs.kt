@@ -4,13 +4,15 @@ import com.google.auth.oauth2.GoogleCredentials
 import gratatouille.tasks.GInputFiles
 import gratatouille.tasks.GLogger
 import gratatouille.tasks.GTask
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import nmcp.transport.Content
 import nmcp.transport.Transport
 import nmcp.transport.publishFileByFile
-import nmcp.transport.toRequestBody
+import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import okhttp3.MediaType.Companion.toMediaType
+import okio.BufferedSink
 import okio.BufferedSource
 import java.time.Duration
 import kotlin.math.pow
@@ -77,6 +79,8 @@ internal class GcsTransport(
   }
 
   /**
+   * We use multipart upload to upload both the metadata and the contents at the same time.
+   *
    * https://cloud.google.com/storage/docs/json_api/v1/objects/insert
    */
   override fun put(path: String, body: Content) {
@@ -85,13 +89,51 @@ internal class GcsTransport(
 
     val name = "${prefix}${path}"
     logger.info("Librarian: gcs-put $name")
+
+    val cacheControl = when {
+      name.endsWith("maven-metadata.xml") -> "public, max-age=60" // This makes it easier to debug snapshots issues
+      else -> "public, max-age=3600"
+    }
+    val multipartBody = MultipartBody.Builder()
+      .setType("multipart/related".toMediaType())
+      .addPart(object : RequestBody() {
+        override fun contentType(): MediaType {
+          return "application/json; charset=UTF-8".toMediaType()
+        }
+
+        override fun writeTo(sink: BufferedSink) {
+          JsonObject(
+            mapOf(
+              "name" to JsonPrimitive(name),
+              "cacheControl" to JsonPrimitive(cacheControl)
+            )
+          ).let {
+            sink.writeUtf8(it.toString())
+          }
+        }
+      })
+      .addPart(object : RequestBody() {
+        override fun contentType(): MediaType {
+          return when {
+            name.endsWith(".jar") -> "application/java-archive"
+            name.endsWith(".pom") -> "application/xml"
+            name.endsWith(".module") -> "application/xml"
+            name.endsWith(".xml") -> "application/xml"
+            else -> "application/octet-stream"
+          }.toMediaType()
+        }
+
+        override fun writeTo(sink: BufferedSink) {
+          body.writeTo(sink)
+        }
+      })
+      .build()
     val url = postBaseUrl
       .newBuilder()
-      .addQueryParameter("name", name)
-      .addQueryParameter("uploadType", "media")
+      .addQueryParameter("uploadType", "multipart")
       .build()
     val request = Request.Builder()
-      .post(body.toRequestBody())
+      .post(multipartBody)
       .addHeader("Authorization", "Bearer $accessToken")
       .url(url)
       .build()
@@ -113,7 +155,7 @@ internal class GcsTransport(
               Thread.sleep(delay)
               retry++
               if (retry > 5) {
-                error("Too many retries ($retry), giving up ('${response.code}'): ${response.body?.string()}")
+                error("Too many retries ($retry), giving up ('${response.code}'): ${response.body.string()}")
               }
             }
 
@@ -123,7 +165,7 @@ internal class GcsTransport(
                   request.header(
                     "content-length"
                   )
-                }) ('${response.code}'): ${response.body?.string()}"
+                }) ('${response.code}'): ${response.body.string()}"
               )
             }
           }
@@ -131,7 +173,7 @@ internal class GcsTransport(
         continue
       }
 
-      return response.body!!.source()
+      return response.body.source()
     }
   }
 }
