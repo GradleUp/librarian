@@ -82,7 +82,7 @@ fun Project.librarianModule() {
   val moduleProperties = moduleProperties()
 
   val bcv = if (moduleProperties.getProperty("bcv") != "false") {
-    Bcv(rootProperties.get("bcv.warn") != "false") {}
+    Bcv(rootProperties.get("bcv.warn") != "false", emptyList())
   } else {
     null
   }
@@ -109,7 +109,7 @@ fun Project.librarianModule() {
 
 class Bcv(
   val warnIfMissing: Boolean,
-  val variantSpec: (variantSpec: Any) -> Unit
+  val excludePatterns: List<String>
 )
 
 class Publishing(
@@ -168,7 +168,7 @@ fun Project.librarianModule(
      * This is because we don't need to track projects that do not get published.
      */
     if (bcv != null) {
-      configureBcv(bcv.warnIfMissing, bcv.variantSpec)
+      configureBcv(bcv.warnIfMissing, bcv.excludePatterns)
     }
     /**
      * Only configure signing for projects that are published.
