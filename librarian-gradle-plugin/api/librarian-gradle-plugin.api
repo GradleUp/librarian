@@ -1,12 +1,12 @@
 public final class com/gradleup/librarian/gradle/Bcv {
-	public fun <init> (ZLkotlin/jvm/functions/Function1;)V
-	public final fun getVariantSpec ()Lkotlin/jvm/functions/Function1;
+	public fun <init> (ZLjava/util/List;)V
+	public final fun getExcludePatterns ()Ljava/util/List;
 	public final fun getWarnIfMissing ()Z
 }
 
 public final class com/gradleup/librarian/gradle/BcvKt {
-	public static final fun configureBcv (Lorg/gradle/api/Project;ZLkotlin/jvm/functions/Function1;)V
-	public static synthetic fun configureBcv$default (Lorg/gradle/api/Project;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun configureBcv (Lorg/gradle/api/Project;ZLjava/util/List;)V
+	public static synthetic fun configureBcv$default (Lorg/gradle/api/Project;ZLjava/util/List;ILjava/lang/Object;)V
 }
 
 public final class com/gradleup/librarian/gradle/CompatibilityKt {

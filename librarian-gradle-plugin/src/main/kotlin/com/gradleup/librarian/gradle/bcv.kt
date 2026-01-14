@@ -8,7 +8,10 @@ import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 
 @OptIn(ExperimentalAbiValidation::class)
-fun Project.configureBcv(warnIfMissing: Boolean = true, block: (variantSpec: Any) -> Unit = {}) {
+fun Project.configureBcv(
+  warnIfMissing: Boolean = true,
+  excludePatterns: List<String> = emptyList(),
+) {
   extensions.getByType(KotlinProjectExtension::class.java).apply {
     val abiValidation = this.extensions.findByName("abiValidation")
 
@@ -16,14 +19,14 @@ fun Project.configureBcv(warnIfMissing: Boolean = true, block: (variantSpec: Any
       when (abiValidation) {
         is AbiValidationExtension -> {
           abiValidation.enabled.set(true)
-          abiValidation.variants.configureEach {
-            block(it)
+          abiValidation.filters {
+            it.exclude.byNames.addAll(excludePatterns)
           }
         }
         is AbiValidationMultiplatformExtension -> {
           abiValidation.enabled.set(true)
-          abiValidation.variants.configureEach {
-            block(it)
+          abiValidation.filters {
+            it.exclude.byNames.addAll(excludePatterns)
           }
         }
          else -> error("Librarian: unknown abiValidation extension type: '${abiValidation.javaClass.name}'")
