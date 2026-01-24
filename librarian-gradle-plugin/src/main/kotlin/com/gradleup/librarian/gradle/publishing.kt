@@ -161,15 +161,6 @@ private fun Project.emptyJavadoc(repositoryUrl: String?): TaskProvider<Jar> {
   }
 }
 
-private fun Project.javaSources(): TaskProvider<Jar> {
-  return tasks.register("librarianSources", Jar::class.java) {
-    it.archiveClassifier.set("sources")
-
-    val sourceSets = project.extensions.getByType(JavaPluginExtension::class.java).sourceSets
-    it.from(sourceSets.getByName("main").allSource)
-  }
-}
-
 /**
  * Creates missing publications based on the plugins being applied and the tasks found in the project.
  *
@@ -185,6 +176,9 @@ fun Project.createMissingPublications(
   docUrl: String? = null,
 ) = configurePublishingInternal {
   val emptyJavadoc = emptyJavadoc(docUrl)
+
+  val javaPluginExtension = project.extensions.findByType(JavaPluginExtension::class.java)
+  javaPluginExtension?.withSourcesJar()
 
   when {
     project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform") -> {
@@ -212,17 +206,12 @@ fun Project.createMissingPublications(
         // Only add sources and javadoc for the main publication
         if (!it.name.endsWith("PluginMarkerMaven")) {
           it.artifact(emptyJavadoc)
-          it.artifact(javaSources())
         }
       }
     }
 
     hasAndroid -> {
-      createAndroidPublication("release")
-
-      publications.withType(MavenPublication::class.java) {
-        it.artifact(emptyJavadoc)
-      }
+      createAndroidPublication("release", emptyJavadoc)
     }
 
     extensions.findByName("java") != null -> {
@@ -230,7 +219,6 @@ fun Project.createMissingPublications(
 
         it.from(components.findByName("java"))
         it.artifact(emptyJavadoc)
-        it.artifact(javaSources())
       }
     }
   }
