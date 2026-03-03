@@ -2,10 +2,9 @@ package com.gradleup.librarian.cli.command
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
-import com.github.kinquirer.KInquirer
-import com.github.kinquirer.components.promptConfirm
-import com.github.kinquirer.components.promptInput
-import com.github.kinquirer.components.promptList
+import com.gradleup.librarian.cli.promptChoices
+import com.gradleup.librarian.cli.promptConfirm
+import com.gradleup.librarian.cli.promptInput
 import com.gradleup.librarian.core.tooling.GitHubRepository
 import com.gradleup.librarian.core.tooling.getAvailableOrganizations
 import com.gradleup.librarian.core.tooling.init.SupportedLicense
@@ -38,7 +37,7 @@ internal class Create : CliktCommand() {
 
     with(Path(directory)) {
       if (exists()) {
-        if(KInquirer.promptConfirm("'$directory' already exists. Overwrite?", false)) {
+        if(promptConfirm("'$directory' already exists. Overwrite?", false)) {
           deleteRecursively()
         } else {
           exitProcess(1)
@@ -59,17 +58,17 @@ internal class Create : CliktCommand() {
         
       """.trimIndent())
 
-      val gitHubProjectName = KInquirer.promptInput(message = "GitHub repository name", directory)
-      val gitHubProjectOwner = KInquirer.promptList(message = "GitHub repository owner", getAvailableOrganizations())
-      val license = KInquirer.promptList("License", SupportedLicense.entries.map { it.name }).toSupportedLicense()
-      val copyrightHolder = KInquirer.promptInput("Copyright holder", "$gitHubProjectName authors")
-      val groupId = KInquirer.promptInput("Maven group id", "io.github.${gitHubProjectOwner}.${gitHubProjectName}")
-      val pomDescription = KInquirer.promptInput("Maven pom description")
-      val pomDeveloper = KInquirer.promptInput("Maven pom developer", copyrightHolder)
-      val multiplatform = KInquirer.promptConfirm("Kotlin multiplatform project")
-      val javaCompatibility = KInquirer.promptInput("Java compatibility", "8")
-      val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", librarianKotlinPluginVersion)
-      val indent = KInquirer.promptInput("Indent size", "4")
+      val gitHubProjectName = promptInput(name = "GitHub repository name", directory)
+      val gitHubProjectOwner = promptChoices(message = "GitHub repository owner", getAvailableOrganizations())
+      val license = promptChoices("License", SupportedLicense.entries.map { it.name }).toSupportedLicense()
+      val copyrightHolder = promptInput("Copyright holder", "$gitHubProjectName authors")
+      val groupId = promptInput("Maven group id", "io.github.${gitHubProjectOwner}.${gitHubProjectName}")
+      val pomDescription = promptInput("Maven pom description")
+      val pomDeveloper = promptInput("Maven pom developer", copyrightHolder)
+      val multiplatform = promptConfirm("Kotlin multiplatform project")
+      val javaCompatibility = promptInput("Java compatibility", "8")
+      val kotlinCompatibility = promptInput("Kotlin compatibility", librarianKotlinPluginVersion)
+      val indent = promptInput("Indent size", "4")
 
       val repository = GitHubRepository(gitHubProjectOwner, gitHubProjectName)
       print("Writing files...")

@@ -2,10 +2,7 @@ package com.gradleup.librarian.cli.command
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
-import com.github.kinquirer.KInquirer
-import com.github.kinquirer.components.promptConfirm
-import com.github.kinquirer.components.promptInput
-import com.github.kinquirer.components.promptList
+import com.gradleup.librarian.cli.promptConfirm
 import com.gradleup.librarian.cli.command.init.ActionsCommand
 import com.gradleup.librarian.cli.command.init.ChangelogCommand
 import com.gradleup.librarian.cli.command.init.CodeStyleCommand
@@ -16,6 +13,9 @@ import com.gradleup.librarian.cli.command.init.LicenseCommand
 import com.gradleup.librarian.cli.command.init.GitHubSecretsCommand
 import com.gradleup.librarian.cli.command.init.GitHubMetadataCommand
 import com.gradleup.librarian.cli.command.init.WriterSideCommand
+import com.gradleup.librarian.cli.exit
+import com.gradleup.librarian.cli.promptChoices
+import com.gradleup.librarian.cli.promptInput
 import com.gradleup.librarian.core.tooling.init.SupportedLicense
 import com.gradleup.librarian.core.tooling.init.currentYear
 import com.gradleup.librarian.core.tooling.init.guessLicenseOrNull
@@ -59,8 +59,8 @@ internal class Init : CliktCommand(invokeWithoutSubcommand = true) {
         val license: SupportedLicense
         if (licenseCandidates.isEmpty()) {
           val defaultCopyrightOwners = "${gitHubRepository?.name ?: name} authors"
-          license = KInquirer.promptList("License", SupportedLicense.entries.map { it.name }).toSupportedLicense()
-          val copyrightHolder = KInquirer.promptInput("Copyright holder", defaultCopyrightOwners)
+          license = promptChoices("License", SupportedLicense.entries.map { it.name }).toSupportedLicense()
+          val copyrightHolder = promptInput("Copyright holder", defaultCopyrightOwners)
           println("Creating LICENSE...")
           initLicense(license, currentYear(), copyrightHolder)
         } else if (licenseCandidates.size == 1) {
@@ -92,12 +92,12 @@ internal class Init : CliktCommand(invokeWithoutSubcommand = true) {
 
         val defaultDevelopers = "${gitHubRepository?.name ?: name} authors"
 
-        val groupId = KInquirer.promptInput("Maven group id")
-        val pomDescription = KInquirer.promptInput("Maven pom description")
-        val pomDeveloper = KInquirer.promptInput("Maven pom developer", defaultDevelopers)
-        val projectUrl = gitHubRepository?.url() ?: KInquirer.promptInput("Maven pom project url")
-        val javaCompatibility = KInquirer.promptInput("Java compatibility", "8")
-        val kotlinCompatibility = KInquirer.promptInput("Kotlin compatibility", librarianKotlinPluginVersion)
+        val groupId = promptInput("Maven group id")
+        val pomDescription = promptInput("Maven pom description")
+        val pomDeveloper = promptInput("Maven pom developer", defaultDevelopers)
+        val projectUrl = gitHubRepository?.url() ?: promptInput("Maven pom project url")
+        val javaCompatibility = promptInput("Java compatibility", "8")
+        val kotlinCompatibility = promptInput("Kotlin compatibility", librarianKotlinPluginVersion)
 
         initLibrarian(
             javaCompatibility = javaCompatibility,
@@ -110,7 +110,7 @@ internal class Init : CliktCommand(invokeWithoutSubcommand = true) {
         )
 
         if (gitHubRepository != null) {
-          val addDocumentationSite = KInquirer.promptConfirm("Add Writerside documentation site?", true)
+          val addDocumentationSite = promptConfirm("Add Writerside documentation site?", true)
           if (addDocumentationSite) {
             // Writer side "edit on GitHub" requires GitHub
             initWriterside(gitHubRepository)

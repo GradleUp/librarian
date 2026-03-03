@@ -62,18 +62,31 @@ fun tagAndBump(versionToRelease: SemVer) {
 
 fun runCommand(vararg args: String): String {
   val builder = ProcessBuilder(*args)
-      .redirectError(ProcessBuilder.Redirect.INHERIT)
 
   val process = builder.start()
-  val ret = process.waitFor()
 
-  val output = process.inputStream.bufferedReader().readText()
-  check(ret == 0) {
-    System.err.flush() //probably not needed?
-    "command ${args.joinToString(" ")} failed with output:\n$output"
+  var stdout: String? = null
+  val outThread = Thread {
+    stdout = process.inputStream.bufferedReader().readText()
   }
 
-  return output.trim()
+  var stderr: String? = null
+  val errThread = Thread {
+    stderr = process.errorStream.bufferedReader().readText()
+  }
+
+  outThread.start()
+  errThread.start()
+  val ret = process.waitFor()
+  outThread.join()
+  errThread.join()
+
+  check(ret == 0) {
+    System.err.flush() //probably not needed?
+    "command ${args.joinToString(" ")} failed with output:\n$stdout\nand error:\n$stderr"
+  }
+
+  return stdout!!.trim()
 }
 
 internal fun setCurrentVersion(version: String) {

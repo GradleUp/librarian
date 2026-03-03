@@ -1,26 +1,7 @@
 package com.gradleup.librarian.cli.command
 
-import com.github.ajalt.clikt.core.CliktCommand
 import java.io.File
 import java.util.regex.Pattern
-
-internal class PrepareNextVersion(private val setVersionInDocs: VersionContext.() -> Unit) : CliktCommand() {
-  override fun run() {
-    val currentVersion = getCurrentVersion()
-    check(currentVersion.endsWith("-SNAPSHOT")) {
-      "Current version '$currentVersion' does not ends with '-SNAPSHOT'. Call set-version to update it."
-    }
-
-    val releaseVersion = currentVersion.dropSnapshot()
-    val nextSnapshot = getNextSnapshot(releaseVersion)
-
-    VersionContext(releaseVersion).setVersionInDocs()
-    setCurrentVersion(nextSnapshot)
-
-    println("Docs have been updated to use version '$releaseVersion'.")
-    println("Version is now '$nextSnapshot'.")
-  }
-}
 
 class VersionContext(val version: String) {
   fun file(path: String, block: FileContext.() -> Unit) {
