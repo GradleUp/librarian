@@ -2,7 +2,7 @@
 kgp = "2.3.0"
 nmcp = "1.4.3"
 nmcp-build-time = "1.4.4-SNAPSHOT-7b0410ef4061d1249c7b161698764b8194838354"
-mosaic = "0.18.0"
+mosaic = "0.19.0-SNAPSHOT"
 
 [libraries]
 agp = "com.android.tools.build:gradle:8.2.0"
@@ -18,8 +18,6 @@ dokka = "org.jetbrains.dokka:dokka-gradle-plugin:2.1.0-Beta"
 google-auth = "com.google.auth:google-auth-library-oauth2-http:1.19.0"
 gradle-api = "dev.gradleplugins:gradle-api:8.8"
 gratatouille-gradle-plugin = "com.gradleup.gratatouille:com.gradleup.gratatouille.gradle.plugin:0.2.2"
-inquirer = "com.github.kotlin-inquirer:kotlin-inquirer:0.1.0"
-jansi = "org.fusesource.jansi:jansi:2.4.0"
 jsonpath = "com.eygraber:jsonpathkt-kotlinx:3.0.2"
 jsonpathkt = "com.eygraber:jsonpathkt-kotlinx:3.0.2"
 kgp-compile-only = "org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.20-Beta1"
@@ -28,7 +26,6 @@ ksp-gradle-plugin = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plug
 librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.2.2-SNAPSHOT-05f300b66924ec4c98ed4afcc6eed459fd08806b"
 maven-sympathy = "com.gradleup.maven-sympathy:maven-sympathy:0.0.2"
 mockserver = "com.apollographql.mockserver:apollo-mockserver:0.0.3"
-mordant = "com.github.ajalt.mordant:mordant:2.7.1"
 mosaic-runtime = { module = "com.jakewharton.mosaic:mosaic-runtime", version.ref = "mosaic" }
 nmcp = { module = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin", version.ref = "nmcp" }
 nmcp-tasks = { module = "com.gradleup.nmcp:nmcp-tasks", version.ref = "nmcp" }
