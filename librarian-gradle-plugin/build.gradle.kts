@@ -1,4 +1,5 @@
 import com.gradleup.librarian.gradle.Librarian
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 
 plugins {
   id("org.jetbrains.kotlin.jvm")
@@ -32,9 +33,37 @@ dependencies {
 
   compileOnly(libs.gradle.api)
   compileOnly(libs.agp)
-  compileOnly(libs.kgp.compile.only)
+  compileOnly(libs.kgp220)
 
   testImplementation(kotlin("test"))
   testImplementation(gradleTestKit())
   testImplementation(libs.mockserver)
+}
+
+private fun addEdge(compilation: KotlinCompilation<*>, dependency: KotlinCompilation<*>) {
+  compilation.defaultSourceSet.dependencies {
+    compileOnly(dependency.output.classesDirs)
+  }
+}
+
+val mainCompilation = kotlin.target.compilations.getByName("main")
+
+mapOf(
+  "220" to setOf(libs.kgp220),
+  "2320" to setOf(libs.kgp2320)
+).forEach {
+  val compilation = kotlin.target.compilations.create("kgp-${it.key}")
+
+  addEdge(mainCompilation, compilation) // Needed to be able
+
+  tasks.jar {
+    from(compilation.output.classesDirs)
+  }
+  dependencies {
+    it.value.forEach {
+      add(compilation.compileOnlyConfigurationName, it)
+    }
+    // See https://issuetracker.google.com/issues/445209309
+    add(compilation.compileOnlyConfigurationName, libs.gradle.api)
+  }
 }
