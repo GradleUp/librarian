@@ -2,7 +2,7 @@
 kgp = "2.3.0"
 nmcp = "1.4.3"
 nmcp-build-time = "1.4.4-SNAPSHOT-7b0410ef4061d1249c7b161698764b8194838354"
-mosaic = "0.19.0-SNAPSHOT"
+mosaic = "0.19.0-gradleup.0"
 
 [libraries]
 agp = "com.android.tools.build:gradle:8.2.0"
@@ -26,7 +26,7 @@ ksp-gradle-plugin = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plug
 librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.2.2-SNAPSHOT-05f300b66924ec4c98ed4afcc6eed459fd08806b"
 maven-sympathy = "com.gradleup.maven-sympathy:maven-sympathy:0.0.2"
 mockserver = "com.apollographql.mockserver:apollo-mockserver:0.0.3"
-mosaic-runtime = { module = "com.jakewharton.mosaic:mosaic-runtime", version.ref = "mosaic" }
+mosaic-runtime = { module = "com.gradleup.mosaic:mosaic-runtime", version.ref = "mosaic" }
 nmcp = { module = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin", version.ref = "nmcp" }
 nmcp-tasks = { module = "com.gradleup.nmcp:nmcp-tasks", version.ref = "nmcp" }
 nmcp-build-time = { module = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin", version.ref = "nmcp-build-time" }

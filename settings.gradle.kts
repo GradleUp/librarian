@@ -4,6 +4,11 @@ pluginManagement {
       mavenCentral()
       google()
       mavenLocal()
+      maven("https://storage.googleapis.com/gradleup/m2") {
+        content {
+          includeGroup("com.gradleup.mosaic")
+        }
+      }
     }
   }
   repositories {
