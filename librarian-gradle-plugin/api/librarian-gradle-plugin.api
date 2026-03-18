@@ -7,6 +7,8 @@ public final class com/gradleup/librarian/gradle/Bcv {
 public final class com/gradleup/librarian/gradle/BcvKt {
 	public static final fun configureBcv (Lorg/gradle/api/Project;ZLjava/util/List;)V
 	public static synthetic fun configureBcv$default (Lorg/gradle/api/Project;ZLjava/util/List;ILjava/lang/Object;)V
+	public static final fun configureBcv_2_2 (Lorg/gradle/api/Project;ZLjava/util/List;)V
+	public static synthetic fun configureBcv_2_2$default (Lorg/gradle/api/Project;ZLjava/util/List;ILjava/lang/Object;)V
 }
 
 public final class com/gradleup/librarian/gradle/CompatibilityKt {
