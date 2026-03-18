@@ -1,5 +1,5 @@
 [versions]
-kgp = "2.3.0"
+kgp = "2.3.20"
 nmcp = "1.4.3"
 nmcp-build-time = "1.4.4-SNAPSHOT-7b0410ef4061d1249c7b161698764b8194838354"
 mosaic = "0.19.0-gradleup.0"
@@ -20,10 +20,10 @@ gradle-api = "dev.gradleplugins:gradle-api:8.8"
 gratatouille-gradle-plugin = "com.gradleup.gratatouille:com.gradleup.gratatouille.gradle.plugin:0.2.2"
 jsonpath = "com.eygraber:jsonpathkt-kotlinx:3.0.2"
 jsonpathkt = "com.eygraber:jsonpathkt-kotlinx:3.0.2"
-kgp-compile-only = "org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.20-Beta1"
+kgp-compile-only = "org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.20"
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kgp" }
 ksp-gradle-plugin = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.3.3"
-librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.2.2-SNAPSHOT-05f300b66924ec4c98ed4afcc6eed459fd08806b"
+librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.2.2-SNAPSHOT-c2127df7d03b2946fc025bf67d31cac3e2c5a397"
 maven-sympathy = "com.gradleup.maven-sympathy:maven-sympathy:0.0.2"
 mockserver = "com.apollographql.mockserver:apollo-mockserver:0.0.3"
 # forked for https://github.com/JakeWharton/mosaic/pull/1100

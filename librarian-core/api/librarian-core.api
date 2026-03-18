@@ -101,6 +101,7 @@ public final class com/gradleup/librarian/core/tooling/SemverKt {
 	public static final fun nextPatch (Lcom/gradleup/librarian/core/tooling/SemVer;)Lcom/gradleup/librarian/core/tooling/SemVer;
 	public static final fun nextPrerelease (Lcom/gradleup/librarian/core/tooling/SemVer;)Lcom/gradleup/librarian/core/tooling/SemVer;
 	public static final fun semVerOrNull (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/SemVer;
+	public static final fun semVerOrThrow (Ljava/lang/String;)Lcom/gradleup/librarian/core/tooling/SemVer;
 }
 
 public final class com/gradleup/librarian/core/tooling/Tag_and_bumpKt {

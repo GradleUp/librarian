@@ -194,6 +194,9 @@ fun SemVer.next(): SemVer {
     }
   }
 }
+fun String.semVerOrThrow(): SemVer {
+  return semVerOrNull() ?: error("Cannot parse $this as a SemVer string")
+}
 
 fun String.semVerOrNull(): SemVer? {
   val regex1 = Regex("([0-9]+)\\.([0-9]+)\\.([0-9]+)(.*)")

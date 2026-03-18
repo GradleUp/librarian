@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalAbiValidation::class)
+
 package com.gradleup.librarian.gradle
 
+import com.gradleup.librarian.core.tooling.semVerOrThrow
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
@@ -7,7 +10,6 @@ import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 
-@OptIn(ExperimentalAbiValidation::class)
 fun Project.configureBcv(
   warnIfMissing: Boolean = true,
   excludePatterns: List<String> = emptyList(),
@@ -29,20 +31,38 @@ fun Project.configureBcv(
             it.exclude.byNames.addAll(excludePatterns)
           }
         }
-         else -> error("Librarian: unknown abiValidation extension type: '${abiValidation.javaClass.name}'")
+        else -> error("Librarian: unknown abiValidation extension type: '${abiValidation.javaClass.name}'")
       }
 
-      tasks.named("build") {
-        it.dependsOn("checkLegacyAbi")
-      }
+      // See https://kotlinlang.org/docs/whatsnew2320.html#improvements-to-binary-compatibility-validation-in-kgp
+      val kgpVersion = this@configureBcv.getKotlinPluginVersion().semVerOrThrow()
+
       /**
        * Compatibility tasks to not break the brain muscle
        */
-      tasks.register("apiDump") {
-        it.dependsOn("updateLegacyAbi")
-      }
-      tasks.register("apiCheck") {
-        it.dependsOn("checkLegacyAbi")
+      if (kgpVersion >= "2.3.20".semVerOrThrow()) {
+        tasks.register("apiDump") {
+          it.dependsOn("updateKotlinAbi")
+          it.doLast {
+            println("`apiDump` is deprecated. Use `updateKotlinAbi` instead")
+          }
+        }
+        tasks.register("apiCheck") {
+          it.dependsOn("checkKotlinAbi")
+          it.doLast {
+            println("`apiCheck` is deprecated. Use `updateKotlinAbi` instead")
+          }
+        }
+      } else {
+        tasks.named("build") {
+          it.dependsOn("checkLegacyAbi")
+        }
+        tasks.register("apiDump") {
+          it.dependsOn("updateLegacyAbi")
+        }
+        tasks.register("apiCheck") {
+          it.dependsOn("checkLegacyAbi")
+        }
       }
     } else {
       if (warnIfMissing) {
