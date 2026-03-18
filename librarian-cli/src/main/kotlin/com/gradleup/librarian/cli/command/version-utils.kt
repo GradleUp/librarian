@@ -2,9 +2,6 @@ package com.gradleup.librarian.cli.command
 
 import java.io.File
 
-
-internal fun String.dropSnapshot() = this.removeSuffix("-SNAPSHOT")
-
 internal fun setCurrentVersion(version: String) {
   val librarianRootProperties = File("librarian.root.properties")
   val newContent = librarianRootProperties.readLines().joinToString(separator = "\n", postfix = "\n") {
@@ -13,7 +10,7 @@ internal fun setCurrentVersion(version: String) {
   librarianRootProperties.writeText(newContent)
 }
 
-internal fun getCurrentVersion(): String {
+fun librarianCurrentVersion(): String {
   val versionLines = File("librarian.root.properties").readLines().filter { it.startsWith("pom.version=") }
 
   require(versionLines.size > 0) {

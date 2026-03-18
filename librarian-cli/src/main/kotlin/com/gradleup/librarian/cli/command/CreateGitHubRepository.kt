@@ -1,11 +1,10 @@
 package com.gradleup.librarian.cli.command
 
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.kinquirer.KInquirer
-import com.github.kinquirer.components.promptConfirm
-import com.github.kinquirer.components.promptInput
-import com.github.kinquirer.components.promptList
 import com.gradleup.librarian.cli.command.init.setSecrets
+import com.gradleup.librarian.cli.promptChoices
+import com.gradleup.librarian.cli.promptConfirm
+import com.gradleup.librarian.cli.promptInput
 import com.gradleup.librarian.core.tooling.GH
 import com.gradleup.librarian.core.tooling.GitHubRepository
 import com.gradleup.librarian.core.tooling.getAvailableOrganizations
@@ -22,8 +21,8 @@ class CreateGitHubRepository : CliktCommand() {
   override fun run() {
 
     Path(".").apply {
-      val gitHubProjectName = KInquirer.promptInput(message = "GitHub repository name", this.absolute().normalize().name)
-      val gitHubProjectOwner = KInquirer.promptList(message = "GitHub repository owner", getAvailableOrganizations())
+      val gitHubProjectName = promptInput(name = "GitHub repository name", this.absolute().normalize().name)
+      val gitHubProjectOwner = promptChoices(message = "GitHub repository owner", getAvailableOrganizations())
       val repository = GitHubRepository(gitHubProjectOwner, gitHubProjectName)
       createGitHubRepository(repository, "")
     }
@@ -31,7 +30,7 @@ class CreateGitHubRepository : CliktCommand() {
 }
 
 internal fun Path.createGitHubRepository(repository: GitHubRepository, defaultDescription: String): UploadResult {
-  val upload = KInquirer.promptConfirm(
+  val upload = promptConfirm(
       "Create public GitHub repository at ${repository.owner}/${repository.name}?",
       default = true
   )
@@ -41,8 +40,8 @@ internal fun Path.createGitHubRepository(repository: GitHubRepository, defaultDe
 
   runCommand("gh", "repo", "create", "--public", "-s",  ".", "--push", "${repository.owner}/${repository.name}",)
 
-  val gitHubDescription = KInquirer.promptInput("GitHub description", defaultDescription)
-  val gitHubTopics = KInquirer.promptInput("GitHub topics (use comma separated list)", "kotlin").split(",").map { it.trim() }
+  val gitHubDescription = promptInput("GitHub description", defaultDescription)
+  val gitHubTopics = promptInput("GitHub topics (use comma separated list)", "kotlin").split(",").map { it.trim() }
   println("Setting GitHub metadata...")
   initMetadata(gitHubDescription, null, gitHubTopics)
 
@@ -54,7 +53,7 @@ internal fun Path.createGitHubRepository(repository: GitHubRepository, defaultDe
   gh.createBranch("gh-pages")
   gh.enablePages("gh-pages")
 
-  val secrets = KInquirer.promptConfirm(
+  val secrets = promptConfirm(
       "Set your project secrets now?",
       default = true
   )

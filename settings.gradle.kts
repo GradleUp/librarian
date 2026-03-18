@@ -3,11 +3,12 @@ pluginManagement {
     it.apply {
       mavenCentral()
       google()
-
-      exclusiveContent {
-        forRepository { maven("https://jitpack.io") }
-        filter {
-          includeGroup("com.github.kotlin-inquirer")
+      mavenLocal()
+      // custom repo for https://github.com/JakeWharton/mosaic/pull/1100
+      // reminder to remove when not forking anymore
+      maven("https://storage.googleapis.com/gradleup/m2") {
+        content {
+          includeGroup("com.gradleup.mosaic")
         }
       }
       maven("https://storage.googleapis.com/gradleup/m2") {
