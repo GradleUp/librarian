@@ -26,6 +26,8 @@ ksp-gradle-plugin = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plug
 librarian-gradle-plugin = "com.gradleup.librarian:librarian-gradle-plugin:0.2.2-SNAPSHOT-05f300b66924ec4c98ed4afcc6eed459fd08806b"
 maven-sympathy = "com.gradleup.maven-sympathy:maven-sympathy:0.0.2"
 mockserver = "com.apollographql.mockserver:apollo-mockserver:0.0.3"
+# forked for https://github.com/JakeWharton/mosaic/pull/1100
+# reminder to remove the gradleup repository from settings.gradle.kts when not forking anymore
 mosaic-runtime = { module = "com.gradleup.mosaic:mosaic-runtime", version.ref = "mosaic" }
 nmcp = { module = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin", version.ref = "nmcp" }
 nmcp-tasks = { module = "com.gradleup.nmcp:nmcp-tasks", version.ref = "nmcp" }
