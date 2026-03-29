@@ -178,7 +178,6 @@ fun Project.createMissingPublications(
   val emptyJavadoc = emptyJavadoc(docUrl)
 
   val javaPluginExtension = project.extensions.findByType(JavaPluginExtension::class.java)
-  javaPluginExtension?.withSourcesJar()
 
   when {
     project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform") -> {
@@ -202,6 +201,7 @@ fun Project.createMissingPublications(
       /**
        * java-gradle-plugin creates 2 publications (one marker and one regular) but without source/javadoc.
        */
+      javaPluginExtension?.withSourcesJar()
       publications.withType(MavenPublication::class.java) {
         // Only add sources and javadoc for the main publication
         if (!it.name.endsWith("PluginMarkerMaven")) {
@@ -215,8 +215,8 @@ fun Project.createMissingPublications(
     }
 
     extensions.findByName("java") != null -> {
+      javaPluginExtension?.withSourcesJar()
       publications.create("default", MavenPublication::class.java) {
-
         it.from(components.findByName("java"))
         it.artifact(emptyJavadoc)
       }
