@@ -1,7 +1,7 @@
 [versions]
 kgp = "2.3.20"
-nmcp = "1.4.3"
-nmcp-build-time = "1.4.4-SNAPSHOT-7b0410ef4061d1249c7b161698764b8194838354"
+nmcp = "1.4.4"
+nmcp-build-time = "1.4.4"
 mosaic = "0.19.0-gradleup.0"
 
 [libraries]
@@ -11,8 +11,8 @@ bouncycastle-pg = "org.bouncycastle:bcpg-jdk18on:1.78.1"
 bouncycastle-prov = "org.bouncycastle:bcprov-jdk18on:1.78.1"
 compose-compiler = { module = "org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kgp" }
 clikt = "com.github.ajalt.clikt:clikt:3.5.0"
-tapmoc = "com.gradleup.tapmoc:tapmoc-gradle-plugin:0.3.2"
-tapmoc-at-build-time = "com.gradleup.tapmoc:tapmoc-gradle-plugin:0.2.1-SNAPSHOT-dda1362c1d0f8389f50b362a08967793e320cf29"
+tapmoc = "com.gradleup.tapmoc:tapmoc-gradle-plugin:0.4.1"
+tapmoc-at-build-time = "com.gradleup.tapmoc:tapmoc-gradle-plugin:0.4.1"
 coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
 dokka = "org.jetbrains.dokka:dokka-gradle-plugin:2.2.0"
 google-auth = "com.google.auth:google-auth-library-oauth2-http:1.19.0"

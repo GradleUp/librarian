@@ -56,10 +56,9 @@ internal fun Properties.projects(project: Project): List<String> {
     project.allprojects.map { it.isolated.path }
   } else {
     getProperty("kdoc.projects")?.split(",")
-      .orEmpty()
-      .filter {
+      ?.filter {
         it.isNotEmpty()
-      }
+      } ?: error("Librarian: either kdoc.projects or kdoc.allProjects is required")
   }
 }
 
