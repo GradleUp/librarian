@@ -49,6 +49,10 @@ fun Gcs(properties: Properties): Gcs? {
 }
 
 class Kdoc(
+  /**
+   * The list of project paths, starting, with ":".
+   * We can't do this automatically, sadly. See https://github.com/Kotlin/dokka/issues/4489
+   */
   val projects: List<String>,
   val olderVersions: List<Coordinates>,
 )
