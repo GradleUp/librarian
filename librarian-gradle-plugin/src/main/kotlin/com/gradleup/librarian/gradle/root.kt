@@ -29,7 +29,6 @@ fun Project.librarianRoot() {
   )
 }
 
-
 fun Project.librarianRoot(
   group: String,
   version: String,
@@ -58,7 +57,7 @@ fun Project.librarianRoot(
     currentVersion = version,
     olderVersions = kdoc.olderVersions,
     aggregateConfiguration = "nmcpAggregation",
-    includeSelf = kdoc.includeSelf,
+    projectPaths = kdoc.projects,
   )
 
   val nmcpAggregation = extensions.getByType(NmcpAggregationExtension::class.java)

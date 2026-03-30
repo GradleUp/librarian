@@ -42,7 +42,7 @@ fun Project.configureDokkaAggregate(
   currentVersion: String,
   olderVersions: List<Coordinates>,
   aggregateConfiguration: String,
-  includeSelf: Boolean,
+  projectPaths: List<String>,
 ): TaskProvider<Jar> {
   val jar = configureDokkaInternal {
     dependencies.add(
@@ -104,11 +104,8 @@ fun Project.configureDokkaAggregate(
     }
   }
 
-  allprojects {
-    if (it == this && !includeSelf) {
-      return@allprojects
-    }
-    dependencies.add("dokka", it)
+  projectPaths.forEach {
+    dependencies.add("dokka", dependencies.project(mapOf("path" to it)))
   }
 
   configurePublishingInternal {

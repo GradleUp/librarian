@@ -49,13 +49,13 @@ fun Gcs(properties: Properties): Gcs? {
 }
 
 class Kdoc(
-  val includeSelf: Boolean,
+  val projects: List<String>,
   val olderVersions: List<Coordinates>,
 )
 
 fun Kdoc(properties: Properties): Kdoc {
   return Kdoc(
-    false,
+    properties.projects(),
     properties.olderVersions(),
   )
 }
