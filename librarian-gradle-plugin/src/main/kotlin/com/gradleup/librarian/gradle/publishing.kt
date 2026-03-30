@@ -57,9 +57,10 @@ class Kdoc(
   val olderVersions: List<Coordinates>,
 )
 
-fun Kdoc(properties: Properties): Kdoc {
+fun Kdoc(project: Project, properties: Properties): Kdoc {
+
   return Kdoc(
-    properties.projects(),
+    properties.projects(project),
     properties.olderVersions(),
   )
 }
