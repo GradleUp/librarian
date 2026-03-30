@@ -47,12 +47,20 @@ internal fun Properties.olderVersions(): List<Coordinates> {
     }
 }
 
-internal fun Properties.projects(): List<String> {
-  return getProperty("kdoc.projects")?.split(",")
-    .orEmpty()
-    .filter {
-      it.isNotEmpty()
+internal fun Properties.projects(project: Project): List<String> {
+  val allProjects = getProperty("kdoc.allProjects")?.toBoolean() ?: false
+  return if (allProjects) {
+    check(getProperty("kdoc.projects") == null) {
+      "It is an error to set both kdoc.projects and kdoc.allProjects"
     }
+    project.allprojects.map { it.isolated.path }
+  } else {
+    getProperty("kdoc.projects")?.split(",")
+      .orEmpty()
+      .filter {
+        it.isNotEmpty()
+      }
+  }
 }
 
 internal fun Project.rootProperties(): Properties {

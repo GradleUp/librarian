@@ -110,7 +110,6 @@ public final class com/gradleup/librarian/gradle/Publishing {
 
 public final class com/gradleup/librarian/gradle/PublishingKt {
 	public static final fun Gcs (Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/Gcs;
-	public static final fun Kdoc (Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/Kdoc;
 	public static final fun PomMetadata (Ljava/lang/String;Ljava/util/Properties;)Lcom/gradleup/librarian/gradle/PomMetadata;
 	public static final fun configurePom (Lorg/gradle/api/Project;Lcom/gradleup/librarian/gradle/PomMetadata;)V
 	public static final fun configurePublishing (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;ZZLcom/gradleup/librarian/gradle/PomMetadata;Lcom/gradleup/librarian/gradle/Signing;Ljava/lang/String;)V

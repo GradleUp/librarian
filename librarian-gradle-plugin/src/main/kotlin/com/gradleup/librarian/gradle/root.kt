@@ -11,7 +11,7 @@ fun Project.librarianRoot() {
   val sonatype = Sonatype(project, rootProperties)
   val signing = Signing(project)
   val gcs = Gcs(rootProperties)
-  val kdoc = Kdoc(rootProperties)
+  val kdoc = Kdoc(this, rootProperties)
 
   librarianRoot(
     group = rootProperties.getRequiredProperty("pom.groupId"),
