@@ -47,6 +47,14 @@ internal fun Properties.olderVersions(): List<Coordinates> {
     }
 }
 
+internal fun Properties.projects(): List<String> {
+  return getProperty("kdoc.projects")?.split(",")
+    .orEmpty()
+    .filter {
+      it.isNotEmpty()
+    }
+}
+
 internal fun Project.rootProperties(): Properties {
   val propertiesFile = rootDir.resolve(rootPropertiesFilename)
   check(propertiesFile.exists()) {

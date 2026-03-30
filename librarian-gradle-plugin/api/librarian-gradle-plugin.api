@@ -24,7 +24,7 @@ public final class com/gradleup/librarian/gradle/Coordinates {
 public final class com/gradleup/librarian/gradle/DokkaKt {
 	public static final fun Coordinates (Ljava/lang/String;)Lcom/gradleup/librarian/gradle/Coordinates;
 	public static final fun configureDokka (Lorg/gradle/api/Project;)V
-	public static final fun configureDokkaAggregate (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Z)Lorg/gradle/api/tasks/TaskProvider;
+	public static final fun configureDokkaAggregate (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/util/List;)Lorg/gradle/api/tasks/TaskProvider;
 }
 
 public final class com/gradleup/librarian/gradle/Gcs {
@@ -47,9 +47,9 @@ public final class com/gradleup/librarian/gradle/GeneratedVersionKt {
 }
 
 public final class com/gradleup/librarian/gradle/Kdoc {
-	public fun <init> (ZLjava/util/List;)V
-	public final fun getIncludeSelf ()Z
+	public fun <init> (Ljava/util/List;Ljava/util/List;)V
 	public final fun getOlderVersions ()Ljava/util/List;
+	public final fun getProjects ()Ljava/util/List;
 }
 
 public final class com/gradleup/librarian/gradle/KmpKt {
