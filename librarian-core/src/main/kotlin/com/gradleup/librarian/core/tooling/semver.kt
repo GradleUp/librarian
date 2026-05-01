@@ -2,7 +2,7 @@ package com.gradleup.librarian.core.tooling
 
 class PreRelease(
     val name: String,
-    val version: Int,
+    val version: Int?,
 )
 
 /**
@@ -100,7 +100,10 @@ class SemVer(
     return buildString {
       append("$major.$minor.$patch")
       if (preRelease != null) {
-        append("-${preRelease.name}.${preRelease.version}")
+        append("-${preRelease.name}")
+        if (preRelease.version != null) {
+          append(".${preRelease.version}")
+        }
       }
       if (isSnapshot) {
         append("-SNAPSHOT")
@@ -110,6 +113,7 @@ class SemVer(
 }
 
 internal fun PreRelease?.compareTo(other: PreRelease?): Int {
+  // v1.0.0-beta < v1.0.0
   return if (this == null && other == null) {
     0
   } else if (this == null) {
@@ -117,13 +121,23 @@ internal fun PreRelease?.compareTo(other: PreRelease?): Int {
   } else if (other == null) {
     -1
   } else {
+    // v1.0.0-beta01 < v1.0.0-beta02
     // XXX: should we handle non-lexicographic order here? (-dev could be lower than -alpha, etc...)
     val ret = name.compareTo(other.name)
     if (ret != 0) {
       return ret
     }
 
-    version.compareTo(other.version)
+    // v1.0.0-beta < v1.0.0-beta.1
+    if (version == null && other.version == null) {
+      0
+    } else if (version == null) {
+      -1
+    } else if (other.version == null) {
+      1
+    } else {
+      version.compareTo(other.version)
+    }
   }
 }
 
@@ -145,7 +159,7 @@ fun SemVer.copy(
 
 fun PreRelease.copy(
     name: String = this.name,
-    version: Int = this.version
+    version: Int? = this.version
 ): PreRelease {
   return PreRelease(name, version)
 }
@@ -167,7 +181,7 @@ fun SemVer.nextMajor(): SemVer {
 
 fun SemVer.nextPrerelease(): SemVer {
   require(preRelease != null) { "Cannot bump prerelease on non-prerelease version" }
-  return copy(preRelease = preRelease.copy(version = preRelease.version + 1))
+  return copy(preRelease = preRelease.copy(version = (preRelease.version ?: 0) + 1))
 }
 
 /**
@@ -187,7 +201,7 @@ fun SemVer.next(): SemVer {
       copy(isSnapshot = false)
     }
     preRelease != null -> {
-      copy(preRelease = preRelease.copy(version = preRelease.version + 1), isSnapshot = false)
+      copy(preRelease = preRelease.copy(version = (preRelease.version ?: 0) + 1), isSnapshot = false)
     }
     else -> {
       copy(patch = patch + 1, isSnapshot = false)
@@ -223,11 +237,11 @@ fun String.semVerOrNull(): SemVer? {
       return null
     }
     rem = rem.substring(1)
-    val regex2 = Regex("([a-zA-Z]+)\\.([0-9]+)")
+    val regex2 = Regex("([a-zA-Z][a-zA-Z0-9]*)(\\.([0-9]+))?")
     val result2 = regex2.matchEntire(rem) ?: return null
 
-    val v = result2.groupValues[2].toIntOrNull() ?: return null
-    preRelease = PreRelease(result2.groupValues[1], v)
+    val preReleaseVersion = result2.groupValues.getOrNull(3)?.toIntOrNull()
+    preRelease = PreRelease(result2.groupValues[1], preReleaseVersion)
   }
   return SemVer(
       major,

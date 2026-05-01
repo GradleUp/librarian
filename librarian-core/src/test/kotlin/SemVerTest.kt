@@ -1,7 +1,10 @@
 import com.gradleup.librarian.core.tooling.semVerOrNull
+import com.gradleup.librarian.core.tooling.semVerOrThrow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class SemVerTest {
   @Test
@@ -40,5 +43,16 @@ class SemVerTest {
       assertEquals("alpha", preRelease?.name)
       assertEquals(0, preRelease?.version)
     }
+    "2.4.0-Beta2".semVerOrNull().apply {
+      assertNotNull(this)
+      assertEquals(2, major)
+      assertEquals(4, minor)
+      assertEquals(0, patch)
+      assertEquals(false, isSnapshot)
+      assertEquals("Beta2", preRelease?.name)
+      assertEquals(null, preRelease?.version)
+    }
+    assertEquals("2.4.0-Beta2", "2.4.0-Beta2".semVerOrThrow().toString())
+    assertTrue("2.4.0-Beta2".semVerOrThrow() < "2.4.0-Beta2.1".semVerOrThrow())
   }
 }

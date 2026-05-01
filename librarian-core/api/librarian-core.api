@@ -46,9 +46,9 @@ public final class com/gradleup/librarian/core/tooling/KeysKt {
 }
 
 public final class com/gradleup/librarian/core/tooling/PreRelease {
-	public fun <init> (Ljava/lang/String;I)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;)V
 	public final fun getName ()Ljava/lang/String;
-	public final fun getVersion ()I
+	public final fun getVersion ()Ljava/lang/Integer;
 }
 
 public final class com/gradleup/librarian/core/tooling/ProcessKt {
@@ -91,9 +91,9 @@ public final class com/gradleup/librarian/core/tooling/SemVer {
 
 public final class com/gradleup/librarian/core/tooling/SemverKt {
 	public static final fun bump (Lcom/gradleup/librarian/core/tooling/SemVer;)Lcom/gradleup/librarian/core/tooling/SemVer;
-	public static final fun copy (Lcom/gradleup/librarian/core/tooling/PreRelease;Ljava/lang/String;I)Lcom/gradleup/librarian/core/tooling/PreRelease;
+	public static final fun copy (Lcom/gradleup/librarian/core/tooling/PreRelease;Ljava/lang/String;Ljava/lang/Integer;)Lcom/gradleup/librarian/core/tooling/PreRelease;
 	public static final fun copy (Lcom/gradleup/librarian/core/tooling/SemVer;IIILcom/gradleup/librarian/core/tooling/PreRelease;Z)Lcom/gradleup/librarian/core/tooling/SemVer;
-	public static synthetic fun copy$default (Lcom/gradleup/librarian/core/tooling/PreRelease;Ljava/lang/String;IILjava/lang/Object;)Lcom/gradleup/librarian/core/tooling/PreRelease;
+	public static synthetic fun copy$default (Lcom/gradleup/librarian/core/tooling/PreRelease;Ljava/lang/String;Ljava/lang/Integer;ILjava/lang/Object;)Lcom/gradleup/librarian/core/tooling/PreRelease;
 	public static synthetic fun copy$default (Lcom/gradleup/librarian/core/tooling/SemVer;IIILcom/gradleup/librarian/core/tooling/PreRelease;ZILjava/lang/Object;)Lcom/gradleup/librarian/core/tooling/SemVer;
 	public static final fun next (Lcom/gradleup/librarian/core/tooling/SemVer;)Lcom/gradleup/librarian/core/tooling/SemVer;
 	public static final fun nextMajor (Lcom/gradleup/librarian/core/tooling/SemVer;)Lcom/gradleup/librarian/core/tooling/SemVer;
