@@ -14,11 +14,11 @@ fun Project.configureBcv(
   excludePatterns: List<String> = emptyList(),
 ) {
   // See https://kotlinlang.org/docs/whatsnew2320.html#improvements-to-binary-compatibility-validation-in-kgp
-  val kgpVersion = this@configureBcv.getKotlinPluginVersion().semVerOrThrow()
+  val kgpVersion = this@configureBcv.getKotlinPluginVersion()
 
   when {
-    kgpVersion >= "2.3.20".semVerOrThrow() -> configureBcv2320(excludePatterns)
-    kgpVersion >= "2.2.0".semVerOrThrow() -> configureBcv220(excludePatterns)
+    kgpVersion >= "2.3.20" -> configureBcv2320(excludePatterns)
+    kgpVersion >= "2.2.0" -> configureBcv220(excludePatterns)
     else -> {
       if (warnIfMissing) {
         println("Librarian: BCV is only configured by default if using KGP 2.2+ (currently detected is '${getKotlinPluginVersion()}'). Set bcv.warn=false in your librarian.root.properties file to remove this warning.")
