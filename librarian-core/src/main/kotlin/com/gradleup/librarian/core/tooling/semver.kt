@@ -7,7 +7,12 @@ class PreRelease(
 
 /**
  *
- * A variation of the traditional semantic versioning specification to support `-SNAPSHOT` and prerelease versions.
+ * A variation of the traditional semantic versioning specification to support `-SNAPSHOT` and prerelease versions like:
+ *
+ * - 1.0.0
+ * - 1.0.0-SNAPSHOT
+ * - 1.0.0-rc.0
+ * - 1.0.0.rc-0-SNAPSHOT
  *
  * ```
  * <valid semver> ::= <version core>

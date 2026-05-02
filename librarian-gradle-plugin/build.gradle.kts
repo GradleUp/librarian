@@ -50,7 +50,8 @@ val mainCompilation = kotlin.target.compilations.getByName("main")
 
 mapOf(
   "220" to setOf(libs.kgp220),
-  "2320" to setOf(libs.kgp2320)
+  "2320" to setOf(libs.kgp2320),
+  "240" to setOf(libs.kgp240)
 ).forEach {
   val compilation = kotlin.target.compilations.create("kgp-${it.key}")
 
