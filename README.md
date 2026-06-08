@@ -2,6 +2,7 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.gradleup.librarian/librarian-gradle-plugin?style=flat-square)](https://central.sonatype.com/namespace/com.gradleup.librarian)
 [![Maven Snapshots](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fcentral.sonatype.com%2Frepository%2Fmaven-snapshots%2Fcom%2Fgradleup%2Flibrarian%2Flibrarian-gradle-plugin%2Fmaven-metadata.xml&style=flat-square&label=snapshots&color=%2315252D&strategy=latestProperty)](https://central.sonatype.com/repository/maven-snapshots/com/gradleup/librarian)
+[![Gradleup Snapshots](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fstorage.googleapis.com%2Fgradleup%2Fm2%2Fcom%2Fgradleup%2Flibrarian%2Flibrarian-gradle-plugin%2Fmaven-metadata.xml&style=flat-square&label=gradleup-snapshots&color=%2315252D&strategy=latestProperty)](https://storage.googleapis.com/gradleup/m2/com/gradleup/librarian/librarian-gradle-plugin/maven-metadata.xml)
 
 </div>
 
