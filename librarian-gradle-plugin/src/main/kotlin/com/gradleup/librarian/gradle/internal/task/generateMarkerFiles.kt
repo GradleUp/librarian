@@ -116,8 +116,7 @@ fun generateMarkerFiles(
             check(privateKeyPassword != null) {
               "Librarian: a signing private key was set but not its password."
             }
-            val ascFile = file.writeSignature(privateKey, privateKeyPassword)
-            ascFile.writeChecksums()
+            file.writeSignature(privateKey, privateKeyPassword)
           }
         }
       }
@@ -136,7 +135,7 @@ private fun File.writeSignature(privateKey: String, privateKeyPassword: String):
 }
 
 private fun File.writeChecksums() {
-  listOf("md5", "sha1", "sha256", "sha512").forEach { algorithm ->
+  listOf("md5", "sha1").forEach { algorithm ->
     inputStream().use {
       parentFile.resolve("$name.$algorithm").writeText(
         it.digest(algorithm.uppercase())
