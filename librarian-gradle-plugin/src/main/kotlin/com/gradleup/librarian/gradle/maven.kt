@@ -11,7 +11,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 /**
  * From https://github.com/arrow-kt/arrow-gradle-config/blob/main/arrow-gradle-config-publish/src/main/kotlin/internal/PublishMppRootModuleInPlatform.kt
  */
-fun Project.publishPlatformArtifactsInRootModule(group: String, version: String) = afterEvaluate {
+internal fun Project.publishPlatformArtifactsInRootModule(group: String, version: String) = afterEvaluate {
   if (kotlinExtension !is KotlinMultiplatformExtension) {
     return@afterEvaluate
   }

@@ -50,15 +50,17 @@ internal fun Properties.olderVersions(): List<Coordinates> {
 internal fun Properties.projects(project: Project): List<String> {
   val allProjects = getProperty("kdoc.allProjects")?.toBoolean() ?: false
   return if (allProjects) {
-    check(getProperty("kdoc.projects") == null) {
-      "It is an error to set both kdoc.projects and kdoc.allProjects"
-    }
-    project.allprojects.map { it.isolated.path }
+    error("Librarian: kdoc.allProjects is not supported anymore. Use kdoc.projects=* instead")
   } else {
-    getProperty("kdoc.projects")?.split(",")
-      ?.filter {
-        it.isNotEmpty()
-      } ?: error("Librarian: either kdoc.projects or kdoc.allProjects is required")
+    val projects = getProperty("kdoc.projects")
+    if (projects == null || projects.isBlank()) {
+      error("Librarian: kdoc.projects is required. You may set kdoc.projects=* to publish for all projects")
+    }
+    if (projects == "*") {
+      project.allprojects.map { it.isolated.path }
+    } else {
+      projects.split(",").map { it.trim() }
+    }
   }
 }
 
