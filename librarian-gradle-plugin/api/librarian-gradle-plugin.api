@@ -72,10 +72,6 @@ public final class com/gradleup/librarian/gradle/LibrarianPluginKt {
 	public static final fun plugin (Lorg/gradle/api/Project;)V
 }
 
-public final class com/gradleup/librarian/gradle/MavenKt {
-	public static final fun publishPlatformArtifactsInRootModule (Lorg/gradle/api/Project;)V
-}
-
 public final class com/gradleup/librarian/gradle/ModuleKt {
 	public static final fun librarianModule (Lorg/gradle/api/Project;)V
 	public static final fun librarianModule (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;ZLcom/gradleup/librarian/gradle/Bcv;Ljava/lang/String;Lcom/gradleup/librarian/gradle/Publishing;Lcom/gradleup/librarian/gradle/Signing;)V
