@@ -108,7 +108,7 @@ fun Project.configurePublishing(
   }
   configurePom(pomMetadata)
   if (publishPlatformArtifactsInRootModule) {
-    publishPlatformArtifactsInRootModule()
+    publishPlatformArtifactsInRootModule(group, version)
   }
 
   pluginManager.apply("com.gradleup.nmcp")
