@@ -1,13 +1,9 @@
-@file:OptIn(ExperimentalAbiValidation::class)
-
 package com.gradleup.librarian.gradle
 
-import com.gradleup.librarian.core.tooling.semVerOrThrow
 import com.gradleup.librarian.internal.configureBcv220
 import com.gradleup.librarian.internal.configureBcv2320
 import com.gradleup.librarian.internal.configureBcv240
 import org.gradle.api.Project
-import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 
 fun Project.configureBcv(
