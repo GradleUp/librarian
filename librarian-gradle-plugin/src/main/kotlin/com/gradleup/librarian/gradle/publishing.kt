@@ -42,8 +42,8 @@ fun Gcs(properties: Properties): Gcs? {
   return System.getenv("LIBRARIAN_GOOGLE_SERVICES_JSON")?.let{
     Gcs(
       it,
-      properties.getProperty("gcs.bucket"),
-      properties.getProperty("gcs.prefix"),
+      properties.getProperty("gcs.bucket") ?: error("LIBRARIAN_GOOGLE_SERVICES_JSON is in the environment but gcs.bucket is not set"),
+      properties.getProperty("gcs.prefix") ?: error("LIBRARIAN_GOOGLE_SERVICES_JSON is in the environment but gcs.prefix is not set"),
     )
   }
 }
