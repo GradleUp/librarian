@@ -122,11 +122,15 @@ private fun Project.configureMarkers(group: String, version: String, pomMetadata
   } catch (_: Exception) {
     return
   }
-  val existingMarkers = extensions.getByType(PublishingExtension::class.java)
-    .publications
-    .filterIsInstance<MavenPublication>()
-    .filter { it.name.endsWith("PluginMarkerMaven") }
-    .map { it.groupId }
+
+  // Resolved lazily so that publications registered after this point are taken into account
+  val existingMarkers = provider {
+    extensions.getByType(PublishingExtension::class.java)
+      .publications
+      .filterIsInstance<MavenPublication>()
+      .filter { it.name.endsWith("PluginMarkerMaven") }
+      .map { it.groupId }
+  }
 
   val task = registerGenerateMarkerFilesTask(
     taskName = "librarianGenerateMarkerFiles",
@@ -137,7 +141,7 @@ private fun Project.configureMarkers(group: String, version: String, pomMetadata
     url = provider { pomMetadata.vcsUrl },
     spdxLicenseId = provider { pomMetadata.license },
     developer = provider { pomMetadata.developer },
-    pluginIdsToIgnore = provider { existingMarkers },
+    pluginIdsToIgnore = existingMarkers,
     privateKey = provider { signing?.privateKey },
     privateKeyPassword = provider { signing?.privateKeyPassword },
   )
