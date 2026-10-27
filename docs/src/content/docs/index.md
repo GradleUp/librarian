@@ -104,7 +104,7 @@ Publish your library:
 ./gradlew librarianPublishToMavenCentral
 ./gradlew librarianPublishToMavenSnapshots
 ./gradlew librarianPublishToGcs
-./gradlew librarianUpdateToGcsReleases
-./gradlew librarianUpdateToGcsSnapshots
+./gradlew librarianPublishToGcsReleases
+./gradlew librarianPublishToGcsSnapshots
 ```
 

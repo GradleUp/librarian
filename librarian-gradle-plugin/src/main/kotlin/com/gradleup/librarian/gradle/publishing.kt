@@ -35,7 +35,7 @@ class Sonatype(
 class Gcs(
   val serviceAccountJson: String,
   val bucket: String,
-  val prefix: String // The prefix. A trailing '/' will be added if not present. If empty, files are uploaded at the root of the bucket
+  val prefix: String
 )
 
 fun Gcs(properties: Properties): Gcs? {
@@ -43,7 +43,7 @@ fun Gcs(properties: Properties): Gcs? {
 }
 
 /**
- * @param name the properties prefix, e.g. "gcs" or "gcs.releases"
+ * @param name the properties prefix, e.g. "gcs" or "gcs.releases". If "$name.prefix" is not set, files are uploaded at the root of the bucket
  * @return null if LIBRARIAN_GOOGLE_SERVICES_JSON is not in the environment or "$name.bucket" is not set
  */
 internal fun Gcs(properties: Properties, name: String): Gcs? {
@@ -52,7 +52,7 @@ internal fun Gcs(properties: Properties, name: String): Gcs? {
   return Gcs(
     serviceAccountJson,
     bucket,
-    properties.getProperty("$name.prefix") ?: error("Librarian: '$name.bucket' is set but '$name.prefix' is not set"),
+    properties.getProperty("$name.prefix") ?: "",
   )
 }
 

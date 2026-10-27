@@ -18,6 +18,9 @@ import java.time.Duration
 import kotlin.math.pow
 import kotlin.time.Duration.Companion.seconds
 
+/**
+ * @param prefix the prefix. If empty, files are uploaded at the root of the bucket. Else, a trailing '/' will be added if not present.
+ */
 @GTask
 fun publishToGcs(
   logger: GLogger,

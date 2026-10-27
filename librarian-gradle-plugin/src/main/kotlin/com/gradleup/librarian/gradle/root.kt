@@ -31,8 +31,8 @@ fun Project.librarianRoot() {
   )
 
   val allFiles = extensions.getByType(NmcpAggregationExtension::class.java).allFiles
-  Gcs(rootProperties, "gcs.releases")?.let { registerGcsTask("librarianUpdateToGcsReleases", it, allFiles) }
-  Gcs(rootProperties, "gcs.snapshots")?.let { registerGcsTask("librarianUpdateToGcsSnapshots", it, allFiles) }
+  Gcs(rootProperties, "gcs.releases")?.let { registerGcsTask("librarianPublishToGcsReleases", it, allFiles) }
+  Gcs(rootProperties, "gcs.snapshots")?.let { registerGcsTask("librarianPublishToGcsSnapshots", it, allFiles) }
 }
 
 private fun Project.registerGcsTask(taskName: String, gcs: Gcs, files: FileCollection) {
