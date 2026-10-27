@@ -75,7 +75,7 @@ fun Project.librarianRoot(
     Librarian.registerGcsTask(
       this,
       provider { gcs.bucket },
-      provider { gcs.prefix.trimEnd('/').let { if (it.isEmpty()) it else "$it/" } },
+      provider { gcs.prefix },
       provider { gcs.serviceAccountJson },
       nmcpAggregation.allFiles
     )

@@ -26,9 +26,11 @@ fun publishToGcs(
   prefix: String,
   credentials: String
 ) {
-  val transport = GcsTransport(logger, bucket, prefix, credentials)
+  // Add a trailing '/' if not present. If empty, files are uploaded at the root of the bucket
+  val normalizedPrefix = prefix.trimEnd('/').let { if (it.isEmpty()) it else "$it/" }
+  val transport = GcsTransport(logger, bucket, normalizedPrefix, credentials)
 
-  logger.lifecycle("Uploading files to gcs://$bucket/$prefix")
+  logger.lifecycle("Uploading files to gcs://$bucket/$normalizedPrefix")
   publishFileByFile(transport, inputFiles)
 }
 
