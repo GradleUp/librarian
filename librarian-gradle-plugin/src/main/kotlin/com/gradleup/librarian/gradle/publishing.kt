@@ -35,7 +35,7 @@ class Sonatype(
 class Gcs(
   val serviceAccountJson: String,
   val bucket: String,
-  val prefix: String // The prefix. A trailing '/' will be added if not present
+  val prefix: String // The prefix. A trailing '/' will be added if not present. If empty, files are uploaded at the root of the bucket
 )
 
 fun Gcs(properties: Properties): Gcs? {
