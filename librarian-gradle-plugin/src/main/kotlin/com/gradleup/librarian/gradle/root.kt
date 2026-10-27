@@ -1,8 +1,10 @@
 package com.gradleup.librarian.gradle
 
 import com.gradleup.librarian.gradle.internal.task.registerGenerateStaticContentTaskTask
+import com.gradleup.librarian.gradle.internal.task.registerPublishToGcsTask
 import nmcp.NmcpAggregationExtension
 import org.gradle.api.Project
+import org.gradle.api.file.FileCollection
 
 @Deprecated("use Librarian.root() instead", ReplaceWith("Librarian.root(project)", "import com.gradleup.librarian.gradle.Librarian"))
 fun Project.librarianRoot() {
@@ -26,6 +28,20 @@ fun Project.librarianRoot() {
     signing = signing,
     gcs = gcs,
     kdoc = kdoc
+  )
+
+  val allFiles = extensions.getByType(NmcpAggregationExtension::class.java).allFiles
+  Gcs(rootProperties, "gcs.releases")?.let { registerGcsTask("librarianUpdateToGcsReleases", it, allFiles) }
+  Gcs(rootProperties, "gcs.snapshots")?.let { registerGcsTask("librarianUpdateToGcsSnapshots", it, allFiles) }
+}
+
+private fun Project.registerGcsTask(taskName: String, gcs: Gcs, files: FileCollection) {
+  registerPublishToGcsTask(
+    taskName = taskName,
+    bucket = provider { gcs.bucket },
+    prefix = provider { gcs.prefix },
+    credentials = provider { gcs.serviceAccountJson },
+    inputFiles = files
   )
 }
 

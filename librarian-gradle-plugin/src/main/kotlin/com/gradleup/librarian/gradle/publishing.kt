@@ -39,13 +39,21 @@ class Gcs(
 )
 
 fun Gcs(properties: Properties): Gcs? {
-  return System.getenv("LIBRARIAN_GOOGLE_SERVICES_JSON")?.let{
-    Gcs(
-      it,
-      properties.getProperty("gcs.bucket") ?: error("LIBRARIAN_GOOGLE_SERVICES_JSON is in the environment but gcs.bucket is not set"),
-      properties.getProperty("gcs.prefix") ?: error("LIBRARIAN_GOOGLE_SERVICES_JSON is in the environment but gcs.prefix is not set"),
-    )
-  }
+  return Gcs(properties, "gcs")
+}
+
+/**
+ * @param name the properties prefix, e.g. "gcs" or "gcs.releases"
+ * @return null if LIBRARIAN_GOOGLE_SERVICES_JSON is not in the environment or "$name.bucket" is not set
+ */
+internal fun Gcs(properties: Properties, name: String): Gcs? {
+  val serviceAccountJson = System.getenv("LIBRARIAN_GOOGLE_SERVICES_JSON") ?: return null
+  val bucket = properties.getProperty("$name.bucket") ?: return null
+  return Gcs(
+    serviceAccountJson,
+    bucket,
+    properties.getProperty("$name.prefix") ?: error("Librarian: '$name.bucket' is set but '$name.prefix' is not set"),
+  )
 }
 
 class Kdoc(

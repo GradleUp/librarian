@@ -56,6 +56,12 @@ pom.license=MIT
 gcs.bucket=gradleup
 gcs.prefix=m2
 
+# Optional: separate Google Cloud Storage locations for releases and snapshots
+gcs.releases.bucket=gradleup
+gcs.releases.prefix=releases
+gcs.snapshots.bucket=gradleup
+gcs.snapshots.prefix=snapshots
+
 # Optional: configure compatibility
 java.compatibility=11 
 kotlin.compatibility=2.0.0
@@ -98,5 +104,7 @@ Publish your library:
 ./gradlew librarianPublishToMavenCentral
 ./gradlew librarianPublishToMavenSnapshots
 ./gradlew librarianPublishToGcs
+./gradlew librarianUpdateToGcsReleases
+./gradlew librarianUpdateToGcsSnapshots
 ```
 
