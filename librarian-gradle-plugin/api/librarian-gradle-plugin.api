@@ -28,10 +28,10 @@ public final class com/gradleup/librarian/gradle/DokkaKt {
 }
 
 public final class com/gradleup/librarian/gradle/Gcs {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Lkotlin/jvm/functions/Function0;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun getBucket ()Ljava/lang/String;
 	public final fun getPrefix ()Ljava/lang/String;
-	public final fun getServiceAccountJson ()Ljava/lang/String;
+	public final fun getServiceAccountJson ()Lkotlin/jvm/functions/Function0;
 }
 
 public abstract class com/gradleup/librarian/gradle/GeneratePluginVersion : org/gradle/api/DefaultTask {

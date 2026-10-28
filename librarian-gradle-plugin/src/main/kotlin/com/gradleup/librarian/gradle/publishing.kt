@@ -33,7 +33,7 @@ class Sonatype(
 )
 
 class Gcs(
-  val serviceAccountJson: String,
+  val serviceAccountJson: () -> String?,
   val bucket: String,
   val prefix: String
 )
@@ -44,13 +44,12 @@ fun Gcs(properties: Properties): Gcs? {
 
 /**
  * @param name the properties prefix, e.g. "gcs" or "gcs.releases". If "$name.prefix" is not set, files are uploaded at the root of the bucket
- * @return null if LIBRARIAN_GOOGLE_SERVICES_JSON is not in the environment or "$name.bucket" is not set
+ * @return null if "$name.bucket" is not set. The service account json is read lazily from LIBRARIAN_GOOGLE_SERVICES_JSON.
  */
 internal fun Gcs(properties: Properties, name: String): Gcs? {
-  val serviceAccountJson = System.getenv("LIBRARIAN_GOOGLE_SERVICES_JSON") ?: return null
   val bucket = properties.getProperty("$name.bucket") ?: return null
   return Gcs(
-    serviceAccountJson,
+    { System.getenv("LIBRARIAN_GOOGLE_SERVICES_JSON") },
     bucket,
     properties.getProperty("$name.prefix") ?: "",
   )

@@ -40,7 +40,7 @@ private fun Project.registerGcsTask(taskName: String, gcs: Gcs, files: FileColle
     taskName = taskName,
     bucket = provider { gcs.bucket },
     prefix = provider { gcs.prefix },
-    credentials = provider { gcs.serviceAccountJson },
+    credentials = provider { gcs.serviceAccountJson() },
     inputFiles = files
   )
 }
@@ -92,7 +92,7 @@ fun Project.librarianRoot(
       this,
       provider { gcs.bucket },
       provider { gcs.prefix },
-      provider { gcs.serviceAccountJson },
+      provider { gcs.serviceAccountJson() },
       nmcpAggregation.allFiles
     )
   }
